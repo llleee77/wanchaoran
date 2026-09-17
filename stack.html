@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上图下文 | 图片卡片布局</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============ 上图下文布局（ul.list1 > li > a > img + p） ============ */
+
+        .stack-main .container { max-width: 860px; }
+
+        /* 抵消 style.css 里 h2::before 的干扰 */
+        .stack-main h2::before { content: ""; }
+
+        .stack-main h2 { font-size: 26px; margin: 0 0 18px; border-left: 5px solid #f5c84b; padding-left: 12px; }
+
+        /* 核心：像网格一样排列卡片 */
+        ul.list1 {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);   /* 每行 3 张，改 2 就是每行 2 张 */
+            gap: 20px;
+        }
+
+        /* 每个 li 是一张卡片 */
+        ul.list1 li {
+            background: #fffdf8;
+            border: 1px solid #d9d4c8;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        ul.list1 li:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0 #f5c84b;
+        }
+
+        /* 整张卡片可点击 */
+        ul.list1 a {
+            display: block;
+            color: inherit;
+        }
+
+        ul.list1 a:hover { text-decoration: none; color: inherit; }
+
+        /* 上图：图片在上，固定高度裁切不变形 */
+        ul.list1 img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 下文：文字在下，水平居中 */
+        ul.list1 p {
+            margin: 0;
+            padding: 12px 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .stack-code {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            background: #1c2a2f;
+            color: #e8f0ee;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-top: 28px;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        @media (max-width: 720px) {
+            ul.list1 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body class="subpage-body">
+
+    <header class="subpage-header">
+        <div class="shell header-inner">
+            <a class="brand" href="index.html"><span class="brand-mark">W</span><span>万超然的高级网页设计</span></a>
+            <a class="back-link" href="index.html">返回课堂目录 <span>↗</span></a>
+        </div>
+    </header>
+
+    <main class="shell subpage-main stack-main">
+        <p class="eyebrow">CLASS PRACTICE · 05</p>
+        <h1>上图下文</h1>
+        <p class="lead">图片在上、文字在下 — 使用 <code>ul &gt; li &gt; a &gt; img + p</code> 的列表结构做图片卡片。</p>
+
+        <div class="container">
+            <h2>上图下文</h2>
+            <!-- 使用新添加的图片：6 张“适应 / 弹性”主题 PNG -->
+            <ul class="list1">
+                <li><a href="./stack.html"><img src="./img/人生要有弹性.png" alt="人生要有弹性">
+                <p>人生要有弹性</p></a></li>
+                <li><a href="./stack.html"><img src="./img/提升自适应能力图.png" alt="提升自适应能力">
+                <p>提升自适应能力</p></a></li>
+                <li><a href="./stack.html"><img src="./img/适应国家发展.png" alt="适应国家发展">
+                <p>适应国家发展</p></a></li>
+                <li><a href="./stack.html"><img src="./img/适应岗位需求.png" alt="适应岗位需求">
+                <p>适应岗位需求</p></a></li>
+                <li><a href="./stack.html"><img src="./img/适应环境.png" alt="适应环境">
+                <p>适应环境</p></a></li>
+                <li><a href="./stack.html"><img src="./img/适应科技发展.png" alt="适应科技发展">
+                <p>适应科技发展</p></a></li>
+            </ul>
+        </div>
+
+        <pre class="stack-code">/* 上图下文效果的核心 CSS */
+ul.list1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+ul.list1 li  { border: 1px solid #d9d4c8; border-radius: 8px; overflow: hidden; }
+ul.list1 img { width: 100%; height: 170px; object-fit: cover; display: block; }  /* 上图 */
+ul.list1 p   { margin: 0; padding: 12px; text-align: center; }                   /* 下文 */</pre>
+    </main>
+
+    <footer>
+        <p>万超然的《高级网页设计》课堂实践 · 上图下文布局 · 2026</p>
+    </footer>
+
+</body>
+</html>
