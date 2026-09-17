@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盒模型、层叠与继承 | CSS 选择器优先级</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============ 今天的课堂代码：盒模型 / 层叠 / 继承 / 选择器优先级 ============ */
+
+        /* 抵消 style.css 里 h2+p、h2::before 对本页授课内容的干扰 */
+        .lesson-main h2::before { content: ""; }
+        .lesson-main h2 + p { font-style: normal; color: inherit; }
+
+        /* ---------- 通用 ---------- */
+        .lesson-main { max-width: 860px; }
+        .lesson-main h2 { font-size: 26px; margin: 48px 0 14px; border-left: 5px solid #f5c84b; padding-left: 12px; }
+        .lesson-main h3 { font-size: 18px; margin: 22px 0 10px; color: #235b68; }
+        .lesson-main p { line-height: 1.9; }
+        .lesson-main code,
+        .demo-selector { font-family: Consolas, "Courier New", monospace; background: #eef1ec; padding: 2px 6px; border-radius: 3px; color: #b0483b; font-size: 15px; }
+        .lesson-box { background: #fffdf8; border: 1px solid #d9d4c8; padding: 24px; margin: 18px 0; }
+        .note { background: #fff6d8; border-left: 4px solid #f5c84b; padding: 10px 14px; margin: 14px 0; font-size: 14px; color: #5a5a50; }
+        .warn { background: #fdecee; border-left: 4px solid #d64550; padding: 10px 14px; margin: 14px 0; font-size: 14px; color: #6b4448; }
+
+        /* ---------- 盒模型示意图：margin / border / padding / content 四层 ---------- */
+        .bm-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+        .bm-demo { font-size: 13px; text-align: center; line-height: 1.5; }
+        .bm-margin { background: #ffe9b3; border: 2px dashed #c99a2e; padding: 14px; }   /* 最外层：margin */
+        .bm-border { background: #333; color: #fff; padding: 12px; }                   /* border */
+        .bm-padding { background: #d7e9ec; color: #174b57; padding: 16px; }            /* padding */
+        .bm-content { background: #fff; border: 1px solid #98bfc7; padding: 18px 10px; color: #333; }
+        .bm-title { display: inline-block; background: #fff; border: 1px solid #ccc; padding: 1px 8px; border-radius: 10px; margin: 4px 0; font-size: 12px; }
+        .bm-labels { font-size: 13px; color: #566b6f; line-height: 2; }
+        .bm-labels b { color: #235b68; }
+
+        /* ---------- box-sizing 对比 ---------- */
+        .bs-row { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-end; }
+        .bs-col { flex: 1; min-width: 220px; }
+        .bs-col h4 { font-size: 15px; margin-bottom: 8px; }
+        .bs-col h4 span { display: block; font: 12px Consolas, monospace; color: #738083; }
+        .bs-box-a, .bs-box-b { width: 200px; padding: 20px; border: 4px solid #235b68; background: #f5c84b; margin: 8px 0; }
+        .bs-note { font-size: 13px; color: #566b6f; }
+        .bs-note .total { font-weight: bold; color: #d64550; }
+
+        /* ---------- 层叠 / 继承演示 ---------- */
+        .ca-rule { font: 14px Consolas, monospace; background: #1c2a2f; color: #e8f0ee; padding: 9px 14px; border-radius: 4px; margin: 6px 0; word-break: break-all; }
+        .ca-rule em { color: #f5c84b; font-style: normal; }
+
+        .inherit-demo { color: #235b68; border: 3px solid #d9d4c8; padding: 16px; }       /* color 可继承，border 不继承 */
+        .inherit-demo p { margin: 6px 0; }
+
+        /* ---------- 优先级权重表 / 计算 ---------- */
+        table.spec-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; background: #fff; }
+        table.spec-table th, table.spec-table td { border: 1px solid #d9d4c8; padding: 9px 12px; text-align: left; }
+        table.spec-table th { background: #235b68; color: #fff; font-weight: normal; }
+        table.spec-table tr:nth-child(even) td { background: #f6f8f5; }
+        table.spec-table .score { font-family: Consolas, monospace; text-align: center; color: #b0483b; }
+
+        .fight { font: 16px Consolas, monospace; color: #174b57; }
+        .fight .win { font-weight: bold; color: #d64550; }
+
+        /* ---------- 优先级交互试验 ---------- */
+        #pbox { font-size: 20px; padding: 16px; margin: 10px 0; }
+        .pbox-plain { background: #f3f0e8; border: 2px dashed #b9b3a4; color: #333; }   /* 元素级默认 */
+        .pbox-cls { color: #48952f; }                                                   /* 类选择器 */
+        .pbox-id   { color: #235b68; }                                                  /* ID 选择器（会被类覆盖？不会，看下面优先级表） */
+
+        /* 注意：id 优先级 > 类优先级，即使写成 .pbox-id 也得用真正的 id 规则才够高 */
+        #pbox.pbox-id { color: #235b68; border-color: #235b68; }
+
+        .btn { border: 1px solid #235b68; background: #fff; color: #235b68; padding: 6px 14px; cursor: pointer; margin: 4px 6px 0 0; border-radius: 4px; }
+        .btn:hover { background: #235b68; color: #fff; }
+
+        /* ---------- 游戏通关答案 ---------- */
+        .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 26px; padding-left: 4px; margin-top: 8px; }
+        .answers ol { margin: 0; padding-left: 26px; }
+        .answers li { padding: 3px 0; font-size: 14px; border-bottom: 1px dotted #d9d4c8; }
+        .answers li code { background: transparent; padding: 0; font-size: 14px; color: #b0483b; }
+        .answers .tag { font-size: 12px; color: #738083; margin-left: 8px; }
+
+        @media (max-width: 720px) {
+            .bm-wrap, .answers { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body class="subpage-body">
+
+    <header class="subpage-header">
+        <div class="shell header-inner">
+            <a class="brand" href="index.html"><span class="brand-mark">W</span><span>万超然的高级网页设计</span></a>
+            <a class="back-link" href="index.html">返回课堂目录 <span>↗</span></a>
+        </div>
+    </header>
+
+    <main class="shell subpage-main lesson-main">
+        <p class="eyebrow">CLASS PRACTICE · 04</p>
+        <h1>盒模型、层叠与继承</h1>
+        <p class="lead">本节课重点：<strong>CSS 选择器优先级（Specificity）</strong>——当多条规则冲突时，浏览器到底听谁的？</p>
+
+        <!-- ================= 一、盒模型 ================= -->
+        <section>
+            <h2>一、盒模型（Box Model）</h2>
+            <p>每一个 HTML 元素都是一个"盒子"，从外到内依次为：</p>
+            <ul class="bm-labels">
+                <li><b>margin（外边距）</b>：盒子与其它盒子之间的空白，不会被背景填充，是透明的。</li>
+                <li><b>border（边框）</b>：盒子的边框线，可设置粗细、样式、颜色。</li>
+                <li><b>padding（内边距）</b>：内容与边框之间的距离，<em>会被背景颜色填充</em>。</li>
+                <li><b>content（内容区）</b>：真正放文字、图片的地方。</li>
+            </ul>
+
+            <div class="lesson-box">
+                <div class="bm-wrap">
+                    <div class="bm-demo">
+                        <div class="bm-margin">
+                            <span class="bm-title">margin 外边距</span>
+                            <div class="bm-border">
+                                <span class="bm-title" style="background:#333;color:#fff;border-color:#333;">border 边框</span>
+                                <div class="bm-padding">
+                                    <span class="bm-title">padding 内边距</span>
+                                    <div class="bm-content">content<br>内容区（文字/图片）</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bm-labels">
+                        <p>盒子总宽度的计算公式（<code>box-sizing: content-box</code> 时）：</p>
+                        <pre class="ca-rule">盒子总宽度 = content + padding*2 + border*2 + margin*2</pre>
+                        <p>盒子总高度的计算公式：</p>
+                        <pre class="ca-rule">盒子总高度 = content + padding*2 + border*2 + margin*2</pre>
+                        <p class="note">💡 小技巧：开发时常用 <code>box-sizing: border-box</code>，让 padding 和 border 都算在宽度内，宽高更可控。</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>box-sizing 对比实验</h3>
+            <div class="lesson-box">
+                <div class="bs-row">
+                    <div class="bs-col">
+                        <h4>content-box <span>总宽度会被撑大</span></h4>
+                        <div class="bs-box-a"></div>
+                        <p class="bs-note">width: 200px + padding 40px + border 8px<br>= <span class="total">248px</span></p>
+                    </div>
+                    <div class="bs-col">
+                        <h4>border-box <span>宽度固定为 200px</span></h4>
+                        <div class="bs-box-b" style="box-sizing: border-box; background:#d7e9ec; border-color:#235b68;"></div>
+                        <p class="bs-note">width: 200px 已包含 padding 和 border<br>= <span class="total">200px</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 二、层叠 ================= -->
+        <section>
+            <h2>二、层叠（Cascade）</h2>
+            <p>当多条 CSS 规则作用于同一个元素时，浏览器按下面顺序决定"听谁的"：</p>
+            <pre class="ca-rule"><em>① !important</em> &gt; <em>② 行内 style</em> &gt; <em>③ ID 选择器</em> &gt; <em>④ 类/属性/伪类</em> &gt; <em>⑤ 元素/伪元素</em> &gt; <em>⑥ 通配符 *</em></pre>
+            <p>如果两边的优先级相同，就看<strong>书写顺序</strong>：后写的覆盖先写的（就近原则）。</p>
+
+            <div class="lesson-box">
+                <h3 style="margin-top:0;">演示：同等优先级，后写的生效</h3>
+                <pre class="ca-rule">p.text { color: blue; }    /* 先写 */
+p.text { color: red;  }    /* 后写 → 生效 */</pre>
+                <p style="color:blue">这段文字由第一行规则上色（蓝）。</p>
+                <p style="color:red">这段文字由第二行规则上色（红），演示"后写覆盖先写"。</p>
+            </div>
+        </section>
+
+        <!-- ================= 三、继承 ================= -->
+        <section>
+            <h2>三、继承（Inheritance）</h2>
+            <p>某些属性会被子元素<strong>自动继承</strong>，某些则不会：</p>
+            <ul class="bm-labels">
+                <li><b>可继承：</b>文字类——<code>color</code>、<code>font-family</code>、<code>font-size</code>、<code>line-height</code>、<code>text-align</code> …</li>
+                <li><b>不继承：</b>盒子类——<code>width</code>、<code>height</code>、<code>margin</code>、<code>padding</code>、<code>border</code>、<code>background</code> …</li>
+            </ul>
+            <div class="lesson-box">
+                <div class="inherit-demo">
+                    我是父元素（color: #235b68; border: 3px solid）——所以文字是蓝色。
+                    <p>我是子元素，<strong>color 被继承</strong>，所以也是蓝色；但 <strong>border 不被继承</strong>，我没有边框。</p>
+                </div>
+                <p class="note">💡 想强制继承/取消继承：<code>inherit</code> 或 <code>initial</code>、<code>unset</code>。</p>
+            </div>
+        </section>
+
+        <!-- ================= 四、选择器优先级（核心） ================= -->
+        <section>
+            <h2>四、CSS 选择器优先级（Specificity）</h2>
+            <p>优先级可以理解为一个"四位分数" <code>(内联, ID, 类, 元素)</code>，逐位比较，大的获胜：</p>
+
+            <table class="spec-table">
+                <tr><th>选择器类型</th><th>计数位数</th><th>例子</th></tr>
+                <tr><td>行内样式 style=""</td><td class="score">(1,0,0,0)</td><td><code>&lt;p style="color:red"&gt;</code></td></tr>
+                <tr><td>ID 选择器</td><td class="score">(0,1,0,0)</td><td><code>#intro</code></td></tr>
+                <tr><td>类 / 属性 / 伪类</td><td class="score">(0,0,1,0)</td><td><code>.text</code>、<code>[type="text"]</code>、<code>:hover</code>、<code>:nth-child(2)</code></td></tr>
+                <tr><td>元素 / 伪元素</td><td class="score">(0,0,0,1)</td><td><code>div</code>、<code>::before</code></td></tr>
+                <tr><td>通配符 * 与组合器</td><td class="score">(0,0,0,0)</td><td><code>*</code>、<code>空格</code>、<code>&gt;</code>、<code>+</code>、<code>~</code> 不计分</td></tr>
+            </table>
+
+            <h3>分数计算举例</h3>
+            <table class="spec-table">
+                <tr><th>选择器</th><th>ID</th><th>类</th><th>元素</th><th>分数</th></tr>
+                <tr><td><code>p</code></td><td>0</td><td>0</td><td>1</td><td class="score">(0,0,0,1)</td></tr>
+                <tr><td><code>.text</code></td><td>0</td><td>1</td><td>0</td><td class="score">(0,0,1,0)</td></tr>
+                <tr><td><code>p.text</code></td><td>0</td><td>1</td><td>1</td><td class="score">(0,0,1,1)</td></tr>
+                <tr><td><code>#intro p</code></td><td>1</td><td>0</td><td>1</td><td class="score">(0,1,0,1)</td></tr>
+                <tr><td><code>#nav .item:hover</code></td><td>1</td><td>2</td><td>0</td><td class="score">(0,1,2,0)</td></tr>
+                <tr><td><code>ul#nav li.active a</code></td><td>1</td><td>1</td><td>3</td><td class="score">(0,1,1,3)</td></tr>
+            </table>
+
+            <h3>关键结论</h3>
+            <ul class="bm-labels">
+                <li><code>#intro</code> 永远赢过 <code>.intro</code>，不管 class 写多少；</li>
+                <li>一个 <code>.text</code> 就能打败 <code>div p a</code>（(0,0,1,0) &gt; (0,0,0,3)）；</li>
+                <li><code>!important</code> 最高，但尽量不要乱用。</li>
+            </ul>
+
+            <div class="lesson-box">
+                <h3 style="margin-top:0;">课堂挑战：谁赢？</h3>
+                <p class="fight">① <code>#box p</code> <span class="score">(0,1,0,1)</span>　vs　<code>#box .txt</code> <span class="score">(0,1,1,0)</span>　→ <span class="win">.txt 赢</span></p>
+                <p class="fight">② <code>div p span</code> <span class="score">(0,0,0,3)</span>　vs　<code>.emu</code> <span class="score">(0,0,1,0)</span>　→ <span class="win">.emu 赢</span></p>
+                <p class="fight">③ <code>p.title.item</code> <span class="score">(0,0,2,1)</span>　vs　<code>#main</code> <span class="score">(0,1,0,0)</span>　→ <span class="win">#main 赢</span></p>
+            </div>
+
+            <h3>交互小实验：优先级实战</h3>
+            <div class="lesson-box">
+                <div id="pbox" class="pbox-plain">我是被多方争夺的元素</div>
+                <p class="note" style="margin:10px 0 0;">三个按钮分别增加"类/ID/行内"三重身份，点进来看看谁说了算（依次点击，观察颜色变化）。</p>
+                <button class="btn" onclick="changePbox('cls')">加 .pbox-cls（类）</button>
+                <button class="btn" onclick="changePbox('id')">加 #pbox（ID）</button>
+                <button class="btn" onclick="changePbox('inline')">加行内 style</button>
+                <button class="btn" onclick="changePbox('reset')">重置</button>
+            </div>
+        </section>
+
+        <!-- ================= 五、CSS 选择器通关游戏答案 ================= -->
+        <section>
+            <h2>五、CSS 选择器通关游戏答案</h2>
+            <p>游戏地址：<a href="https://flukeout.github.io/" target="_blank" rel="noopener">https://flukeout.github.io/</a>（CSS Diner 32 关，全通关答案如下 👇）</p>
+
+            <div class="answers">
+                <ol>
+                    <li><code>plate</code><span class="tag">标签选择器</span></li>
+                    <li><code>bento</code><span class="tag">标签选择器</span></li>
+                    <li><code>#fancy</code><span class="tag">ID 选择器</span></li>
+                    <li><code>plate apple</code><span class="tag">后代选择器</span></li>
+                    <li><code>#fancy pickle</code><span class="tag">后代选择器</span></li>
+                    <li><code>.small</code><span class="tag">类选择器</span></li>
+                    <li><code>orange.small</code><span class="tag">类选择器</span></li>
+                    <li><code>bento orange.small</code><span class="tag">后代 + 类</span></li>
+                    <li><code>plate, bento</code><span class="tag">群组选择器</span></li>
+                    <li><code>*</code><span class="tag">通配符</span></li>
+                    <li><code>plate *</code><span class="tag">通配符</span></li>
+                    <li><code>plate + apple</code><span class="tag">相邻兄弟</span></li>
+                    <li><code>bento ~ pickle</code><span class="tag">通用兄弟</span></li>
+                    <li><code>plate &gt; apple</code><span class="tag">子代选择器</span></li>
+                    <li><code>orange:first-child</code><span class="tag">伪类</span></li>
+                    <li><code>plate :only-child</code><span class="tag">伪类</span></li>
+                </ol>
+                <ol start="17">
+                    <li><code>.small:last-child</code><span class="tag">伪类</span></li>
+                    <li><code>:nth-child(3)</code><span class="tag">伪类</span></li>
+                    <li><code>bento:nth-last-child(3)</code><span class="tag">伪类</span></li>
+                    <li><code>apple:first-of-type</code><span class="tag">伪类</span></li>
+                    <li><code>plate:nth-of-type(even)</code><span class="tag">伪类</span></li>
+                    <li><code>plate:nth-of-type(2n+3)</code><span class="tag">伪类公式</span></li>
+                    <li><code>plate apple:only-of-type</code><span class="tag">伪类</span></li>
+                    <li><code>.small:last-of-type</code><span class="tag">伪类</span></li>
+                    <li><code>bento:empty</code><span class="tag">伪类</span></li>
+                    <li><code>apple:not(.small)</code><span class="tag">伪类 :not</span></li>
+                    <li><code>[for]</code><span class="tag">属性选择器</span></li>
+                    <li><code>plate[for]</code><span class="tag">属性选择器</span></li>
+                    <li><code>[for="Vitaly"]</code><span class="tag">属性值相等</span></li>
+                    <li><code>[for^="Sa"]</code><span class="tag">属性值开头</span></li>
+                    <li><code>[for$="ato"]</code><span class="tag">属性值结尾</span></li>
+                    <li><code>[for*="obb"]</code><span class="tag">属性值包含</span></li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>万超然的《高级网页设计》课堂实践 · 盒模型 · 层叠 · 继承 · 选择器优先级 · 2026</p>
+    </footer>
+
+    <script>
+        /* 优先级交互小实验：类 / ID / 行内 三重复制施加，看看谁生效 */
+        function changePbox(which) {
+            var box = document.getElementById('pbox');
+            box.className = 'pbox-plain';          // 每次先回到元素级默认
+            box.style.color = '';                  // 清掉行内样式
+            box.style.borderColor = '';
+            if (which === 'cls') {
+                box.className = 'pbox-plain pbox-cls';   // 只有类：绿色
+            } else if (which === 'id') {
+                box.className = 'pbox-plain pbox-id';    // 类+ID：蓝色（ID 赢）
+            } else if (which === 'inline') {
+                box.className = 'pbox-plain';            // 行内样式优先于一切规则
+                box.style.color = 'purple';
+                box.style.borderColor = 'purple';
+            }
+        }
+    </script>
+</body>
+</html>
