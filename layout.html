@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="万超然的高级网页设计课堂实践 · 网页整体布局">
+    <title>网页整体布局｜万超然高级网页设计</title>
+    <style>
+        :root {
+            --ink: #1d2833;
+            --muted: #667481;
+            --paper: #f6f4ee;
+            --card: #fffdf8;
+            --line: #d9ddd8;
+            --accent: #e26d4f;
+            --accent-dark: #a9422f;
+            --mint: #dcefe8;
+            --yellow: #f5d77a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.7;
+        }
+
+        a { color: inherit; }
+
+        .page-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 0;
+            font-size: 14px;
+        }
+
+        .topbar .back {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent-dark);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(40px, 6vw, 72px);
+            background: var(--mint);
+            border: 1px solid var(--line);
+            margin-bottom: 56px;
+        }
+
+        .hero::after {
+            position: absolute;
+            right: 6%;
+            bottom: -46px;
+            width: 150px;
+            height: 150px;
+            content: "";
+            border: 22px solid var(--yellow);
+            border-radius: 50%;
+            opacity: .85;
+        }
+
+        .eyebrow {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 14px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .18em;
+        }
+
+        .hero h1, .hero p { position: relative; z-index: 1; margin-top: 0; }
+
+        .hero h1 {
+            margin-bottom: 14px;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: clamp(34px, 5vw, 56px);
+            line-height: 1.12;
+        }
+
+        .hero p { margin-bottom: 0; max-width: 560px; color: #41535a; }
+
+        .demo-label {
+            margin: 40px 0 16px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .12em;
+        }
+
+        /* ============ header / nav / main / aside / footer 实例 ============ */
+        .layout-demo {
+            background: var(--card);
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            padding: 18px 24px;
+            background: var(--ink);
+            color: #f8f5ed;
+            font-weight: 700;
+        }
+
+        .demo-nav { background: var(--mint); border-bottom: 1px solid var(--line); }
+
+        .demo-nav ul {
+            display: flex;
+            gap: 4px;
+            margin: 0;
+            padding: 8px 12px;
+            list-style: none;
+        }
+
+        .demo-nav li a {
+            display: block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .demo-nav li a:hover { background: var(--card); color: var(--accent-dark); }
+
+        .demo-body {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+        }
+
+        .demo-main { padding: 24px; }
+
+        .demo-main h2 { margin: 0 0 12px; }
+
+        .demo-main p { margin: 0 0 10px; color: var(--muted); }
+
+        .demo-aside {
+            padding: 24px;
+            border-left: 1px solid var(--line);
+            background: var(--paper);
+        }
+
+        .demo-aside h3 { margin: 0 0 10px; font-size: 16px; }
+
+        .demo-aside ul { margin: 0; padding-left: 18px; }
+
+        .demo-footer {
+            padding: 16px 24px;
+            color: var(--muted);
+            border-top: 1px solid var(--line);
+            background: var(--mint);
+            font-size: 13px;
+        }
+
+        .home-link {
+            display: block;
+            width: fit-content;
+            margin: 48px 0 64px;
+            padding: 12px 22px;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .home-link:hover { background: var(--accent); color: #fff; }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 0 40px;
+            color: var(--muted);
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+        }
+
+        @media (max-width: 760px) {
+            .page-shell { width: min(100% - 28px, 600px); }
+            .demo-body { grid-template-columns: 1fr; }
+            .demo-aside { border-left: 0; border-top: 1px solid var(--line); }
+            .topbar, .footer { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="signature">WAN CHAORAN / CLASS PRACTICE 04</div>
+            <a class="back" href="index.html">← 返回课堂目录</a>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="page-title">
+                <p class="eyebrow">CLASS PRACTICE / 004</p>
+                <h1 id="page-title">网页整体布局</h1>
+                <p>使用 header、nav、main、aside 与 footer 组织网页整体结构。</p>
+            </section>
+
+            <p class="demo-label">HEADER / NAV / MAIN / ASIDE / FOOTER 实例</p>
+            <div class="layout-demo">
+                <header class="demo-header">header · 页面头部</header>
+                <nav class="demo-nav">
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">课程</a></li>
+                        <li><a href="#">作品</a></li>
+                        <li><a href="#">关于</a></li>
+                    </ul>
+                </nav>
+                <div class="demo-body">
+                    <main class="demo-main">
+                        <h2>main · 主体内容</h2>
+                        <p>这是页面的主要内容区域，放置文章、图片与表单等核心信息。</p>
+                        <p>布局使用语义化标签，让结构的含义一目了然。</p>
+                    </main>
+                    <aside class="demo-aside">
+                        <h3>aside · 侧边栏</h3>
+                        <ul>
+                            <li>相关链接</li>
+                            <li>广告区域</li>
+                            <li>小工具</li>
+                        </ul>
+                    </aside>
+                </div>
+                <footer class="demo-footer">footer · 页面底部</footer>
+            </div>
+
+            <a class="home-link" href="index.html">返回课堂目录 →</a>
+        </main>
+
+        <footer class="footer">
+            <span>高级网页设计 · 网页整体布局</span>
+            <span>Made with HTML &amp; CSS</span>
+        </footer>
+    </div>
+</body>
+
+</html>
