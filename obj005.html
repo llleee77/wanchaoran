@@ -8,14 +8,14 @@
     <title>JavaScript 对象｜高级网页设计</title>
     <style>
         :root {
-            --ink: #17252b;
-            --paper: #f3f0e8;
-            --cream: #fffdf8;
-            --yellow: #f5c84b;
-            --blue: #235b68;
-            --muted: #738083;
-            --line: #d9d4c8;
-            --red: #b0483b;
+            --ink: #14202e;
+            --paper: #eef1f4;
+            --cream: #ffffff;
+            --blue: #2563eb;
+            --blue-soft: #dbe7ff;
+            --blue-dark: #1e40af;
+            --muted: #64748b;
+            --line: #dfe5ea;
         }
 
         * { box-sizing: border-box; }
@@ -23,7 +23,9 @@
         body {
             margin: 0;
             color: var(--ink);
-            background: var(--paper);
+            background:
+                radial-gradient(1200px 500px at 85% -10%, #e2eafc 0%, transparent 60%),
+                var(--paper);
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
             line-height: 1.8;
         }
@@ -32,14 +34,13 @@
 
         .shell { width: min(960px, calc(100% - 48px)); margin: 0 auto; }
 
-        .subpage-header { background: var(--ink); color: var(--cream); padding: 22px 0; }
+        .subpage-header { background: var(--blue); color: #fff; padding: 22px 0; }
 
         .header-inner { display: flex; justify-content: space-between; align-items: center; }
 
         .brand { display: flex; gap: 10px; align-items: center; font-weight: bold; text-decoration: none; }
-        .brand:hover, .back-link:hover { color: var(--yellow); text-decoration: none; }
-        .brand-mark { background: var(--yellow); color: var(--ink); padding: 7px 10px; font: bold 18px Georgia, serif; }
-        .back-link { color: #cad4d1; font-size: 13px; text-decoration: none; }
+        .brand:hover, .back-link:hover { color: #dbeafe; text-decoration: none; }
+        .back-link { color: #dbeafe; font-size: 13px; text-decoration: none; }
 
         .subpage-main { padding: 70px 0 90px; }
 
@@ -91,8 +92,8 @@
             height: 40px;
             display: grid;
             place-items: center;
-            background: var(--yellow);
-            color: var(--ink);
+            background: var(--blue-soft);
+            color: var(--blue-dark);
             border-radius: 10px;
             font: 700 18px Georgia, serif;
         }
@@ -106,8 +107,8 @@
 
         code {
             font-family: Consolas, "Courier New", monospace;
-            background: #eef1ec;
-            color: var(--red);
+            background: #eef2f7;
+            color: var(--blue-dark);
             padding: 2px 6px;
             border-radius: 3px;
             font-size: .94em;
@@ -132,8 +133,8 @@
         .cm { color: #7f8f8b; }
 
         .out {
-            background: #f7f4ec;
-            color: var(--ink);
+            background: #f0f6ff;
+            color: #1f3350;
             border: 1px dashed var(--blue);
             border-left: 4px solid var(--blue);
         }
@@ -153,7 +154,7 @@
 <body>
     <header class="subpage-header">
         <div class="shell header-inner">
-            <a class="brand" href="index.html"><span class="brand-mark">W</span><span>高级网页设计</span></a>
+            <a class="brand" href="index.html"><span>高级网页设计</span></a>
             <a class="back-link" href="index.html">返回课堂目录 <span>↗</span></a>
         </div>
     </header>
