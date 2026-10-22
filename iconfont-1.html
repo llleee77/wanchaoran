@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Awesome — 字形的样本</title>
+<link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+<style>
+  :root{
+    --wcr_paper:#EDEBE3;
+    --wcr_mist:#F6F4EC;
+    --wcr_ink:#242B33;
+    --wcr_slate:#5A6570;
+    --wcr_line:#D3CFC3;
+    --wcr_ultra:#2B4A6F;
+    --wcr_vermill:#A03B30;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+    background:var(--wcr_paper);
+    color:var(--wcr_ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{vertical-align:middle;}
+
+  /* ---------- 视口 ---------- */
+  .wcr_viewport{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- 英雄区：字形样张 ---------- */
+  .wcr_hero{
+    padding:88px 0 64px;
+  }
+  .wcr_hero_glyphs{
+    display:flex;
+    align-items:baseline;
+    gap:20px;
+    margin-bottom:44px;
+    font-size:64px;
+    color:var(--wcr_ultra);
+  }
+  .wcr_hero_glyphs i:nth-child(2){
+    color:var(--wcr_vermill);
+    transform:translateY(10px);
+  }
+  .wcr_hero_glyphs i:nth-child(3){
+    color:var(--wcr_slate);
+  }
+  .wcr_hero h1{
+    font-family:"Songti SC","STSong",SimSun,Georgia,"Times New Roman",serif;
+    font-size:clamp(38px,6vw,60px);
+    font-weight:600;
+    line-height:1.25;
+    letter-spacing:.01em;
+  }
+  .wcr_lead{
+    max-width:56ch;
+    margin-top:22px;
+    font-size:16px;
+    color:var(--wcr_slate);
+  }
+  .wcr_lead code{
+    font-family:inherit;
+    font-size:.92em;
+    color:var(--wcr_ink);
+    background:rgba(43,74,111,.09);
+    padding:.1em .35em;
+    border-radius:3px;
+  }
+  .wcr_link{
+    display:inline-block;
+    margin-top:28px;
+    font-size:15px;
+    color:var(--wcr_ultra);
+    text-decoration:none;
+    border-bottom:1px solid var(--wcr_ultra);
+    padding-bottom:3px;
+    transition:color .25s ease, border-color .25s ease;
+  }
+  .wcr_link:hover{
+    color:var(--wcr_vermill);
+    border-color:var(--wcr_vermill);
+  }
+
+  /* ---------- 符号组 ---------- */
+  .wcr_group{
+    border-top:1px solid var(--wcr_line);
+    padding-top:40px;
+    margin-top:52px;
+  }
+  .wcr_group h2{
+    font-family:"Songti SC","STSong",SimSun,Georgia,"Times New Roman",serif;
+    font-size:22px;
+    font-weight:600;
+  }
+  .wcr_group_desc{
+    margin-top:6px;
+    font-size:14px;
+    color:var(--wcr_slate);
+  }
+  .wcr_grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+    gap:14px;
+    margin-top:26px;
+  }
+
+  /* ---------- 印章盒 ---------- */
+  .wcr_cell{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    padding:26px 6px 16px;
+    background:var(--wcr_mist);
+    border:1px solid var(--wcr_line);
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .wcr_cell:hover{
+    border-color:var(--wcr_vermill);
+    transform:translateY(-2px);
+  }
+  .wcr_cell i{
+    font-size:30px;
+    color:var(--wcr_ultra);
+    transition:color .25s ease;
+  }
+  .wcr_cell:hover i{color:var(--wcr_vermill);}
+  .wcr_cell_name{
+    font-size:13px;
+    color:var(--wcr_slate);
+    line-height:1.4;
+    text-align:center;
+    word-break:break-all;
+    transition:color .25s ease;
+  }
+  .wcr_cell:hover .wcr_cell_name{color:var(--wcr_ink);}
+
+  /* ---------- 原理 ---------- */
+  .wcr_foot{
+    margin:72px 0 20px;
+    padding:32px 0 0;
+    border-top:1px solid var(--wcr_line);
+    font-size:15px;
+    color:var(--wcr_slate);
+    line-height:1.9;
+  }
+  .wcr_foot b, .wcr_foot code{
+    font-family:inherit;
+    font-weight:600;
+    color:var(--wcr_ink);
+  }
+
+  /* ---------- 键盘焦点 ---------- */
+  a:focus-visible, i:focus-visible{
+    outline:2px solid var(--wcr_vermill);
+    outline-offset:3px;
+  }
+
+  /* ---------- 入场（仅英雄区一次编排） ---------- */
+  .wcr_hero > *{
+    opacity:0;
+    animation:wcr_rise .8s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .wcr_hero > *:nth-child(1){animation-delay:.05s;}
+  .wcr_hero > *:nth-child(2){animation-delay:.15s;}
+  .wcr_hero > *:nth-child(3){animation-delay:.25s;}
+  .wcr_hero > *:nth-child(4){animation-delay:.35s;}
+  @keyframes wcr_rise{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:none;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+
+  /* ---------- 窄屏 ---------- */
+  @media (max-width:720px){
+    .wcr_hero{padding:56px 0 36px;}
+    .wcr_hero_glyphs{font-size:42px;gap:14px;margin-bottom:30px;}
+    .wcr_grid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="wcr_viewport">
+  <div class="wcr_hero">
+    <div class="wcr_hero_glyphs" aria-hidden="true">
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-music"></i>
+      <i class="fa-solid fa-camera"></i>
+    </div>
+    <h1>Font Awesome<br>字形的样本</h1>
+    <p class="wcr_lead">这些符号以字体形式存在——每一个都是写在字体文件里的字符。页面引入本地的 Font Awesome 字体，用一个
+      <code>&lt;i class="fa-solid fa-star"&gt;&lt;/i&gt;</code> 就能把它召唤出来。</p>
+    <a class="wcr_link" href="index.html">返回首页 index.html</a>
+  </div>
+</header>
+
+<main class="wcr_viewport">
+
+  <section class="wcr_group">
+    <h2>Solid 实心</h2>
+    <p class="wcr_group_desc">描满墨色的符号，前缀 fa-solid</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i class="fa-solid fa-house"></i><span class="wcr_cell_name">house</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-user"></i><span class="wcr_cell_name">user</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-gear"></i><span class="wcr_cell_name">gear</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-heart"></i><span class="wcr_cell_name">heart</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-star"></i><span class="wcr_cell_name">star</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-bell"></i><span class="wcr_cell_name">bell</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-envelope"></i><span class="wcr_cell_name">envelope</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-camera"></i><span class="wcr_cell_name">camera</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-download"></i><span class="wcr_cell_name">download</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-magnifying-glass"></i><span class="wcr_cell_name">magnifying-glass</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-cart-shopping"></i><span class="wcr_cell_name">cart-shopping</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-globe"></i><span class="wcr_cell_name">globe</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-rocket"></i><span class="wcr_cell_name">rocket</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-shield-halved"></i><span class="wcr_cell_name">shield-halved</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-music"></i><span class="wcr_cell_name">music</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-calendar"></i><span class="wcr_cell_name">calendar</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-cloud"></i><span class="wcr_cell_name">cloud</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-bolt"></i><span class="wcr_cell_name">bolt</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-wifi"></i><span class="wcr_cell_name">wifi</span></div>
+      <div class="wcr_cell"><i class="fa-solid fa-lock"></i><span class="wcr_cell_name">lock</span></div>
+    </div>
+  </section>
+
+  <section class="wcr_group">
+    <h2>Regular 线性</h2>
+    <p class="wcr_group_desc">只描轮廓的符号，前缀 fa-regular</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i class="fa-regular fa-heart"></i><span class="wcr_cell_name">heart</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-star"></i><span class="wcr_cell_name">star</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-bell"></i><span class="wcr_cell_name">bell</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-envelope"></i><span class="wcr_cell_name">envelope</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-user"></i><span class="wcr_cell_name">user</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-circle-check"></i><span class="wcr_cell_name">circle-check</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-clock"></i><span class="wcr_cell_name">clock</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-comment"></i><span class="wcr_cell_name">comment</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-bookmark"></i><span class="wcr_cell_name">bookmark</span></div>
+      <div class="wcr_cell"><i class="fa-regular fa-calendar"></i><span class="wcr_cell_name">calendar</span></div>
+    </div>
+  </section>
+
+  <section class="wcr_group">
+    <h2>Brands 品牌</h2>
+    <p class="wcr_group_desc">各家公司的徽记，前缀 fa-brands</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i class="fa-brands fa-github"></i><span class="wcr_cell_name">github</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-weixin"></i><span class="wcr_cell_name">weixin</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-qq"></i><span class="wcr_cell_name">qq</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-weibo"></i><span class="wcr_cell_name">weibo</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-bilibili"></i><span class="wcr_cell_name">bilibili</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-apple"></i><span class="wcr_cell_name">apple</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-windows"></i><span class="wcr_cell_name">windows</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-android"></i><span class="wcr_cell_name">android</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-chrome"></i><span class="wcr_cell_name">chrome</span></div>
+      <div class="wcr_cell"><i class="fa-brands fa-html5"></i><span class="wcr_cell_name">html5</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wcr_viewport">
+  <div class="wcr_foot">
+    图标本质是文字。<b>cdn/fontawesome/css/all.min.css</b> 通过 <code>@font-face</code> 加载
+    <b>cdn/fontawesome/webfonts/</b> 下的 woff2 与 ttf 字体文件，每个 <code>fa-*</code> 类用
+    <code>::before</code> 伪元素写入对应的字体字符。因此可以用 <code>font-size</code> 改变大小、
+    用 <code>color</code> 染色——像对待文字一样对待它们。
+  </div>
+</footer>
+
+</body>
+</html>
