@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="高级网页设计课堂实践 · JavaScript 对象">
+    <title>JavaScript 对象｜高级网页设计</title>
+    <style>
+        :root {
+            --ink: #14202e;
+            --paper: #eef1f4;
+            --cream: #ffffff;
+            --blue: #2563eb;
+            --blue-soft: #dbe7ff;
+            --blue-dark: #1e40af;
+            --muted: #64748b;
+            --line: #dfe5ea;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 500px at 85% -10%, #e2eafc 0%, transparent 60%),
+                var(--paper);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.8;
+        }
+
+        a { color: inherit; }
+
+        .shell { width: min(960px, calc(100% - 48px)); margin: 0 auto; }
+
+        .subpage-header { background: var(--blue); color: #fff; padding: 22px 0; }
+
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+
+        .brand { display: flex; gap: 10px; align-items: center; font-weight: bold; text-decoration: none; }
+        .brand:hover, .back-link:hover { color: #dbeafe; text-decoration: none; }
+        .back-link { color: #dbeafe; font-size: 13px; text-decoration: none; }
+
+        .subpage-main { padding: 70px 0 90px; }
+
+        .eyebrow {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: clamp(34px, 6vw, 54px);
+        }
+
+        .lead { color: var(--muted); max-width: 620px; margin-bottom: 20px; }
+
+        .toc { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 46px; }
+
+        .toc a {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--blue);
+            border-radius: 999px;
+            padding: 4px 14px;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .toc a:hover { background: var(--blue); color: #fff; }
+
+        section { margin-bottom: 52px; scroll-margin-top: 20px; }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            margin: 0 0 16px;
+        }
+
+        h2 .num {
+            flex: none;
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            background: var(--blue-soft);
+            color: var(--blue-dark);
+            border-radius: 10px;
+            font: 700 18px Georgia, serif;
+        }
+
+        h3 { font-size: 16px; color: var(--blue); margin: 22px 0 10px; }
+
+        p { margin: 0 0 12px; }
+
+        ul { padding-left: 22px; margin: 0 0 14px; }
+        li { margin: 6px 0; }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            background: #eef2f7;
+            color: var(--blue-dark);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: .94em;
+        }
+
+        .card { background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 24px; }
+
+        pre {
+            margin: 12px 0;
+            padding: 18px 20px;
+            background: var(--ink);
+            color: #e8f0ee;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13.5px;
+            line-height: 1.7;
+        }
+
+        pre code { background: none; color: inherit; padding: 0; }
+
+        .cm { color: #7f8f8b; }
+
+        .out {
+            background: #f0f6ff;
+            color: #1f3350;
+            border: 1px dashed var(--blue);
+            border-left: 4px solid var(--blue);
+        }
+
+        .out::before { content: "▶ 运行结果"; display: block; color: var(--blue); font-weight: 700; font-size: 12px; letter-spacing: .1em; margin-bottom: 8px; }
+
+        footer { background: var(--ink); color: #aebcba; padding: 22px 0; }
+        .footer-inner { display: flex; justify-content: space-between; font: 12px Consolas, monospace; }
+
+        @media (max-width: 640px) {
+            .shell { width: min(100% - 28px, 560px); }
+            .footer-inner { display: block; line-height: 2; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="subpage-header">
+        <div class="shell header-inner">
+            <a class="brand" href="index.html"><span>高级网页设计</span></a>
+            <a class="back-link" href="index.html">返回课堂目录 <span>↗</span></a>
+        </div>
+    </header>
+
+    <main class="shell subpage-main">
+        <p class="eyebrow">Class Practice · 005</p>
+        <h1>JavaScript 对象</h1>
+        <p class="lead">对象是 JavaScript 中最常用的数据结构，用来把一组相关的<strong>属性（数据）</strong>和<strong>方法（函数）</strong>打包在一起。本页练习对象的属性与方法、删除与判断、<code>for...in</code> 遍历，以及引用赋值后的共享变化。</p>
+
+        <nav class="toc" aria-label="本节导航">
+            <a href="#s1">① 属性与方法</a>
+            <a href="#s2">② 删除与判断</a>
+            <a href="#s3">③ for...in 遍历</a>
+            <a href="#s4">④ 引用赋值</a>
+        </nav>
+
+        <!-- ============ 一 ============ -->
+        <section id="s1" class="card">
+            <h2><span class="num">1</span>对象的属性与方法</h2>
+            <p>使用<strong>对象字面量</strong>创建对象；用<strong>点语法</strong>或<strong>中括号语法</strong>访问属性；对象里的函数称为<strong>方法</strong>，方法中的 <code>this</code> 指向该对象本身。</p>
+            <pre><code><span class="cm">// 创建对象</span>
+var student = {
+    name: "小王",
+    age: 20,
+    hobbies: ["编程", "篮球"],
+    sayHi: function () {
+        return "大家好，我是 " + this.name;
+    }
+};
+
+console.log(student.name);        <span class="cm">// 点语法</span>
+console.log(student["age"]);      <span class="cm">// 中括号语法</span>
+console.log(student.sayHi());     <span class="cm">// 调用方法</span></code></pre>
+            <pre class="out" id="out1"></pre>
+        </section>
+
+        <!-- ============ 二 ============ -->
+        <section id="s2" class="card">
+            <h2><span class="num">2</span>属性的删除与判断</h2>
+            <p><code>delete</code> 删除属性；用 <code>in</code> 运算符或 <code>hasOwnProperty()</code> 判断属性是否存在。注意 <code>in</code> 会沿原型链查找，而 <code>hasOwnProperty</code> 只看对象自身。</p>
+            <pre><code>var book = { title: "网页设计", price: 59 };
+
+delete book.price;
+console.log(book.price);                 <span class="cm">// undefined</span>
+
+console.log("title" in book);            <span class="cm">// true</span>
+console.log("price" in book);            <span class="cm">// false</span>
+console.log(book.hasOwnProperty("title")); <span class="cm">// true</span></code></pre>
+            <pre class="out" id="out2"></pre>
+        </section>
+
+        <!-- ============ 三 ============ -->
+        <section id="s3" class="card">
+            <h2><span class="num">3</span>for...in 遍历对象</h2>
+            <p><code>for...in</code> 循环会依次取出对象的<strong>键名（key）</strong>，再通过 <code>对象[key]</code> 拿到对应的值。</p>
+            <pre><code>var film = { name: "千与千寻", year: 2001, director: "宫崎骏" };
+
+for (var key in film) {
+    console.log(key + "：" + film[key]);
+}</code></pre>
+            <pre class="out" id="out3"></pre>
+        </section>
+
+        <!-- ============ 四 ============ -->
+        <section id="s4" class="card">
+            <h2><span class="num">4</span>引用赋值后的共享变化</h2>
+            <p>对象是<strong>引用类型</strong>：<code>var b = a</code> 只是让 <code>b</code> 指向<strong>同一块内存</strong>，并没有复制。因此通过任意一个变量修改对象，另一个变量看到的也会同步变化。</p>
+            <pre><code>var a = { score: 60 };
+var b = a;              <span class="cm">// b 和 a 指向同一个对象</span>
+
+b.score = 100;
+console.log(a.score);   <span class="cm">// 100 —— a 也跟着变了</span>
+
+<span class="cm">// 想要互不影响，需要“深拷贝”出一个新对象：</span>
+var c = { ...a };       <span class="cm">// 展开运算符复制</span>
+c.score = 0;
+console.log(a.score);   <span class="cm">// 仍然是 100</span></code></pre>
+            <pre class="out" id="out4"></pre>
+        </section>
+    </main>
+
+    <footer>
+        <div class="shell footer-inner">
+            <p>CLASS PRACTICE · JavaScript 对象</p>
+            <p>Made with HTML &amp; CSS &amp; JavaScript</p>
+        </div>
+    </footer>
+
+    <script>
+        function print(id, lines) {
+            document.getElementById(id).textContent = lines.join("\n");
+        }
+
+        (function () {
+            var student = {
+                name: "小王",
+                age: 20,
+                hobbies: ["编程", "篮球"],
+                sayHi: function () {
+                    return "大家好，我是 " + this.name;
+                }
+            };
+            print("out1", [
+                "student.name  -> " + student.name,
+                "student[\"age\"] -> " + student["age"],
+                "student.sayHi() -> " + student.sayHi()
+            ]);
+        })();
+
+        (function () {
+            var book = { title: "网页设计", price: 59 };
+            var before = "删除前 price = " + book.price;
+            delete book.price;
+            print("out2", [
+                before,
+                "删除后 price = " + book.price,
+                "\"title\" in book -> " + ("title" in book),
+                "\"price\" in book -> " + ("price" in book),
+                "book.hasOwnProperty(\"title\") -> " + book.hasOwnProperty("title")
+            ]);
+        })();
+
+        (function () {
+            var film = { name: "千与千寻", year: 2001, director: "宫崎骏" };
+            var lines = [];
+            for (var key in film) {
+                lines.push(key + "：" + film[key]);
+            }
+            print("out3", lines);
+        })();
+
+        (function () {
+            var a = { score: 60 };
+            var b = a;
+            b.score = 100;
+            var shared = a.score;
+            var c = Object.assign({}, a);
+            c.score = 0;
+            print("out4", [
+                "b.score 改成 100 后，a.score = " + shared + "  ← 同一引用",
+                "复制出 c 并把 c.score 改成 0 后，a.score = " + a.score + "  ← 互不影响"
+            ]);
+        })();
+    </script>
+</body>
+
+</html>

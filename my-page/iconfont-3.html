@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>底部导航 · 字形徽章</title>
+<link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+<style>
+  :root{
+    --wcr_paper:#EDEBE3;
+    --wcr_mist:#F6F4EC;
+    --wcr_ink:#242B33;
+    --wcr_slate:#5A6570;
+    --wcr_line:#D3CFC3;
+    --wcr_ultra:#2B4A6F;
+    --wcr_vermill:#A03B30;
+    --wcr_badge:#D64545;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+    background:var(--wcr_paper);
+    color:var(--wcr_ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{vertical-align:middle;}
+
+  /* ---------- 顶部 ---------- */
+  .wcr_topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--wcr_paper);
+    border-bottom:1px solid var(--wcr_line);
+    padding:18px 20px;
+  }
+  .wcr_topbar_inner{
+    max-width:420px;
+    margin:0 auto;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .wcr_topbar h1{
+    font-family:"Songti SC","STSong",SimSun,Georgia,"Times New Roman",serif;
+    font-size:19px;
+    font-weight:600;
+  }
+  .wcr_back{
+    font-size:13px;
+    color:var(--wcr_ultra);
+    text-decoration:none;
+    border-bottom:1px solid var(--wcr_ultra);
+    padding-bottom:1px;
+    white-space:nowrap;
+  }
+  .wcr_back:hover{color:var(--wcr_vermill);border-color:var(--wcr_vermill);}
+
+  /* ---------- 页面内容（画布） ---------- */
+  .wcr_canvas{
+    max-width:420px;
+    margin:0 auto;
+    padding:28px 20px 140px;
+  }
+  .wcr_canvas h2{
+    font-family:"Songti SC","STSong",SimSun,Georgia,"Times New Roman",serif;
+    font-size:22px;
+    font-weight:600;
+  }
+  .wcr_canvas .wcr_lead{
+    margin-top:10px;
+    font-size:14px;
+    color:var(--wcr_slate);
+    max-width:40ch;
+  }
+  .wcr_sample{
+    margin-top:26px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .wcr_sample .wcr_row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--wcr_mist);
+    border:1px solid var(--wcr_line);
+    padding:14px 16px;
+  }
+  .wcr_sample .wcr_row i{
+    font-size:18px;
+    color:var(--wcr_ultra);
+    width:22px;
+    text-align:center;
+  }
+  .wcr_sample .wcr_row span{
+    font-size:13px;
+    color:var(--wcr_slate);
+  }
+
+  /* ---------- 底部固定导航 ---------- */
+  .wcr_nav{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:420px;
+    z-index:10;
+    background:rgba(246,244,236,.92);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--wcr_line);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wcr_nav_list{
+    display:flex;
+    list-style:none;
+    height:62px;
+  }
+  .wcr_nav_item{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    border:none;
+    background:none;
+    font-family:inherit;
+    cursor:pointer;
+    color:var(--wcr_slate);
+    transition:color .2s ease;
+  }
+  .wcr_nav_item[aria-current="true"]{
+    color:var(--wcr_ultra);
+  }
+  .wcr_icon_wrap{
+    position:relative;
+    line-height:1;
+  }
+  .wcr_nav_item i{
+    font-size:22px;
+    transition:transform .2s ease;
+  }
+  .wcr_nav_item[aria-current="true"] i{
+    transform:translateY(-1px);
+  }
+  .wcr_nav_label{
+    font-size:11px;
+    letter-spacing:.02em;
+  }
+
+  /* ---------- 数字徽章 ---------- */
+  .wcr_badge_num{
+    position:absolute;
+    top:-7px;
+    right:-12px;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:999px;
+    background:var(--wcr_vermill);
+    color:#fff;
+    font-size:10px;
+    font-weight:600;
+    line-height:16px;
+    text-align:center;
+    font-family:inherit;
+  }
+
+  /* ---------- 红点 ---------- */
+  .wcr_dot{
+    position:absolute;
+    top:-5px;
+    right:-6px;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--wcr_badge);
+    box-shadow:0 0 0 2px var(--wcr_mist);
+  }
+
+  /* ---------- 键盘焦点 ---------- */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--wcr_vermill);
+    outline-offset:3px;
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="wcr_topbar">
+  <div class="wcr_topbar_inner">
+    <h1>底部导航 · 字形</h1>
+    <a class="wcr_back" href="index.html">返回首页 index.html</a>
+  </div>
+</header>
+
+<main class="wcr_canvas">
+  <h2>固定底栏，徽章就位</h2>
+  <p class="wcr_lead">四个入口固定在视口底部、随屏幕自适应。消息带数字徽章，购物车显示件数，我的入口以红点提示有未读动态。</p>
+
+  <div class="wcr_sample" aria-hidden="true">
+    <div class="wcr_row"><i class="fa-solid fa-magnifying-glass"></i><span>搜索示例页面</span></div>
+    <div class="wcr_row"><i class="fa-solid fa-list"></i><span>列表项示例</span></div>
+    <div class="wcr_row"><i class="fa-solid fa-circle-info"></i><span>详情提示示例</span></div>
+  </div>
+</main>
+
+<nav class="wcr_nav" aria-label="主导航">
+  <ul class="wcr_nav_list">
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button" aria-current="true">
+        <span class="wcr_icon_wrap"><i class="fa-solid fa-house"></i></span>
+        <span class="wcr_nav_label">首页</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i class="fa-solid fa-message"></i>
+          <span class="wcr_badge_num">3</span>
+        </span>
+        <span class="wcr_nav_label">消息</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="wcr_badge_num">9+</span>
+        </span>
+        <span class="wcr_nav_label">购物车</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i class="fa-solid fa-user"></i>
+          <span class="wcr_dot"></span>
+        </span>
+        <span class="wcr_nav_label">我的</span>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  // 点击切换当前导航项
+  var wcr_navItems = document.querySelectorAll('.wcr_nav_item');
+  wcr_navItems.forEach(function (wcr_item) {
+    wcr_item.addEventListener('click', function () {
+      wcr_navItems.forEach(function (wcr_other) {
+        wcr_other.setAttribute('aria-current', 'false');
+      });
+      wcr_item.setAttribute('aria-current', 'true');
+    });
+  });
+</script>
+
+</body>
+</html>

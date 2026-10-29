@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="万超然的高级网页设计课堂实践 · 自我介绍">
+    <title>自我介绍｜万超然的课堂实践</title>
+    <style>
+        :root { --ink: #1d2833; --muted: #667481; --paper: #f6f4ee; --card: #fffdf8; --accent: #e26d4f; --accent-dark: #a9422f; --mint: #dcefe8; --line: #d9ddd8; --yellow: #f5d77a; }
+        * { box-sizing: border-box; }
+        body { margin: 0; color: var(--ink); background: var(--paper); font-family: "Microsoft YaHei", "PingFang SC", sans-serif; line-height: 1.7; }
+        img { max-width: 100%; display: block; }
+        .page { width: min(900px, calc(100% - 40px)); margin: 0 auto; padding: 28px 0 60px; }
+        .back { color: var(--accent); font-weight: 700; text-decoration: none; }
+        .intro { margin-top: 70px; padding: clamp(28px, 7vw, 72px); background: var(--mint); border: 1px solid #c8ddd5; position: relative; overflow: hidden; }
+        .intro::after { content: ""; position: absolute; right: -42px; bottom: -70px; width: 150px; height: 150px; border: 20px solid var(--yellow); border-radius: 50%; opacity: .8; }
+        .eyebrow { color: var(--accent-dark); font-size: 13px; font-weight: 700; letter-spacing: .16em; }
+        h1 { margin: 12px 0 24px; font-family: Georgia, "Songti SC", serif; font-size: clamp(42px, 8vw, 78px); line-height: 1.1; position: relative; z-index: 1; }
+        .intro p { max-width: 600px; color: #41535a; font-size: 18px; position: relative; z-index: 1; margin-bottom: 0; }
+        .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0 44px; }
+        .fact { padding: 22px; background: var(--card); border: 1px solid var(--line); }
+        .fact strong { display: block; margin-bottom: 8px; color: var(--accent); }
+
+        .section-title { margin: 0 0 18px; font-family: Georgia, "Songti SC", serif; font-size: 26px; }
+
+        .about-grid { display: grid; grid-template-columns: 240px 1fr; gap: 30px; align-items: start; }
+        .about-grid img { border: 1px solid var(--line); }
+        .about-block { margin-bottom: 22px; }
+        .about-block h3 { margin: 0 0 8px; font-size: 16px; color: var(--accent-dark); }
+        .about-block ul { margin: 0; padding-left: 20px; }
+
+        .info-table { width: 100%; border-collapse: collapse; }
+        .info-table caption { padding: 6px 0; font-weight: 700; }
+        .info-table th, .info-table td { padding: 8px 12px; border: 1px solid var(--line); text-align: left; }
+        .info-table th { background: var(--mint); }
+
+        .semantic { display: flex; flex-wrap: wrap; gap: 10px; }
+        .semantic span { display: inline-block; padding: 10px 16px; background: var(--card); border: 1px solid var(--line); font-size: 14px; }
+        .semantic span b { color: var(--accent); }
+
+        @media (max-width: 640px) {
+            .page { width: min(100% - 28px, 520px); }
+            .facts { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <a class="back" href="index.html">← 返回课堂目录</a>
+
+        <section class="intro">
+            <div class="eyebrow">ABOUT ME / 002</div>
+            <h1>你好，我是万超然。</h1>
+            <p>这是我的《高级网页设计》课堂实践页面。我正在从 HTML 基础开始，学习如何用结构、样式与内容，完成一个清晰、有温度的网页。</p>
+        </section>
+
+        <section class="facts" aria-label="个人信息">
+            <div class="fact"><strong>正在学习</strong>HTML、CSS 与网页布局</div>
+            <div class="fact"><strong>课堂方向</strong>用原生代码完成网页实践</div>
+            <div class="fact"><strong>下一步</strong>继续添加新的课程模块</div>
+        </section>
+
+        <section aria-labelledby="about-title">
+            <h2 class="section-title" id="about-title">关于我</h2>
+            <div class="about-grid">
+                <img src="./img/1.jpg" alt="万超然的照片">
+                <div>
+                    <div class="about-block">
+                        <h3>我的爱好</h3>
+                        <ul>
+                            <li>打游戏</li>
+                            <li>看电影</li>
+                            <li>看书</li>
+                        </ul>
+                    </div>
+                    <div class="about-block">
+                        <h3>我的学习计划</h3>
+                        <ul>
+                            <li>学好 HTML 标签与语义化结构</li>
+                            <li>掌握 CSS 选择器与页面布局</li>
+                            <li>熟悉 Git 操作并把作品归档</li>
+                        </ul>
+                    </div>
+                    <table class="info-table">
+                        <caption>基本信息</caption>
+                        <tr><th>姓名</th><td>万超然</td></tr>
+                        <tr><th>方向</th><td>前端网页设计</td></tr>
+                        <tr><th>常用工具</th><td>VSCode / Git / 浏览器调试</td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section aria-labelledby="semantic-title" style="margin-top: 46px;">
+            <h2 class="section-title" id="semantic-title">H5 语义化标签</h2>
+            <div class="semantic">
+                <span><b>&lt;header&gt;</b> 页面头部</span>
+                <span><b>&lt;nav&gt;</b> 导航</span>
+                <span><b>&lt;main&gt;</b> 主体内容</span>
+                <span><b>&lt;article&gt;</b> 文章区域</span>
+                <span><b>&lt;aside&gt;</b> 侧边栏</span>
+                <span><b>&lt;footer&gt;</b> 页脚</span>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

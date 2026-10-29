@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #f6f4ee;
+    color: #1d2833;
+    padding: 90px 20px 60px;
+}
+
+.page-back {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 10;
+    padding: 8px 16px;
+    background: #fffdf8;
+    border: 1px solid #d9ddd8;
+    border-radius: 999px;
+    color: #a9422f;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+
+.page-back:hover {
+    background: #e26d4f;
+    border-color: #e26d4f;
+    color: #fff;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+    margin: 10px;
+    grid-column: span 4;
+    font-family: Georgia, "Songti SC", serif;
+}
+
+.hint {
+    grid-column: span 4;
+    margin-bottom: 14px;
+    text-align: center;
+    color: #667481;
+    font-size: 14px;
+}
+
+.box {
+    width: 160px;
+    height: 160px;
+    background: blue;
+    color: white;
+    font-size: 60px;
+    text-align: center;
+    line-height: 160px;
+    transition: all .8s;
+    /* 动画 forwards 是停在动画结束状态 */
+    animation: boxIn 1s ease forwards;
+}
+
+/* class为box的元素，并且他是父元素的第2个孩子 */
+.box:nth-child(2) {
+    background: red;
+    font-size: 120px;
+}
+
+/* hover是伪类，
+当鼠标悬停在box元素上时，执行样式 */
+.box:nth-child(3):hover {
+    border-radius: 50%;
+}
+
+.box:nth-child(4):hover {
+    /* box-shadow:阴影，参数：x轴偏移量，y轴偏移量，
+    模糊半径，阴影颜色 */
+    box-shadow: 10px 10px 10px #f00;
+}
+
+/* nth-of-type(4)是class为box的第四个元素 */
+.box:nth-of-type(4):hover {
+    text-shadow: 10px 10px 10px yellow;
+}
+
+.box:nth-of-type(5):hover {
+    background: linear-gradient(to right, red, green, orange)
+}
+
+.box:nth-of-type(6) {
+    background: radial-gradient(circle, red, green, orange)
+}
+
+.box:nth-of-type(7):hover {
+    /* 旋转 */
+    transform: rotateY(180deg);
+}
+
+.box:nth-of-type(8):hover {
+    /* 平移 */
+    transform: translate(50px, 50px);
+}
+
+.box:nth-of-type(9):hover {
+    /* 倾斜 */
+    transform: skew(45deg, 45deg);
+}
+
+/*  */
+.box:nth-last-child(3):hover {
+    /* 缩放 */
+    transform: scale(0.5);
+}
+
+.box:nth-last-child(2):hover {
+    /* 旋转缩放 */
+    transform: rotate(45deg) scale(0.5);
+}
+
+.box:last-child:hover::before {
+    content: '#';
+    color: orange;
+}
+
+.box:nth-child(even)::first-letter {
+    color: purple;
+}
+
+@keyframes boxIn {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.box:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.box:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.box:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.box:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.box:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
+.box:nth-child(7) {
+    animation-delay: 0.6s;
+}
+
+.box:nth-child(8) {
+    animation-delay: 0.7s;
+}
+
+.box:nth-child(9) {
+    animation-delay: 0.8s;
+}
+
+@media (max-width: 760px) {
+    body { padding: 80px 12px 40px; }
+    .parent { grid-template-columns: repeat(2, 1fr); }
+    h2, .hint { grid-column: span 2; }
+    .box { width: 100%; }
+}

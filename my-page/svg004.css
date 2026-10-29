@@ -1,0 +1,123 @@
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #1d2833;
+    background: #f6f4ee;
+}
+
+.page-back {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 10;
+    padding: 8px 16px;
+    background: #fffdf8;
+    border: 1px solid #d9ddd8;
+    border-radius: 999px;
+    color: #a9422f;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+
+.page-back:hover {
+    background: #e26d4f;
+    border-color: #e26d4f;
+    color: #fff;
+}
+
+svg.sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.page-head {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 90px 24px 160px;
+    text-align: center;
+}
+
+.page-head .eyebrow {
+    margin-bottom: 12px;
+    color: #a9422f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .18em;
+}
+
+.page-head h2 {
+    margin-bottom: 14px;
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 40px;
+}
+
+.page-head p {
+    color: #667481;
+    font-size: 15px;
+}
+
+.preview {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.preview .tab-item {
+    color: #667481;
+}
+
+.preview .tab-item.active {
+    color: #e26d4f;
+}
+
+.tab-nav {
+    display: flex;
+    justify-content: space-around;
+    /* fixed 是固定定位 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 2px solid #eee;
+}
+
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tab-item svg {
+    font-size: 24px;
+    margin: 5px;
+}
+
+.tab-item.active {
+    color: red;
+}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucide — 以线条绘制</title>
+<style>
+  :root{
+    --wcr_paper:#FBFBFA;
+    --wcr_ink:#191919;
+    --wcr_slate:#6E706A;
+    --wcr_line:#E3E2DC;
+    --wcr_signal:#0E7490;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Segoe UI","Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    background:var(--wcr_paper);
+    color:var(--wcr_ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{vertical-align:middle;}
+
+  /* ---------- 视口 ---------- */
+  .wcr_viewport{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- 英雄区：仪器总成 ---------- */
+  .wcr_hero{
+    padding:96px 0 60px;
+  }
+  .wcr_hero_glyphs{
+    display:flex;
+    align-items:flex-end;
+    gap:22px;
+    margin-bottom:40px;
+  }
+  .wcr_hero_glyphs i{color:var(--wcr_signal);}
+  .wcr_hero_glyphs i:nth-child(2){color:var(--wcr_ink);}
+  .wcr_hero_glyphs i:nth-child(3){color:var(--wcr_slate);}
+  .wcr_hero_glyphs svg{
+    width:56px;
+    height:56px;
+    stroke-width:1.25;
+  }
+  .wcr_hero h1{
+    font-size:clamp(40px,6.4vw,64px);
+    font-weight:800;
+    line-height:1.1;
+    letter-spacing:-.015em;
+  }
+  .wcr_hero .wcr_sub{
+    display:block;
+    margin-top:10px;
+    font-size:.5em;
+    font-weight:500;
+    letter-spacing:0;
+    color:var(--wcr_slate);
+  }
+  .wcr_lead{
+    max-width:56ch;
+    margin-top:24px;
+    font-size:16px;
+    color:var(--wcr_slate);
+  }
+  .wcr_lead code{
+    font-size:.92em;
+    color:var(--wcr_ink);
+    background:rgba(14,116,144,.08);
+    padding:.1em .35em;
+    border-radius:3px;
+  }
+  .wcr_link{
+    display:inline-block;
+    margin-top:28px;
+    font-size:15px;
+    color:var(--wcr_signal);
+    text-decoration:none;
+    border-bottom:1px solid var(--wcr_signal);
+    padding-bottom:3px;
+    transition:color .25s ease, border-color .25s ease;
+  }
+  .wcr_link:hover{
+    color:var(--wcr_ink);
+    border-color:var(--wcr_ink);
+  }
+
+  /* ---------- 符号组 ---------- */
+  .wcr_group{
+    border-top:1px solid var(--wcr_line);
+    padding-top:34px;
+    margin-top:48px;
+  }
+  .wcr_group h2{
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .wcr_group_desc{
+    margin-top:6px;
+    font-size:14px;
+    color:var(--wcr_slate);
+  }
+  .wcr_grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+    gap:0 20px;
+    margin-top:14px;
+  }
+
+  /* ---------- 裸图标 + 发丝底线 ---------- */
+  .wcr_cell{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    padding:28px 6px 18px;
+    border-bottom:1px solid var(--wcr_line);
+    margin-bottom:26px;
+    transition:border-color .25s ease;
+  }
+  .wcr_cell:hover{border-color:var(--wcr_signal);}
+  .wcr_cell svg{
+    width:27px;
+    height:27px;
+    color:var(--wcr_ink);
+    transition:color .25s ease, transform .25s ease;
+  }
+  .wcr_cell:hover svg{
+    color:var(--wcr_signal);
+    transform:translateY(-2px);
+  }
+  .wcr_cell_name{
+    font-size:13px;
+    color:var(--wcr_slate);
+    line-height:1.4;
+    text-align:center;
+    word-break:break-all;
+    transition:color .25s ease;
+  }
+  .wcr_cell:hover .wcr_cell_name{color:var(--wcr_ink);}
+
+  /* ---------- 原理 ---------- */
+  .wcr_foot{
+    margin:64px 0 20px;
+    padding:32px 0 0;
+    border-top:1px solid var(--wcr_line);
+    font-size:15px;
+    color:var(--wcr_slate);
+    line-height:1.9;
+  }
+  .wcr_foot b, .wcr_foot code{
+    font-weight:600;
+    color:var(--wcr_ink);
+  }
+
+  /* ---------- 键盘焦点 ---------- */
+  a:focus-visible, i:focus-visible{
+    outline:2px solid var(--wcr_signal);
+    outline-offset:3px;
+  }
+
+  /* ---------- 入场（仅英雄区一次编排） ---------- */
+  .wcr_hero > *{
+    opacity:0;
+    animation:wcr_rise .8s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .wcr_hero > *:nth-child(1){animation-delay:.05s;}
+  .wcr_hero > *:nth-child(2){animation-delay:.15s;}
+  .wcr_hero > *:nth-child(4){animation-delay:.25s;}
+  .wcr_hero > *:nth-child(5){animation-delay:.35s;}
+  @keyframes wcr_rise{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:none;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+
+  /* ---------- 窄屏 ---------- */
+  @media (max-width:720px){
+    .wcr_hero{padding:60px 0 36px;}
+    .wcr_hero_glyphs svg{width:40px;height:40px;gap:16px;}
+    .wcr_grid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));}
+  }
+</style>
+</head>
+<body>
+
+<header class="wcr_viewport">
+  <div class="wcr_hero">
+    <div class="wcr_hero_glyphs" aria-hidden="true">
+      <i data-lucide="star"></i>
+      <i data-lucide="heart"></i>
+      <i data-lucide="camera"></i>
+    </div>
+    <h1>Lucide<span class="wcr_sub">以线条绘制的符号</span></h1>
+    <p class="wcr_lead">这里的每个符号都是一段矢量路径。脚本扫描带 <code>data-lucide</code> 占位符的元素，
+      在运行时把它替换成真正的内联 svg，于是线条的粗细与色彩都由你掌控。</p>
+    <a class="wcr_link" href="index.html">返回首页 index.html</a>
+  </div>
+</header>
+
+<main class="wcr_viewport">
+
+  <section class="wcr_group">
+    <h2>常见</h2>
+    <p class="wcr_group_desc">界面里最常出现的那一批</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i data-lucide="home"></i><span class="wcr_cell_name">home</span></div>
+      <div class="wcr_cell"><i data-lucide="user"></i><span class="wcr_cell_name">user</span></div>
+      <div class="wcr_cell"><i data-lucide="settings"></i><span class="wcr_cell_name">settings</span></div>
+      <div class="wcr_cell"><i data-lucide="heart"></i><span class="wcr_cell_name">heart</span></div>
+      <div class="wcr_cell"><i data-lucide="star"></i><span class="wcr_cell_name">star</span></div>
+      <div class="wcr_cell"><i data-lucide="bell"></i><span class="wcr_cell_name">bell</span></div>
+      <div class="wcr_cell"><i data-lucide="mail"></i><span class="wcr_cell_name">mail</span></div>
+      <div class="wcr_cell"><i data-lucide="camera"></i><span class="wcr_cell_name">camera</span></div>
+      <div class="wcr_cell"><i data-lucide="download"></i><span class="wcr_cell_name">download</span></div>
+      <div class="wcr_cell"><i data-lucide="search"></i><span class="wcr_cell_name">search</span></div>
+      <div class="wcr_cell"><i data-lucide="shopping-cart"></i><span class="wcr_cell_name">shopping-cart</span></div>
+      <div class="wcr_cell"><i data-lucide="globe"></i><span class="wcr_cell_name">globe</span></div>
+      <div class="wcr_cell"><i data-lucide="rocket"></i><span class="wcr_cell_name">rocket</span></div>
+      <div class="wcr_cell"><i data-lucide="shield"></i><span class="wcr_cell_name">shield</span></div>
+      <div class="wcr_cell"><i data-lucide="music"></i><span class="wcr_cell_name">music</span></div>
+      <div class="wcr_cell"><i data-lucide="calendar"></i><span class="wcr_cell_name">calendar</span></div>
+      <div class="wcr_cell"><i data-lucide="cloud"></i><span class="wcr_cell_name">cloud</span></div>
+      <div class="wcr_cell"><i data-lucide="zap"></i><span class="wcr_cell_name">zap</span></div>
+      <div class="wcr_cell"><i data-lucide="wifi"></i><span class="wcr_cell_name">wifi</span></div>
+      <div class="wcr_cell"><i data-lucide="lock"></i><span class="wcr_cell_name">lock</span></div>
+    </div>
+  </section>
+
+  <section class="wcr_group">
+    <h2>操作与状态</h2>
+    <p class="wcr_group_desc">指示发生了什么，以及下一步可以做什么</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i data-lucide="check"></i><span class="wcr_cell_name">check</span></div>
+      <div class="wcr_cell"><i data-lucide="x"></i><span class="wcr_cell_name">x</span></div>
+      <div class="wcr_cell"><i data-lucide="plus"></i><span class="wcr_cell_name">plus</span></div>
+      <div class="wcr_cell"><i data-lucide="arrow-right"></i><span class="wcr_cell_name">arrow-right</span></div>
+      <div class="wcr_cell"><i data-lucide="trash-2"></i><span class="wcr_cell_name">trash-2</span></div>
+      <div class="wcr_cell"><i data-lucide="pencil"></i><span class="wcr_cell_name">pencil</span></div>
+      <div class="wcr_cell"><i data-lucide="save"></i><span class="wcr_cell_name">save</span></div>
+      <div class="wcr_cell"><i data-lucide="eye"></i><span class="wcr_cell_name">eye</span></div>
+      <div class="wcr_cell"><i data-lucide="thumbs-up"></i><span class="wcr_cell_name">thumbs-up</span></div>
+      <div class="wcr_cell"><i data-lucide="message-circle"></i><span class="wcr_cell_name">message-circle</span></div>
+    </div>
+  </section>
+
+  <section class="wcr_group">
+    <h2>文件与媒体</h2>
+    <p class="wcr_group_desc">与内容打交道的符号</p>
+    <div class="wcr_grid">
+      <div class="wcr_cell"><i data-lucide="folder"></i><span class="wcr_cell_name">folder</span></div>
+      <div class="wcr_cell"><i data-lucide="file"></i><span class="wcr_cell_name">file</span></div>
+      <div class="wcr_cell"><i data-lucide="image"></i><span class="wcr_cell_name">image</span></div>
+      <div class="wcr_cell"><i data-lucide="video"></i><span class="wcr_cell_name">video</span></div>
+      <div class="wcr_cell"><i data-lucide="map-pin"></i><span class="wcr_cell_name">map-pin</span></div>
+      <div class="wcr_cell"><i data-lucide="phone"></i><span class="wcr_cell_name">phone</span></div>
+      <div class="wcr_cell"><i data-lucide="sun"></i><span class="wcr_cell_name">sun</span></div>
+      <div class="wcr_cell"><i data-lucide="moon"></i><span class="wcr_cell_name">moon</span></div>
+      <div class="wcr_cell"><i data-lucide="umbrella"></i><span class="wcr_cell_name">umbrella</span></div>
+      <div class="wcr_cell"><i data-lucide="gift"></i><span class="wcr_cell_name">gift</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wcr_viewport">
+  <div class="wcr_foot">
+    页面引入本地 <b>cdn/lucide/lucide.min.js</b>，脚本扫描所有带 <code>data-lucide</code> 属性的元素，
+    把它们替换为内联 <code>&lt;svg&gt;</code>（描边使用 <code>currentColor</code>）。所以用 CSS 的
+    <code>color</code> 即可换色，用 <code>width</code>/<code>height</code> 即可改尺寸；
+    多色与更精细的矢量细节也由此成为可能。
+  </div>
+</footer>
+
+<script src="cdn/lucide/lucide.min.js"></script>
+<script>
+  // 统一设置生成的 svg 描边粗细；尺寸交由 CSS 控制
+  var wcr_createOptions = {
+    attrs: {
+      'stroke-width': 1.75
+    }
+  };
+  lucide.createIcons(wcr_createOptions);
+</script>
+
+</body>
+</html>

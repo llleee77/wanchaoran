@@ -1,159 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="万超然的个人主页 - 大连东软信息学院 高级网页设计课程作业">
-    <title>万超然 · 个人主页</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>万超然 · 高级网页设计档案索引</title>
+<meta http-equiv="refresh" content="0;url=my-page/index.html">
+<style>
+  :root{
+    --wcr_ink:#1b2733;
+    --wcr_mist:#eef1f4;
+    --wcr_deep:#0f3d5e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    background:
+      radial-gradient(900px 420px at 80% -8%, #d7e5f2 0%, transparent 62%),
+      var(--wcr_mist);
+    color:var(--wcr_ink);
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    line-height:1.7;
+  }
+  .wcr_card{
+    padding:44px 52px;
+    background:#fff;
+    border:1px solid #dfe5ea;
+    box-shadow:0 18px 40px rgba(20,32,46,.08);
+    text-align:center;
+  }
+  .wcr_kicker{
+    font-size:12px;
+    letter-spacing:.24em;
+    color:var(--wcr_deep);
+  }
+  .wcr_title{
+    margin:14px 0 8px;
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:-.01em;
+  }
+  .wcr_note{
+    font-size:14px;
+    color:#64748b;
+    max-width:34ch;
+    margin:0 auto 26px;
+  }
+  .wcr_go{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 22px;
+    background:var(--wcr_deep);
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+    text-decoration:none;
+  }
+  .wcr_go:hover{background:#163a58;}
+  .wcr_meta{margin-top:22px;font-size:12px;color:#94a3b8;}
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#hero" class="nav-logo">WC<span class="accent">.</span>Ran</a>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#about" class="nav-link">关于我</a></li>
-                <li><a href="#skills" class="nav-link">技能</a></li>
-                <li><a href="#works" class="nav-link">作品</a></li>
-                <li><a href="#contact" class="nav-link">联系</a></li>
-            </ul>
-            <button class="nav-toggle" id="navToggle" aria-label="打开菜单">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Hero 区 -->
-    <section class="hero" id="hero">
-        <div class="hero-bg" aria-hidden="true"></div>
-        <div class="hero-content">
-            <p class="hero-greet reveal">你好，我是</p>
-            <h1 class="hero-title reveal">万超然</h1>
-            <p class="hero-subtitle reveal">网页设计学习者 · 数字世界的建造者</p>
-            <p class="hero-meta reveal">大连东软信息学院 · 学号 24001011008</p>
-            <div class="hero-actions reveal">
-                <a href="#works" class="btn btn-primary">查看作品</a>
-                <a href="#contact" class="btn btn-ghost">联系我</a>
-            </div>
-        </div>
-        <a href="#about" class="scroll-hint" aria-label="向下滚动">
-            <span class="scroll-mouse"></span>
-        </a>
-    </section>
-
-    <!-- 关于我 -->
-    <section class="section" id="about">
-        <div class="container">
-            <h2 class="section-title reveal">关于我 <span class="accent">/</span> About</h2>
-            <div class="about-grid">
-                <div class="about-card reveal">
-                    <div class="about-avatar" aria-hidden="true">然</div>
-                    <div>
-                        <h3>一名爱折腾的本科生</h3>
-                        <p>我在大连东软信息学院学习，正在「高级网页设计」课程里一点点把想法变成页面。喜欢干净的排版、舒服的配色，以及浏览器里跑起来的每一行代码。</p>
-                        <p>这个页面就是我的课程作业，也是我学习网页设计的第一份作品集。</p>
-                    </div>
-                </div>
-                <div class="about-stats">
-                    <div class="stat-card reveal">
-                        <span class="stat-num" data-count="3">0</span>
-                        <span class="stat-label">正在学习的方向</span>
-                    </div>
-                    <div class="stat-card reveal">
-                        <span class="stat-num" data-count="12">0</span>
-                        <span class="stat-label">熬过的夜</span>
-                    </div>
-                    <div class="stat-card reveal">
-                        <span class="stat-num" data-count="99">0</span>
-                        <span class="stat-label">对设计的热情 %</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 技能 -->
-    <section class="section section-alt" id="skills">
-        <div class="container">
-            <h2 class="section-title reveal">我的技能 <span class="accent">/</span> Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-card reveal">
-                    <h3>HTML5</h3>
-                    <p>语义化标签、表单与多媒体，搭建页面的骨架。</p>
-                    <div class="progress"><div class="progress-bar" data-width="85"></div></div>
-                </div>
-                <div class="skill-card reveal">
-                    <h3>CSS3</h3>
-                    <p>Flexbox / Grid 布局、动画与响应式设计，负责页面的颜值。</p>
-                    <div class="progress"><div class="progress-bar" data-width="80"></div></div>
-                </div>
-                <div class="skill-card reveal">
-                    <h3>JavaScript</h3>
-                    <p>DOM 操作与事件交互，让页面真正"动"起来。</p>
-                    <div class="progress"><div class="progress-bar" data-width="70"></div></div>
-                </div>
-                <div class="skill-card reveal">
-                    <h3>Git</h3>
-                    <p>版本控制、commit &amp; push、用 GitHub Pages 发布网站。</p>
-                    <div class="progress"><div class="progress-bar" data-width="65"></div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 作品 -->
-    <section class="section" id="works">
-        <div class="container">
-            <h2 class="section-title reveal">课程作品 <span class="accent">/</span> Works</h2>
-            <div class="works-grid">
-                <article class="work-card reveal">
-                    <div class="work-thumb thumb-1" aria-hidden="true">01</div>
-                    <div class="work-body">
-                        <h3>个人主页</h3>
-                        <p>你现在看到的这个页面：响应式布局 + 滚动动画 + 深色模式，纯手写 HTML/CSS/JS。</p>
-                        <span class="work-tag">HTML · CSS · JS</span>
-                    </div>
-                </article>
-                <article class="work-card reveal">
-                    <div class="work-thumb thumb-2" aria-hidden="true">02</div>
-                    <div class="work-body">
-                        <h3>课程练习页</h3>
-                        <p>课堂上完成的跟做练习与课后实验，随学习进度持续更新。</p>
-                        <span class="work-tag">持续更新中</span>
-                    </div>
-                </article>
-                <article class="work-card reveal">
-                    <div class="work-thumb thumb-3" aria-hidden="true">03</div>
-                    <div class="work-body">
-                        <h3>下一个作品</h3>
-                        <p>正在构思：一个更复杂的交互式专题页面，敬请期待。</p>
-                        <span class="work-tag">设计中…</span>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- 联系 -->
-    <section class="section section-alt" id="contact">
-        <div class="container">
-            <h2 class="section-title reveal">联系我 <span class="accent">/</span> Contact</h2>
-            <div class="contact-card reveal">
-                <p class="contact-line">如果你也想聊聊网页设计、作业或者别的什么，欢迎找我。</p>
-                <div class="contact-links">
-                    <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-primary">GitHub 主页</a>
-                    <a href="mailto:1761136724@qq.com" class="btn btn-ghost">发邮件给我</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <p>© 2026 万超然 · 大连东软信息学院 · 高级网页设计课程作业</p>
-        <p class="footer-sub">Built with HTML / CSS / JavaScript · Deployed on GitHub Pages</p>
-    </footer>
-
-    <script src="js/main.js"></script>
+  <main class="wcr_card">
+    <p class="wcr_kicker">CLASS PRACTICE ARCHIVE</p>
+    <h1 class="wcr_title">高级网页设计档案</h1>
+    <p class="wcr_note">全部课堂练习已整理至 my-page 文件夹，从下面的入口进入课堂目录。</p>
+    <a class="wcr_go" href="my-page/index.html">进入课堂目录 →</a>
+    <p class="wcr_meta">索引页 · 自动跳转中</p>
+  </main>
 </body>
 </html>

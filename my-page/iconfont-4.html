@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>底部导航 · 线条徽章</title>
+<style>
+  :root{
+    --wcr_paper:#FBFBFA;
+    --wcr_ink:#191919;
+    --wcr_slate:#6E706A;
+    --wcr_line:#E3E2DC;
+    --wcr_signal:#0E7490;
+    --wcr_badge:#D64545;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Segoe UI","Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    background:var(--wcr_paper);
+    color:var(--wcr_ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{vertical-align:middle;}
+
+  /* ---------- 顶部 ---------- */
+  .wcr_topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--wcr_paper);
+    border-bottom:1px solid var(--wcr_line);
+    padding:18px 20px;
+  }
+  .wcr_topbar_inner{
+    max-width:420px;
+    margin:0 auto;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .wcr_topbar h1{
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .wcr_back{
+    font-size:13px;
+    color:var(--wcr_signal);
+    text-decoration:none;
+    border-bottom:1px solid var(--wcr_signal);
+    padding-bottom:1px;
+    white-space:nowrap;
+  }
+  .wcr_back:hover{color:var(--wcr_ink);border-color:var(--wcr_ink);}
+
+  /* ---------- 页面内容（画布） ---------- */
+  .wcr_canvas{
+    max-width:420px;
+    margin:0 auto;
+    padding:28px 20px 140px;
+  }
+  .wcr_canvas h2{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-.015em;
+  }
+  .wcr_canvas .wcr_lead{
+    margin-top:10px;
+    font-size:14px;
+    color:var(--wcr_slate);
+    max-width:40ch;
+  }
+  .wcr_sample{
+    margin-top:26px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .wcr_sample .wcr_row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border-bottom:1px solid var(--wcr_line);
+    padding:14px 2px;
+  }
+  .wcr_sample .wcr_row svg{
+    width:18px;
+    height:18px;
+    color:var(--wcr_signal);
+  }
+  .wcr_sample .wcr_row span{
+    font-size:13px;
+    color:var(--wcr_slate);
+  }
+
+  /* ---------- 底部固定导航 ---------- */
+  .wcr_nav{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:420px;
+    z-index:10;
+    background:rgba(251,251,250,.9);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--wcr_line);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wcr_nav_list{
+    display:flex;
+    list-style:none;
+    height:62px;
+  }
+  .wcr_nav_item{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    border:none;
+    background:none;
+    font-family:inherit;
+    cursor:pointer;
+    color:var(--wcr_slate);
+    transition:color .2s ease;
+  }
+  .wcr_nav_item[aria-current="true"]{
+    color:var(--wcr_signal);
+  }
+  .wcr_icon_wrap{
+    position:relative;
+    line-height:1;
+  }
+  .wcr_nav_item svg{
+    width:23px;
+    height:23px;
+    stroke-width:1.75;
+    transition:transform .2s ease;
+  }
+  .wcr_nav_item[aria-current="true"] svg{
+    transform:translateY(-1px);
+  }
+  .wcr_nav_label{
+    font-size:11px;
+    letter-spacing:.02em;
+  }
+
+  /* ---------- 数字徽章 ---------- */
+  .wcr_badge_num{
+    position:absolute;
+    top:-7px;
+    right:-12px;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:999px;
+    background:var(--wcr_signal);
+    color:#fff;
+    font-size:10px;
+    font-weight:600;
+    line-height:16px;
+    text-align:center;
+    font-family:inherit;
+  }
+
+  /* ---------- 红点 ---------- */
+  .wcr_dot{
+    position:absolute;
+    top:-5px;
+    right:-6px;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--wcr_badge);
+    box-shadow:0 0 0 2px var(--wcr_paper);
+  }
+
+  /* ---------- 键盘焦点 ---------- */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--wcr_signal);
+    outline-offset:3px;
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="wcr_topbar">
+  <div class="wcr_topbar_inner">
+    <h1>底部导航 · 线条</h1>
+    <a class="wcr_back" href="index.html">返回首页 index.html</a>
+  </div>
+</header>
+
+<main class="wcr_canvas">
+  <h2>固定底栏，徽章就位</h2>
+  <p class="wcr_lead">四个入口固定在视口底部、随屏幕自适应。消息带数字徽章，购物车显示件数，我的入口以红点提示有未读动态。</p>
+
+  <div class="wcr_sample" aria-hidden="true">
+    <div class="wcr_row"><i data-lucide="search"></i><span>搜索示例页面</span></div>
+    <div class="wcr_row"><i data-lucide="list"></i><span>列表项示例</span></div>
+    <div class="wcr_row"><i data-lucide="info"></i><span>详情提示示例</span></div>
+  </div>
+</main>
+
+<nav class="wcr_nav" aria-label="主导航">
+  <ul class="wcr_nav_list">
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button" aria-current="true">
+        <span class="wcr_icon_wrap"><i data-lucide="home"></i></span>
+        <span class="wcr_nav_label">首页</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i data-lucide="message-square"></i>
+          <span class="wcr_badge_num">3</span>
+        </span>
+        <span class="wcr_nav_label">消息</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i data-lucide="shopping-cart"></i>
+          <span class="wcr_badge_num">9+</span>
+        </span>
+        <span class="wcr_nav_label">购物车</span>
+      </button>
+    </li>
+    <li style="flex:1">
+      <button class="wcr_nav_item" type="button">
+        <span class="wcr_icon_wrap">
+          <i data-lucide="user"></i>
+          <span class="wcr_dot"></span>
+        </span>
+        <span class="wcr_nav_label">我的</span>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<script src="cdn/lucide/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // 点击切换当前导航项
+  var wcr_navItems = document.querySelectorAll('.wcr_nav_item');
+  wcr_navItems.forEach(function (wcr_item) {
+    wcr_item.addEventListener('click', function () {
+      wcr_navItems.forEach(function (wcr_other) {
+        wcr_other.setAttribute('aria-current', 'false');
+      });
+      wcr_item.setAttribute('aria-current', 'true');
+    });
+  });
+</script>
+
+</body>
+</html>

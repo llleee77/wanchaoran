@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="万超然的高级网页设计课堂实践 · 上图下文">
+    <title>上图下文｜万超然高级网页设计</title>
+    <style>
+        :root {
+            --ink: #1d2833;
+            --muted: #667481;
+            --paper: #f6f4ee;
+            --card: #fffdf8;
+            --line: #d9ddd8;
+            --accent: #e26d4f;
+            --accent-dark: #a9422f;
+            --mint: #dcefe8;
+            --yellow: #f5d77a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.7;
+        }
+
+        a { color: inherit; }
+
+        .page-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 0;
+            font-size: 14px;
+        }
+
+        .topbar .back {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent-dark);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(40px, 6vw, 72px);
+            background: var(--mint);
+            border: 1px solid var(--line);
+            margin-bottom: 56px;
+        }
+
+        .hero::after {
+            position: absolute;
+            right: 6%;
+            bottom: -46px;
+            width: 150px;
+            height: 150px;
+            content: "";
+            border: 22px solid var(--yellow);
+            border-radius: 50%;
+            opacity: .85;
+        }
+
+        .eyebrow {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 14px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .18em;
+        }
+
+        .hero h1, .hero p { position: relative; z-index: 1; margin-top: 0; }
+
+        .hero h1 {
+            margin-bottom: 14px;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: clamp(34px, 5vw, 56px);
+            line-height: 1.12;
+        }
+
+        .hero p { margin-bottom: 0; max-width: 560px; color: #41535a; }
+
+        .section-heading h2 {
+            margin: 0 0 16px;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: clamp(24px, 3vw, 34px);
+        }
+
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stack-card {
+            display: block;
+            background: var(--card);
+            border: 1px solid var(--line);
+            text-decoration: none;
+            overflow: hidden;
+            transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .stack-card:hover, .stack-card:focus-visible {
+            border-color: var(--accent);
+            box-shadow: 8px 8px 0 rgba(226, 109, 79, .14);
+            transform: translateY(-5px);
+        }
+
+        .stack-card img {
+            display: block;
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .stack-card p {
+            margin: 0;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .stack-code {
+            margin-top: 40px;
+            padding: 20px 24px;
+            background: var(--ink);
+            color: #e8f0ee;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .home-link {
+            display: block;
+            width: fit-content;
+            margin: 48px 0 64px;
+            padding: 12px 22px;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .home-link:hover { background: var(--accent); color: #fff; }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 0 40px;
+            color: var(--muted);
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+        }
+
+        @media (max-width: 760px) {
+            .page-shell { width: min(100% - 28px, 600px); }
+            .stack-grid { grid-template-columns: 1fr; }
+            .topbar, .footer { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="signature">WAN CHAORAN / CLASS PRACTICE 03</div>
+            <a class="back" href="index.html">← 返回课堂目录</a>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="page-title">
+                <p class="eyebrow">CLASS PRACTICE / 003</p>
+                <h1 id="page-title">上图下文</h1>
+                <p>练习图片与文字的组合布局，认识列表与 Flex 排版方式。</p>
+            </section>
+
+            <section>
+                <div class="section-heading">
+                    <h2>图片卡片</h2>
+                </div>
+                <div class="stack-grid">
+                    <a class="stack-card" href="stack.html"><img src="./img/人生要有弹性.png" alt="人生要有弹性"><p>人生要有弹性</p></a>
+                    <a class="stack-card" href="stack.html"><img src="./img/提升自适应能力图.png" alt="提升自适应能力"><p>提升自适应能力</p></a>
+                    <a class="stack-card" href="stack.html"><img src="./img/适应国家发展.png" alt="适应国家发展"><p>适应国家发展</p></a>
+                    <a class="stack-card" href="stack.html"><img src="./img/适应岗位需求.png" alt="适应岗位需求"><p>适应岗位需求</p></a>
+                    <a class="stack-card" href="stack.html"><img src="./img/适应环境.png" alt="适应环境"><p>适应环境</p></a>
+                    <a class="stack-card" href="stack.html"><img src="./img/适应科技发展.png" alt="适应科技发展"><p>适应科技发展</p></a>
+                </div>
+            </section>
+
+            <pre class="stack-code">/* 上图下文效果的核心 CSS */
+ul.list1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+ul.list1 li  { border: 1px solid #d9d4c8; border-radius: 8px; overflow: hidden; }
+ul.list1 img { width: 100%; height: 170px; object-fit: cover; display: block; }  /* 上图 */
+ul.list1 p   { margin: 0; padding: 12px; text-align: center; }                   /* 下文 */</pre>
+
+            <a class="home-link" href="index.html">返回课堂目录 →</a>
+        </main>
+
+        <footer class="footer">
+            <span>高级网页设计 · 上图下文</span>
+            <span>Made with HTML &amp; CSS</span>
+        </footer>
+    </div>
+</body>
+
+</html>
