@@ -1,0 +1,10 @@
+# 本地助手记忆与缓存，不入库
+.workbuddy/memory/
+.workbuddy/blobs/
+
+# Swiper 组件包（页面走 CDN，不需要入库）
+swiper/
+
+# 系统杂项
+Thumbs.db
+.DS_Store
