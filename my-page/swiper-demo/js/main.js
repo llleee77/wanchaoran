@@ -92,6 +92,9 @@
       prevEl: '#btnPrev',
       nextEl: '#btnNext'
     },
+    // 任务三选的能力：parallax 视差（课堂上没讲过）
+    // 打开后会给 [data-swiper-parallax] 的元素按 slide 进度做位移
+    parallax: true,
     keyboard: {
       enabled: true,
       onlyInViewport: true
@@ -111,6 +114,7 @@
     autoOn: true,
     wheelOn: true,
     keysOn: true,
+    parallaxOn: true,
     delay: 3200,       // 3.2 秒（任务一 ②）
     speed: 700,
     start: 0
@@ -137,6 +141,7 @@
   const chkAuto  = $('#chkAutoplay');
   const chkWheel = $('#chkWheel');
   const chkKeys  = $('#chkKeys');
+  const chkPar   = $('#chkParallax');
   const delayRange = $('#delayRange');
   const delayInput = $('#delayInput');
   const speedRange = $('#speedRange');
@@ -153,7 +158,15 @@
       swiper = null;
     }
 
+    // 视差关掉时清一次残留：parallax 只改子元素 inline style，重建实例不会自动复位
+    document.querySelectorAll('#mySwi4 [data-swiper-parallax]').forEach((el) => {
+      el.style.transform = '';
+      el.style.opacity = '';
+      el.style.transitionDuration = '';
+    });
+
     const cfg = Object.assign({}, BASE, EFFECTS[fx] || {}, {
+      parallax: state.parallaxOn,
       speed: state.speed,
       initialSlide: keep,
       autoplay: {
@@ -198,6 +211,7 @@
         ? { delay: p.autoplay.delay, disableOnInteraction: p.autoplay.disableOnInteraction }
         : false,
       pagination: { el: '#pager', clickable: p.pagination.clickable },
+      parallax: typeof p.parallax === 'object' ? !!(p.parallax && p.parallax.enabled) : !!p.parallax,
       keyboard: { enabled: !!(p.keyboard && p.keyboard.enabled) },
       mousewheel: {
         enabled: !!(p.mousewheel && p.mousewheel.enabled),
@@ -317,6 +331,13 @@
     if (!swiper || !swiper.mousewheel) return;
     state.wheelOn ? swiper.mousewheel.enable() : swiper.mousewheel.disable();
     renderDump();
+  });
+
+  // Swiper 11 没有 swiper.parallax.enable() 这种运行时开关（只有 params 上的开关），
+  // 所以这里靠重新构造实例来切换——build() 里会先把子元素残留的 inline style 清掉。
+  chkPar.addEventListener('change', () => {
+    state.parallaxOn = chkPar.checked;
+    build(state.fx);
   });
 
   chkKeys.addEventListener('change', () => {

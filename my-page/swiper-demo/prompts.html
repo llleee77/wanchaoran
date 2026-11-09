@@ -277,98 +277,108 @@ creativeEffect: {
   <section class="log-sec" id="t3">
     <div class="log-sec__head">
       <span class="log-sec__no">TASK 03</span>
-      <h2>综合创作：课堂没讲的能力 + 现场调参</h2>
+      <h2>综合创作：挑一个课堂上没讲过的能力</h2>
       <p class="log-sec__goal">
-        挑的能力：<b>keyboard 键盘控制 + mousewheel 滚轮</b>（两个都做了，答辩任选其一）。
-        另外加了第六件展品「爱达·魔都号」，图片 AI 生成，横版 16:9。
+        选的是 <b>parallax 视差</b>。<br />
+        <b>为什么不是 zoom</b>：本项目 6 张展品里只有第 6 张是真实图片（<code>&lt;img&gt;</code>），前 5 张是 CSS 渐变画出来的装置，
+        而 zoom 只对 <code>img / svg / canvas</code> 生效——选 zoom 会出现"只有一张能双击放大"的尴尬，演示起来反而像坏了。
+        parallax 对 6 张全部有效，也更贴合"光影展"要的纵深。
+        <br />
+        <b>键盘 / 滚轮</b> 也接了（页面上有开关），但那两个课上讲过，不算加分项，这里只当附加能力写。
       </p>
     </div>
 
     <article class="round">
-      <div class="round__tag">ASK 01 · 第一版翻车</div>
+      <div class="round__tag">ASK 01 · 第一版</div>
       <div class="prompt">
         <div class="prompt__head">
           <span>我的提示词</span>
           <button class="copy" data-copy type="button">复制</button>
         </div>
         <div class="prompt__body">
-          给我的 Swiper 加键盘方向键控制和鼠标滚轮翻页。
+          给我的轮播加视差：翻页的时候，每张 slide 里的文字按不同速度左右错开，做出前中后三层的感觉。
+          用 Swiper 11 实现。
         </div>
       </div>
 
       <div class="answer answer--bad">
         <div class="answer__head"><span>AI 回答（错的）</span><em>踩坑</em></div>
-<pre><code>// 1) 布尔值写法，v6 时代的老接口
-keyboard: true,
-mousewheel: true,</code></pre>
+<pre><code>// 自己监听滚动，按 scrollTop 算偏移
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.querySelectorAll('.slide__no').forEach(el => {
+    el.style.transform = `translateY(${y * 0.3}px)`;
+  });
+});</code></pre>
         <p class="answer__after">
-          <b>现象</b>：按方向键毫无反应，控制台也不报错；滚轮报
-          <code>swiper.mousewheel is undefined</code>——因为项目当时只引了 <code>swiper.min.js</code>（核心包），
-          里面根本没有 Mousewheel 模块。
+          <b>现象</b>：完全没反应。轮播的位移是靠 <code>transform</code> 改的，页面根本没滚动，
+          <code>scroll</code> 事件一次都不会触发——所以 <code>scrollY</code> 永远是 0。
         </p>
       </div>
-
-      <figure class="shot" data-slot>
-        <img src="img/shot-04.png" alt="只引核心包时，swiper.mousewheel 为 undefined 并抛 TypeError" loading="lazy" />
-        <figcaption>图 4 · <a href="debug/core-only.html">复现页</a>：只引核心包，<code>swiper.keyboard / swiper.mousewheel</code> 都是 undefined，一调 <code>.enable()</code> 就抛 TypeError</figcaption>
-      </figure>
     </article>
 
     <article class="round">
-      <div class="round__tag round__tag--ok">ASK 02 · 改对</div>
+      <div class="round__tag round__tag--ok">ASK 02 · 照着官方 demo 改</div>
       <div class="prompt">
         <div class="prompt__head">
           <span>我的提示词</span>
           <button class="copy" data-copy type="button">复制</button>
         </div>
         <div class="prompt__body">
-          两个问题请一起改：① <code>keyboard</code> 在 Swiper 11 里要写成对象，并且我只想让轮播在视口内时才响应方向键；
-          ② 滚轮要能翻页，但滚到第一张/最后一张时要把滚动还给页面，不要一直劫持。<br />
-          告诉我这两个能力分别需要哪个模块，以及我现在的 CDN 引用够不够。
+          方向错了：轮播是 transform 驱动的，不产生 scroll。<br />
+          我看到 Swiper 自带 demo 里有 <code>360-parallax.html</code>，请按它的写法给我：<br />
+          1. 不要自己算滚动，用模块自带的开关 + 元素上的 data 属性；<br />
+          2. 三层文字的速度要不一样（编号最快、标题次之、正文最慢）；<br />
+          3. 告诉我 parallax 和 effect（比如 creative）同时开会不会打架。
         </div>
       </div>
 
       <div class="answer">
-        <div class="answer__head"><span>AI 回答 → 已落地</span><em>js/main.js</em></div>
-<pre><code>keyboard: {
-  enabled: true,        // ← 必须是对象，keyboard: true 等于没开
-  onlyInViewport: true  // 只在轮播进入视口时响应
-},
-mousewheel: {
-  enabled: true,
-  releaseOnEdges: true, // 到边界把滚动还给页面
-  thresholdDelta: 18,   // 累积 18 才算一次，防手抖
-  forceToAxis: false    // 竖向滚轮也翻页（代价见下）
-}
-// 模块要全：用 swiper-bundle.min.js，或单独补 modules/mousewheel.min.js</code></pre>
+        <div class="answer__head"><span>AI 回答 → 已落地</span><em>js/main.js + index.html</em></div>
+<pre><code>// 1) 配置里打开模块（官方 360-parallax.html 第 136 行就是这一句）
+parallax: true,
+
+// 2) 元素上用 data 属性声明"位移多少"，负值 = 往左
+&lt;span class="slide__no" data-swiper-parallax="-320"
+      data-swiper-parallax-opacity="0"&gt;01&lt;/span&gt;
+&lt;h2  data-swiper-parallax="-170"&gt;棱镜切片&lt;/h2&gt;
+&lt;p   data-swiper-parallax="-90"&gt;一束白光穿过三角棱镜…&lt;/p&gt;</code></pre>
         <p class="answer__after">
-          <b>取舍</b>：<code>forceToAxis: false</code> 让竖向滚轮也能翻页，代价是鼠标停在展台上时竖向滚动会被"吃掉"。
-          想要滚轮翻页，就必然要抢滚动——这一点我是在页面上放了个开关来放行，而不是假装没有代价。
+          <b>为什么不会打架</b>：effect 改的是 <b>slide 本身</b>的 transform，parallax 改的是 slide <b>里面子元素</b>的 transform，
+          两层各算各的，互不覆盖。实测六种特效 + creative 都能带着视差跑。
         </p>
       </div>
+
+      <figure class="shot" data-slot>
+        <img src="img/shot-04.png" alt="只引核心包时 mousewheel 模块不存在" loading="lazy" />
+        <figcaption>图 4 · 附加能力踩的坑：<a href="debug/core-only.html">复现页</a>里只引核心包，<code>swiper.keyboard / swiper.mousewheel</code> 都是 undefined，一调 <code>.enable()</code> 就抛 TypeError</figcaption>
+      </figure>
     </article>
 
     <div class="qa">
       <h3>答辩四问</h3>
       <details open>
         <summary>Q1 这段代码什么意思？</summary>
-        <p><code>keyboard.enabled</code> 给容器绑 keydown 监听 ← →；<code>onlyInViewport</code> 用 IntersectionObserver 判断是否在视口内，
-        不加的话，页面滚到下方看"需求对照表"时按方向键，上面的轮播会偷偷翻页。<code>releaseOnEdges</code> 到边界就放行滚动，
-        <b>但本项目开了 <code>loop</code>，永远不会到边界</b>，所以实际靠页面开关放行。<code>thresholdDelta: 18</code> 是防抖阈值。</p>
+        <p><code>parallax: true</code> 把视差模块打开。之后每次 Swiper 算位移（<code>setTranslate</code>），它会顺带读每张 slide 的
+        <code>progress</code>（当前张是 0，往右待场是 -1，往左退场是 +1），再给页面上所有带
+        <code>data-swiper-parallax</code> 的元素设一个 <code>translate3d(值 × progress)</code>。</p>
+        <p>所以 <code>-320</code> 的意思是"这张退场时往左甩 320px"，三层分别给 -320 / -170 / -90，就是三个速度。
+        <code>data-swiper-parallax-opacity="0"</code> 让它同时淡出，避免文字硬生生飞出画面。</p>
       </details>
       <details>
         <summary>Q2 AI 第一次给的哪里不对、你改了什么？</summary>
         <ul class="tight">
-          <li><code>keyboard: true</code> → 改成 <code>{ enabled: true, onlyInViewport: true }</code></li>
-          <li>只引核心包却用 <code>mousewheel</code> → 换 <code>swiper-bundle.min.js</code></li>
-          <li><code>swiper.changeEffect('fade')</code> 报错 → Swiper 11 已移除该方法，改成 <code>destroy()</code> + 重新 <code>new</code>，并用 <code>initialSlide</code> 把 <code>realIndex</code> 带过去</li>
-          <li>把"循环切换特效"写进 <code>slideChange</code> → 一换特效就无限重建、页面卡死，改成只在点击时重建一次</li>
+          <li><b>用 scroll 事件算偏移</b> —— 轮播靠 transform 位移，不触发 scroll，<code>scrollY</code> 恒为 0，代码等于没写。</li>
+          <li><b>只写 data 属性、忘了 <code>parallax: true</code></b> —— 属性全在，效果一点没有，而且不报错，最难查。</li>
+          <li><b>想用 <code>swiper.parallax.disable()</code> 做开关</b> —— v11 里根本没有这个对象。我实测报了
+            <code>TypeError: Cannot read properties of undefined (reading 'disable')</code>，最后改成"重建实例"来切换。</li>
         </ul>
       </details>
       <details>
         <summary>Q3 新参数的作用？</summary>
-        <p><code>onlyInViewport</code> 管"什么时候<b>不该</b>响应"，<code>thresholdDelta</code> 管"多大的动作才算一次"，
-        <code>releaseOnEdges</code> 管"什么时候<b>该放手</b>"——三个都是边界条件参数，不是视觉效果参数。会调这些，才算真的会用插件。</p>
+        <p><code>data-swiper-parallax</code> 是主轴位移，数值写 <code>-300</code> 就是 px、写 <code>-23%</code> 就是按元素自身尺寸的百分比；
+        另有 <code>-x / -y</code> 分开控轴、<code>-opacity</code> 控淡出、<code>-scale</code> 控缩放、<code>-rotate</code> 控旋转。
+        <b>负值往左、正值往右</b>，绝对值越大动得越狠——三层速度差就是这么拉开的。</p>
       </details>
       <details>
         <summary>Q4 现场把 delay 改成指定值，预期是什么？</summary>
