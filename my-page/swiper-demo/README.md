@@ -28,8 +28,9 @@
 | `new Swiper('#mySwi4', {…})` 四条硬性要求（① 无缝循环 ② 3.2s 自动翻页且手动后不停 ③ 圆点可点击 ④ 初始 cube） | `js/main.js` → `BASE` + `EFFECTS.cube`；页面「需求对照表」逐条标注 |
 | 第 7 个按钮「creative 电影墙」 | `js/main.js` → `EFFECTS.creative` |
 | 第六件展品 爱达·魔都号（AI 生成横版 16:9） | `index.html` 第 6 张 slide + `img/exhibit-06-adora.png` |
-| **课堂没讲过的能力：parallax 视差** | `js/main.js` → `parallax: true`；三层 `data-swiper-parallax`（-320 / -170 / -90），第四个开关可现场关掉对比 |
-| 附加：keyboard / mousewheel（课上讲过，不计分） | 页面三个开关可现场开合 |
+| **课堂没讲过的能力：浏览器历史（官方 demo 340）** | `js/main.js` → `bindHistory()`：`pushState` 写 `#展品名`、`popstate` 切回对应张；地址栏会跟着变，按浏览器后退能回上一张 |
+| 附加：parallax 视差 | `parallax: true` + 三层 `data-swiper-parallax`（-320 / -170 / -90），第四个开关可现场关掉对比 |
+| 附加：keyboard / mousewheel（课上讲过，不计分） | 页面开关可现场开合 |
 | 现场改 `delay` 并解释预期 | 页面右下「现场调参」，拖滑块自动回一段预期说明 |
 
 ## 三、目录

@@ -187,8 +187,64 @@
     swiper.on('slideChange', renderInfo);
     swiper.on('slideChangeTransitionEnd', renderInfo);
 
+    // 对应官方 demo 340-history：把当前展品写进 URL，浏览器前进/后退也能切张
+    bindHistory(swiper);
+
     renderInfo();
   }
+
+  /* ------------------------- 5.5 浏览器历史（demo 340 的思路） -------------------------
+     官方 340 用 Swiper 的 history 模块，它把地址拼成"路径"（/slide/neon），
+     静态站一刷新就 404、相对路径也会断。这里用同一套 history API，
+     但把状态放在 hash 里（#neon）：刷新、分享、前进后退都不会坏。
+     ------------------------------------------------------------------------ */
+  let userActed = false;
+
+  document.addEventListener('pointerdown', () => {
+    userActed = true;
+    setTimeout(() => { userActed = false; }, 1500);
+  }, true);
+  document.addEventListener('keydown', () => {
+    userActed = true;
+    setTimeout(() => { userActed = false; }, 1500);
+  }, true);
+
+  function slugsOf(sw) {
+    return Array.from(sw.el.querySelectorAll('.swiper-slide')).map((el) => el.dataset.history || '');
+  }
+
+  function bindHistory(sw) {
+    const slugs = slugsOf(sw);
+
+    const write = (i) => {
+      const slug = slugs[i];
+      if (!slug) return;
+      const url = '#' + slug;
+      if (location.hash === url) return;
+      // 用户操作 -> 新增一条历史（能按后退）；自动播放 -> 替换当前条（不刷屏）
+      const state = { exhibit: i, slug };
+      if (userActed) history.pushState(state, '', url);
+      else history.replaceState(state, '', url);
+    };
+
+    sw.on('slideChange', () => write(sw.realIndex));
+
+    // 打开带 #neon 的链接，直接落在对应展品
+    const at = slugs.indexOf(decodeURIComponent(location.hash.slice(1)));
+    if (at > 0) setTimeout(() => sw.slideToLoop(at, 0), 80);
+
+    renderDump();
+  }
+
+  // 只绑一次，切换特效重建实例后仍然有效
+  window.addEventListener('popstate', (e) => {
+    if (!swiper) return;
+    const slugs = slugsOf(swiper);
+    const idx = (e.state && typeof e.state.exhibit === 'number')
+      ? e.state.exhibit
+      : slugs.indexOf(decodeURIComponent(location.hash.slice(1)));
+    if (idx >= 0 && idx < slugs.length) swiper.slideToLoop(idx, 500);
+  });
 
   /* ------------------------- 6. 当前展品信息 ------------------------- */
   function renderInfo() {
@@ -212,6 +268,7 @@
         : false,
       pagination: { el: '#pager', clickable: p.pagination.clickable },
       parallax: typeof p.parallax === 'object' ? !!(p.parallax && p.parallax.enabled) : !!p.parallax,
+      history: { mode: 'hash (#展品名)', url: location.hash || '(未写入)' },
       keyboard: { enabled: !!(p.keyboard && p.keyboard.enabled) },
       mousewheel: {
         enabled: !!(p.mousewheel && p.mousewheel.enabled),

@@ -306,108 +306,103 @@ creativeEffect: {
   <section class="log-sec" id="t3">
     <div class="log-sec__head">
       <span class="log-sec__no">TASK 03</span>
-      <h2>综合创作：挑一个课堂上没讲过的能力</h2>
+      <h2>综合创作：官方 demo 340 的「浏览器历史」</h2>
       <p class="log-sec__goal">
-        选的是 <b>parallax 视差</b>。<br />
-        <b>为什么不是 zoom</b>：本项目 6 张展品里只有第 6 张是真实图片（<code>&lt;img&gt;</code>），前 5 张是 CSS 渐变画出来的装置，
-        而 zoom 只对 <code>img / svg / canvas</code> 生效——选 zoom 会出现"只有一张能双击放大"的尴尬，演示起来反而像坏了。
-        parallax 对 6 张全部有效，也更贴合"光影展"要的纵深。
-        <br />
-        <b>键盘 / 滚轮</b> 也接了（页面上有开关），但那两个课上讲过，不算加分项，这里只当附加能力写。
+        选的能力是 <b>history</b>（官方 <code>demo/340-history.html</code>）：地址栏跟着当前展品变，按浏览器的 ← 后退能回到上一张。<br />
+        <b>为什么不是别的</b>：keyboard / mousewheel 课上讲过；zoom 只对 <code>img / svg / canvas</code> 生效，
+        本项目 6 张里只有邮轮那张是真图，选它会变成"只有一张能双击"；parallax 我做了（页面上有开关），
+        但它更像装饰，history 才真正体现"轮播要和浏览器协作"这件事。<br />
+        <b>但官方那套不能直接抄</b>——见下面的翻车记录。
       </p>
     </div>
 
     <article class="round">
-      <div class="round__tag">ASK 01 · 第一版</div>
+      <div class="round__tag">ASK 01 · 直接照抄官方 demo</div>
       <div class="prompt">
         <div class="prompt__head">
           <span>我的提示词</span>
           <button class="copy" data-copy type="button">复制</button>
         </div>
         <div class="prompt__body">
-          给我的轮播加视差：翻页的时候，每张 slide 里的文字按不同速度左右错开，做出前中后三层的感觉。
-          用 Swiper 11 实现。
+          我想让轮播和浏览器历史联动：翻到第几张，地址栏就显示第几张，按浏览器后退能回上一张。
+          官方 demo 里有 <code>340-history.html</code>，请按它的写法给我 Swiper 11 的配置。
         </div>
       </div>
 
       <div class="answer answer--bad">
-        <div class="answer__head"><span>AI 回答（错的）</span><em>踩坑</em></div>
-<pre><code>// 自己监听滚动，按 scrollTop 算偏移
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  document.querySelectorAll('.slide__no').forEach(el => {
-    el.style.transform = `translateY(${y * 0.3}px)`;
-  });
-});</code></pre>
+        <div class="answer__head"><span>AI 回答（照抄官方）</span><em>能用，但埋雷</em></div>
+<pre><code>history: { key: 'exhibit' }
+// slide 上加：&lt;div class="swiper-slide" data-history="prism"&gt;</code></pre>
         <p class="answer__after">
-          <b>现象</b>：完全没反应。轮播的位移是靠 <code>transform</code> 改的，页面根本没滚动，
-          <code>scroll</code> 事件一次都不会触发——所以 <code>scrollY</code> 永远是 0。
+          <b>现象</b>：翻页、后退都对，但地址栏变成了
+          <code>…/swiper-demo/exhibit/neon</code>——<b>路径，不是 hash</b>。<br />
+          静态站没有这个路由，<b>一刷新就是 404</b>；而且页面里的 <code>css/style.css</code> 是相对路径，
+          在 <code>/exhibit/</code> 这一层下会全部失效，整个页面裸奔。
         </p>
       </div>
     </article>
 
     <article class="round">
-      <div class="round__tag round__tag--ok">ASK 02 · 照着官方 demo 改</div>
+      <div class="round__tag round__tag--ok">ASK 02 · 保留机制，换掉承载方式</div>
       <div class="prompt">
         <div class="prompt__head">
           <span>我的提示词</span>
           <button class="copy" data-copy type="button">复制</button>
         </div>
         <div class="prompt__body">
-          方向错了：轮播是 transform 驱动的，不产生 scroll。<br />
-          我看到 Swiper 自带 demo 里有 <code>360-parallax.html</code>，请按它的写法给我：<br />
-          1. 不要自己算滚动，用模块自带的开关 + 元素上的 data 属性；<br />
-          2. 三层文字的速度要不一样（编号最快、标题次之、正文最慢）；<br />
-          3. 告诉我 parallax 和 effect（比如 creative）同时开会不会打架。
+          这个不行：<code>history</code> 模块 pushState 的是路径，静态站刷新会 404，相对路径也会断。<br />
+          我要保留"前进后退能切张"的效果，但状态要放在 <b>hash</b> 里（<code>#neon</code>），这样刷新和分享都不会坏。<br />
+          另外自动播放每 3.2 秒翻一张，不要每一张都往历史里塞一条——只有用户自己操作时才 push，自动播放请用 replace。
         </div>
       </div>
 
       <div class="answer">
-        <div class="answer__head"><span>AI 回答 → 已落地</span><em>js/main.js + index.html</em></div>
-<pre><code>// 1) 配置里打开模块（官方 360-parallax.html 第 136 行就是这一句）
-parallax: true,
+        <div class="answer__head"><span>AI 回答 → 已落地</span><em>js/main.js · bindHistory()</em></div>
+<pre><code>// 用户操作 → pushState（能按后退）；自动播放 → replaceState（不刷历史）
+const state = { exhibit: i, slug };
+userActed ? history.pushState(state, '', '#' + slug)
+          : history.replaceState(state, '', '#' + slug);
 
-// 2) 元素上用 data 属性声明"位移多少"，负值 = 往左
-&lt;span class="slide__no" data-swiper-parallax="-320"
-      data-swiper-parallax-opacity="0"&gt;01&lt;/span&gt;
-&lt;h2  data-swiper-parallax="-170"&gt;棱镜切片&lt;/h2&gt;
-&lt;p   data-swiper-parallax="-90"&gt;一束白光穿过三角棱镜…&lt;/p&gt;</code></pre>
+// 后退 / 前进时，从 state 里取回是第几张
+window.addEventListener('popstate', (e) =&gt; {
+  const i = e.state &amp;&amp; typeof e.state.exhibit === 'number' ? e.state.exhibit : -1;
+  if (i &gt;= 0) swiper.slideToLoop(i, 500);
+});</code></pre>
         <p class="answer__after">
-          <b>为什么不会打架</b>：effect 改的是 <b>slide 本身</b>的 transform，parallax 改的是 slide <b>里面子元素</b>的 transform，
-          两层各算各的，互不覆盖。实测六种特效 + creative 都能带着视差跑。
+          <b>结果</b>：地址栏从 <code>#prism</code> 走到 <code>#neon</code>、<code>#liquid</code>；
+          按后退回到 <code>#neon</code> 并停在第 2 张；直接打开带 <code>#adora</code> 的链接会落在第 6 张。
         </p>
       </div>
-
-      <figure class="shot" data-slot>
-        <img src="img/shot-04.png" alt="只引核心包时 mousewheel 模块不存在" loading="lazy" />
-        <figcaption>图 4 · 附加能力踩的坑：<a href="debug/core-only.html">复现页</a>里只引核心包，<code>swiper.keyboard / swiper.mousewheel</code> 都是 undefined，一调 <code>.enable()</code> 就抛 TypeError</figcaption>
-      </figure>
     </article>
 
     <div class="qa">
       <h3>答辩四问</h3>
       <details open>
         <summary>Q1 这段代码什么意思？</summary>
-        <p><code>parallax: true</code> 把视差模块打开。之后每次 Swiper 算位移（<code>setTranslate</code>），它会顺带读每张 slide 的
-        <code>progress</code>（当前张是 0，往右待场是 -1，往左退场是 +1），再给页面上所有带
-        <code>data-swiper-parallax</code> 的元素设一个 <code>translate3d(值 × progress)</code>。</p>
-        <p>所以 <code>-320</code> 的意思是"这张退场时往左甩 320px"，三层分别给 -320 / -170 / -90，就是三个速度。
-        <code>data-swiper-parallax-opacity="0"</code> 让它同时淡出，避免文字硬生生飞出画面。</p>
+        <p><code>history.pushState(state, '', '#neon')</code>：往浏览器历史里塞一条新记录，把地址改成 <code>#neon</code>，
+        同时把"这是第几张"塞进 <code>state</code> 对象（浏览器会替我们保存）。</p>
+        <p><code>popstate</code>：用户按前进/后退时触发。这时从 <code>e.state.exhibit</code> 取回索引，调
+        <code>slideToLoop(i)</code> 把轮播切过去——<b>不是靠解析地址栏字符串，而是靠 state 里存的结构化数据</b>，更稳。</p>
+        <p><code>replaceState</code>：同样是改地址，但<b>不新增</b>历史记录。自动播放用它，否则每 3.2 秒塞一条，
+        用户按一次后退要按十几下才出得去。</p>
       </details>
       <details>
         <summary>Q2 AI 第一次给的哪里不对、你改了什么？</summary>
         <ul class="tight">
-          <li><b>用 scroll 事件算偏移</b> —— 轮播靠 transform 位移，不触发 scroll，<code>scrollY</code> 恒为 0，代码等于没写。</li>
-          <li><b>只写 data 属性、忘了 <code>parallax: true</code></b> —— 属性全在，效果一点没有，而且不报错，最难查。</li>
-          <li><b>想用 <code>swiper.parallax.disable()</code> 做开关</b> —— v11 里根本没有这个对象。我实测报了
-            <code>TypeError: Cannot read properties of undefined (reading 'disable')</code>，最后改成"重建实例"来切换。</li>
+          <li><b>照抄 340 用路径</b> —— 静态站没有 <code>/exhibit/neon</code> 这个路由，刷新 404；相对路径也会全断。
+            改用 hash 承载状态，刷新、分享都不坏。</li>
+          <li><b>只写 <code>history: { key }</code> 却没给 slide 加 <code>data-history</code></b> —— 模块跑起来了，
+            但取不到值，URL 里出现空段，后退也定位不到。必须成对出现。</li>
+          <li><b>自动播放也 pushState</b> —— 官方模块在每次 <code>slideChange</code> 都 push，自动播放会把历史刷爆。
+            我加了个 <code>userActed</code> 标志：只有用户点/按键/滚轮之后的切换才 push，其余走 replace。</li>
         </ul>
       </details>
       <details>
-        <summary>Q3 新参数的作用？</summary>
-        <p><code>data-swiper-parallax</code> 是主轴位移，数值写 <code>-300</code> 就是 px、写 <code>-23%</code> 就是按元素自身尺寸的百分比；
-        另有 <code>-x / -y</code> 分开控轴、<code>-opacity</code> 控淡出、<code>-scale</code> 控缩放、<code>-rotate</code> 控旋转。
-        <b>负值往左、正值往右</b>，绝对值越大动得越狠——三层速度差就是这么拉开的。</p>
+        <summary>Q3 新 API 的作用？</summary>
+        <p><code>pushState(state, title, url)</code> 新增一条历史；<code>replaceState</code> 只改当前条；
+        <code>popstate</code> 在前进/后退时触发，<code>event.state</code> 就是当初 push 进去的那个对象；
+        <code>slideToLoop(i)</code> 是循环模式下按"逻辑序号"跳转（<code>slideTo</code> 用的是实际 DOM 序号，循环模式下会错位）。</p>
+        <p class="kv">一句话区分：hash 变化不会请求服务器（刷新安全），path 变化在静态站上等于向服务器要一个不存在的文件（404）。</p>
       </details>
       <details>
         <summary>Q4 现场把 delay 改成指定值，预期是什么？</summary>
@@ -422,7 +417,6 @@ parallax: true,
         <p>三句必须说出口：① <code>delay</code> 是"多久动一次"，<code>speed</code> 是"动多久"，两者不叠加；
         ② 改的是 <code>swiper.params.autoplay.delay</code>，要 <code>stop()</code> → <code>start()</code> 才会立刻按新值重新计时；
         ③ delay 不能比过渡时长小太多，否则视觉上就是"永远在动"。</p>
-        <p class="kv">这个演示已经做进页面右下角的「现场调参」，拖滑块会实时回一段预期说明。</p>
       </details>
     </div>
   </section>

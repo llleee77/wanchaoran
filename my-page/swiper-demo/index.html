@@ -19,7 +19,7 @@
       </a>
     </div>
     <h1>光影展 <span class="latin">LUMEN</span> 轮播实验室</h1>
-    <p class="lede">六种内置特效 + 一种 <code>creative</code> 自定义变换；<b>parallax 视差</b>、键盘、滚轮、拖拽四路控制；参数可现场调，结论可现场验。</p>
+    <p class="lede">六种内置特效 + 一种 <code>creative</code> 自定义变换；<b>地址栏与浏览器历史同步</b>、parallax 视差、键盘、滚轮、拖拽五路控制；参数可现场调，结论可现场验。</p>
     <ul class="badges">
       <li>任务一 · 提示词工程</li>
       <li>任务二 · creative 仿写</li>
@@ -35,7 +35,7 @@
     <div class="stage__bar">
       <span class="stage__label">EXHIBITION HALL</span>
       <span class="stage__hint">
-        <kbd>←</kbd><kbd>→</kbd> 键盘　·　滚轮横向切换　·　按住拖拽
+        <kbd>←</kbd><kbd>→</kbd> 键盘　·　滚轮　·　拖拽　·　<b>地址栏同步 #展品名（试试浏览器后退）</b>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
       <div class="swiper" id="mySwi4">
         <div class="swiper-wrapper">
 
-          <div class="swiper-slide" data-name="棱镜切片" data-en="PRISM" data-desc="一束白光穿过三角棱镜，被拆成连续光谱——所谓“白”，其实是一整套颜色挤在一起。">
+          <div class="swiper-slide" data-history="prism" data-name="棱镜切片" data-en="PRISM" data-desc="一束白光穿过三角棱镜，被拆成连续光谱——所谓“白”，其实是一整套颜色挤在一起。">
             <div class="art art--prism"></div>
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">01</span>
@@ -52,7 +52,7 @@
             </div>
           </div>
 
-          <div class="swiper-slide" data-name="霓虹谱" data-en="NEON" data-desc="单色光管按十二平均律排布，把听觉的频率关系翻译成视觉的间距关系。">
+          <div class="swiper-slide" data-history="neon" data-name="霓虹谱" data-en="NEON" data-desc="单色光管按十二平均律排布，把听觉的频率关系翻译成视觉的间距关系。">
             <div class="art art--neon"></div>
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">02</span>
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <div class="swiper-slide" data-name="液光" data-en="LIQUID LIGHT" data-desc="三色光在雾箱里缓慢对流，每一次对流的边界都不会重复。">
+          <div class="swiper-slide" data-history="liquid" data-name="液光" data-en="LIQUID LIGHT" data-desc="三色光在雾箱里缓慢对流，每一次对流的边界都不会重复。">
             <div class="art art--liquid"></div>
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">03</span>
@@ -70,7 +70,7 @@
             </div>
           </div>
 
-          <div class="swiper-slide" data-name="光轨" data-en="TRACES" data-desc="长曝光记录下的城市车流，像一张被拉长的心电图。">
+          <div class="swiper-slide" data-history="traces" data-name="光轨" data-en="TRACES" data-desc="长曝光记录下的城市车流，像一张被拉长的心电图。">
             <div class="art art--trails"></div>
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">04</span>
@@ -79,7 +79,7 @@
             </div>
           </div>
 
-          <div class="swiper-slide" data-name="光谱墙" data-en="SPECTRUM WALL" data-desc="七色竖条与观众的呼吸同步，走近一步，它就亮一分。">
+          <div class="swiper-slide" data-history="spectrum" data-name="光谱墙" data-en="SPECTRUM WALL" data-desc="七色竖条与观众的呼吸同步，走近一步，它就亮一分。">
             <div class="art art--spectrum"></div>
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">05</span>
@@ -88,7 +88,7 @@
             </div>
           </div>
 
-          <div class="swiper-slide" data-name="爱达·魔都号" data-en="ADORA MAGIC CITY" data-desc="首艘国产大型邮轮，2024 年 1 月 1 日自上海吴淞口开启商业首航。总吨位 13.55 万吨，全长 323.6 米，2125 间客房，满载可容纳 5246 人。图由 AI 生成（横版 16:9）。">
+          <div class="swiper-slide" data-history="adora" data-name="爱达·魔都号" data-en="ADORA MAGIC CITY" data-desc="首艘国产大型邮轮，2024 年 1 月 1 日自上海吴淞口开启商业首航。总吨位 13.55 万吨，全长 323.6 米，2125 间客房，满载可容纳 5246 人。图由 AI 生成（横版 16:9）。">
             <img class="art art--photo" src="img/exhibit-06-adora.png" alt="黄昏海面上的大型邮轮，AI 生成示意图" />
             <div class="slide__caption">
               <span class="slide__no" data-swiper-parallax="-320" data-swiper-parallax-opacity="0">06</span>
@@ -218,9 +218,10 @@
       <div class="checklist__col">
         <h4>任务三 · 综合作品</h4>
         <ul>
-          <li><b>课堂没讲过的能力 · parallax 视差</b><code>parallax: true</code> + 三层 <code>data-swiper-parallax</code>（-320 / -170 / -90）</li>
+          <li><b>课堂没讲过的能力 · 浏览器历史（官方 demo 340）</b>地址栏跟着变 <code>#prism → #neon</code>，按浏览器 ← 后退能回上一张</li>
+          <li><b>附加 · parallax 视差</b><code>parallax: true</code> + 三层 <code>data-swiper-parallax</code>（-320 / -170 / -90）</li>
           <li><b>第六件展品</b>爱达·魔都号，AI 生成横版 16:9，<code>object-fit: cover</code> 不变形</li>
-          <li><b>附加（课上讲过，不计分）</b>键盘 <code>keyboard</code>、滚轮 <code>mousewheel</code>，四个开关可现场开合</li>
+          <li><b>附加（课上讲过，不计分）</b>键盘 / 滚轮，四个开关可现场开合</li>
           <li><b>delay 现场改</b>见下方“现场调参”，改完自动给出预期变化</li>
         </ul>
       </div>
