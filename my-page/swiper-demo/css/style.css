@@ -907,3 +907,32 @@ input[type="number"]:focus{ outline:2px solid var(--accent); outline-offset:1px;
   .verify th,.verify td{ padding:8px 9px; }
   .log-end{ padding:20px 18px; }
 }
+
+/* 任务一里的单条对比块 */
+.mini-cmp{
+  margin:18px 0 0;
+  padding:16px 18px 14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--paper-2);
+}
+.mini-cmp h4{
+  margin:0 0 4px;
+  font-size:13.5px; font-weight:650;
+}
+.mini-cmp .verify{ margin-top:12px; table-layout:fixed; }
+.mini-cmp .verify th:first-child,
+.mini-cmp .verify td:first-child{ width:82px; }
+.mini-cmp__cta{
+  margin:14px 0 0;
+  font-size:12.5px;
+  line-height:1.8;
+  color:var(--ink-2);
+  padding:10px 12px;
+  background:#f4f1e9;
+  border-left:2px solid var(--accent);
+  border-radius:0 8px 8px 0;
+}
+.mini-cmp__cta a{ color:var(--accent); font-weight:600; }
+.v-ok{ color:#256b45; font-weight:600; }
+.v-no{ color:#b4472f; font-weight:600; }

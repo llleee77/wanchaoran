@@ -85,6 +85,33 @@
         <figcaption>图 1 · <a href="debug/index.html">对照实验页</a> A 组（第一轮配置）：切换一次之后 <code>autoplay.running</code> 变成 false</figcaption>
       </figure>
 
+      <div class="mini-cmp">
+        <h4>③「圆点可点击」这一条，单独拉出来对比</h4>
+        <table class="verify">
+          <thead>
+            <tr><th style="width:86px">维度</th><th>不带 <code>clickable</code>（第一轮）</th><th><code>clickable: true</code>（第二轮）</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>触发条件</b></td>
+              <td>圆点由 <code>pagination</code> 渲染出来，但 <code>clickable</code> 默认 <code>false</code>，Swiper 不给它绑 click 处理器</td>
+              <td>显式写 <code>clickable: true</code>，每个圆点都绑上「跳到对应索引」</td>
+            </tr>
+            <tr>
+              <td><b>操作结果</b></td>
+              <td><span class="v-no">点了没反应</span>：指针不变、没有过渡、当前张序号原地不动</td>
+              <td><span class="v-ok">点了就跳</span>：过渡到那一张，<code>activeIndex</code> 同步更新</td>
+            </tr>
+            <tr>
+              <td><b>限制原因</b></td>
+              <td>缺的是<b>配置</b>不是样式——圆点看得见 ≠ 点得动，而且不报错</td>
+              <td>补上之后，同一个 DOM 元素从「装饰」变成「可交互控件」</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="mini-cmp__cta">👉 <a href="debug/index.html#click">点开对照实验页，亲手点一下这两排圆点</a>——左边点了不动，右边点了会跳，点完底下会现读 <code>activeIndex</code> 把结果显示出来。</p>
+      </div>
+
       <p class="insight">
         <b>问题出在哪</b>：四条需求里有三条只给了形容词。形容词到参数之间，全靠 AI 猜。
       </p>
@@ -103,7 +130,9 @@
           在你上一版基础上，按下面四条精确改，每一条都要对应到具体参数，不要省略、不要只给 diff：<br />
           1. <code>loop</code> 保持 <code>true</code>；<br />
           2. <code>autoplay</code> 必须是对象写法：<code>{ delay: 3200, disableOnInteraction: false }</code>。delay 必须正好 3200（要 3.2 秒），<code>disableOnInteraction</code> 必须 <code>false</code>——因为需求是"手动拖动之后自动播放不能停"；<br />
-          3. <code>pagination</code> 里 <code>el</code> 改成 <code>'#pager'</code>，并且加 <code>clickable: true</code>，否则圆点点了没反应；<br />
+          3. <code>pagination</code> 里 <code>el</code> 改成 <code>'#pager'</code>，并且加 <code>clickable: true</code>。
+          第一版就是这个毛病：<b>圆点画出来了但点不动</b>（<code>clickable</code> 默认 <code>false</code>，Swiper 不给它绑 click）。
+          这一版要求：<b>点第几个圆点就跳到第几张</b>，高亮和当前张同步；<br />
           4. <code>effect: 'cube'</code> 作为初始效果，并补上 <code>cubeEffect: { shadow: true, slideShadows: true }</code>。<br />
           只用 Swiper 11 的写法，不要用 <code>autoplay: 3000</code> 这种 v6 以前的简写。
         </div>

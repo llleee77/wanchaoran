@@ -84,6 +84,26 @@
     font-size:12.5px; cursor:pointer;
   }
   .ab-btn:hover{ opacity:.86; }
+  .ab-h2{ margin:46px 0 6px; font-size:21px; font-weight:700; letter-spacing:-.01em; }
+  .ab-h2 span{ font-size:12px; font-weight:400; color:var(--ink-3); margin-left:10px; letter-spacing:0; }
+  .ab-lead{ margin:0 0 18px; font-size:13px; color:var(--ink-2); line-height:1.85; }
+  .ab-dots{ display:flex; gap:9px; justify-content:center; padding:14px 0 2px; }
+  .ab-dots .swiper-pagination-bullet{
+    width:12px; height:12px; border-radius:50%;
+    background:#cfc9bd; opacity:1; cursor:pointer;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .ab-dots .swiper-pagination-bullet:hover{ background:#a8a196; }
+  .ab-dots .swiper-pagination-bullet-active{ background:var(--ink); transform:scale(1.2); }
+  .ab-click{
+    margin:10px 0 0; padding:9px 12px; border-radius:8px;
+    font-family:ui-monospace,Consolas,monospace; font-size:12px; line-height:1.7;
+    color:var(--ink-3); background:#f4f1e9;
+  }
+  .ab-click.is-bad{ color:#a3391f; background:#fdf1ee; }
+  .ab-click.is-ok{ color:#256b45; background:#eef6f1; }
+  .v-ok{ color:#256b45; font-weight:600; }
+  .v-no{ color:#b4472f; font-weight:600; }
   .ab-note{ margin:18px 0 0; font-size:12px; color:var(--ink-3); line-height:1.8; }
   @media (max-width:860px){ .ab-grid{ grid-template-columns:1fr; } }
 </style>
@@ -95,9 +115,9 @@
     <p class="kicker"><span class="kicker__dot"></span>A/B TEST · 课堂任务 06</p>
     <h1>同一段提示词，两轮结果并排跑</h1>
     <p class="lede">
-      左边是第一轮提示词生成的配置，右边是第二轮把需求翻译成参数之后的配置。
-      两个实例跑同一份代码、同一个自动翻页间隔逻辑，下方的读数是从 <code>swiper.params</code> 和
-      <code>swiper.autoplay.running</code> 实时读出来的——不是写死的文案。
+      两组对照：<b>① 自动播放</b>——拖一下，左边停、右边继续；<b>② 圆点点击</b>——左边的圆点点不动、右边的能跳。<br />
+      每一组的读数都是从 <code>swiper.params</code>、<code>swiper.autoplay.running</code>、<code>swiper.activeIndex</code>
+      实时读出来的，不是写死的文案。
     </p>
     <div class="log-nav">
       <a class="btn" href="../prompts.html">← 回到提示词记录</a>
@@ -173,6 +193,79 @@ pagination: { el: '.swiper-pagination', <span class="ok">clickable: true</span> 
     </section>
 
   </div>
+
+  <h2 class="ab-h2" id="click">② 圆点能不能点 <span>两边的配置只差一个 clickable</span></h2>
+  <p class="ab-lead">
+    下面两排圆点是真的分页器，<b>直接用鼠标点</b>。左边是没写 <code>clickable</code> 的版本，右边写了。
+    点完看每块底下那行「点击结果」——那行字是点完之后现读 <code>swiper.activeIndex</code> 生成的，不是我写死的。
+  </p>
+
+  <div class="ab-grid">
+    <section class="ab-panel ab-panel--bad">
+      <h2>C · 不带 clickable <span class="ab-tag ab-tag--bad">默认 false</span></h2>
+      <p class="ab-sub">圆点渲染出来了，但没有任何 click 处理</p>
+
+      <div class="ab-stage">
+        <div class="swiper" id="swC">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#2b1b4d,#0b0a14)">01</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#0e3f4a,#07131a)">02</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#4a1b2c,#14070d)">03</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#1b3a4d,#0a1420)">04</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-dots" id="pagerC"></div>
+      <p class="ab-click" id="cLog">还没点 —— 点上面任意一个圆点试试</p>
+
+      <pre class="ab-code">pagination: { el: '#pagerC' }   <span class="hl">// 就到这儿，没写 clickable</span></pre>
+    </section>
+
+    <section class="ab-panel ab-panel--good">
+      <h2>D · clickable: true <span class="ab-tag ab-tag--good">显式开启</span></h2>
+      <p class="ab-sub">Swiper 给每个圆点绑了 slideTo(索引)</p>
+
+      <div class="ab-stage">
+        <div class="swiper" id="swD">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#1b3a4d,#0a1420)">01</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#3a2d1b,#171007)">02</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#1b4a2c,#07170f)">03</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#3a1b2c,#14070d)">04</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-dots" id="pagerD"></div>
+      <p class="ab-click" id="dLog">还没点 —— 点上面任意一个圆点试试</p>
+
+      <pre class="ab-code">pagination: { el: '#pagerD', <span class="ok">clickable: true</span> }</pre>
+    </section>
+  </div>
+
+  <table class="verify">
+    <thead>
+      <tr><th style="width:96px">维度</th><th>C · 不带 clickable（第一轮）</th><th>D · clickable: true（第二轮）</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>触发条件</b></td>
+        <td>圆点由 <code>pagination</code> 渲染出来，但 <code>clickable</code> 默认是 <code>false</code>，Swiper 根本不给它绑 click 处理器</td>
+        <td>写了 <code>clickable: true</code>，每个圆点都绑上「跳到对应索引」的处理器</td>
+      </tr>
+      <tr>
+        <td><b>操作结果</b></td>
+        <td><span class="v-no">点了没反应</span>：鼠标指针不变成手型、没有过渡动画、当前张序号原地不动</td>
+        <td><span class="v-ok">点了就跳</span>：立刻过渡到那一张，<code>activeIndex</code> 同步更新，圆点高亮跟着走</td>
+      </tr>
+      <tr>
+        <td><b>限制原因</b></td>
+        <td>缺的是<b>配置</b>不是样式——圆点看得见 ≠ 点得动，而且不报错，只能靠点一下才发现</td>
+        <td>补上 <code>clickable</code> 之后，同一个 DOM 元素从「装饰」变成「可交互控件」</td>
+      </tr>
+    </tbody>
+  </table>
 
   <p class="ab-note">
     说明：这里的「用户切换」用 <code>slideNext()</code> 触发——它不属于 autoplay 自己发的切换，Swiper 会走和手动拖拽
@@ -253,6 +346,49 @@ pagination: { el: '.swiper-pagination', <span class="ok">clickable: true</span> 
   }
 
   document.getElementById('btnDrag').addEventListener('click', function () { runDrag(); });
+
+  /* ---------- 第二组：圆点能不能点 ---------- */
+  var swC = new Swiper('#swC', {
+    effect: 'slide',
+    speed: 400,
+    autoplay: false,
+    pagination: { el: '#pagerC' }              // 没有 clickable
+  });
+  var swD = new Swiper('#swD', {
+    effect: 'slide',
+    speed: 400,
+    autoplay: false,
+    pagination: { el: '#pagerD', clickable: true }
+  });
+
+  // 只负责“记录下来点完发生了什么”，点击本身交给 Swiper（C 组它没绑，所以点了不动）
+  function watchPager(sel, sw, logEl) {
+    var pager = document.querySelector(sel);
+    // 用捕获阶段：Swiper 自己的 click 处理器绑在圆点上是冒泡阶段，
+    // 必须在它之前把“点击前是第几张”读下来，否则读到的是已经跳过去之后的索引。
+    pager.addEventListener('click', function (e) {
+      var bullet = e.target.closest('.swiper-pagination-bullet');
+      if (!bullet) return;
+      var all = Array.prototype.slice.call(pager.querySelectorAll('.swiper-pagination-bullet'));
+      var n = all.indexOf(bullet) + 1;
+      var before = sw.activeIndex;
+      setTimeout(function () {
+        var after = sw.activeIndex;
+        if (after !== before) {
+          logEl.textContent = '点了第 ' + n + ' 个圆点 → 已跳到第 ' + (after + 1) + ' 张';
+          logEl.className = 'ab-click is-ok';
+        } else if (after === n - 1) {
+          logEl.textContent = '点了第 ' + n + ' 个圆点 → 本来就在这一张';
+          logEl.className = 'ab-click';
+        } else {
+          logEl.textContent = '点了第 ' + n + ' 个圆点 → 仍停在第 ' + (before + 1) + ' 张，没有任何反应';
+          logEl.className = 'ab-click is-bad';
+        }
+      }, 450);
+    }, true);
+  }
+  watchPager('#pagerC', swC, document.getElementById('cLog'));
+  watchPager('#pagerD', swD, document.getElementById('dLog'));
 
   // 打开 2.5 秒后自动跑一次，方便直接截屏
   setTimeout(function () { runDrag(); }, 2500);
