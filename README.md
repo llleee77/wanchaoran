@@ -21,6 +21,7 @@
 - 图文排版（`picture_above_text`）、JavaScript 对象（`obj005`）
 - 自我介绍页（`self-introduction.html`）
 - Swiper 轮播作品「光影展 LUMEN」（`my-page/swiper-demo/`）：六种内置 effect + 手写 creative 电影墙，附提示词记录 `prompts.html` 与 A/B 对照实验页
+- 提示词流水账（`wcr_prompt.md`）：每条给 AI 的提示词与所用模型，本次课堂任务三条任务的提示词原文也存档在里面
 
 图片素材位于 `my-page/img/`，本地字体库（Font Awesome / Lucide）位于 `my-page/cdn/`。
 
