@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>复现：只引核心包会怎样</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="../vendor/swiper-bundle.min.css" />
+<style>
+  .core-wrap{ max-width:900px; }
+  .core-card{
+    margin-top:26px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--paper-2);
+    padding:22px;
+  }
+  .core-card h2{ margin:0 0 8px; font-size:16px; }
+  .core-card p{ margin:0 0 14px; font-size:13px; color:var(--ink-2); line-height:1.8; }
+  .fileline{
+    display:flex; gap:10px; flex-wrap:wrap;
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:12px;
+    margin-bottom:16px;
+  }
+  .chip{
+    padding:5px 10px; border-radius:6px; border:1px solid var(--line);
+    background:#f7f5f0; color:var(--ink-2);
+  }
+  .chip--bad{ border-color:#e6c3ba; background:#fdf1ee; color:#a3391f; }
+  .chip--good{ border-color:#bcd8c6; background:#eef6f1; color:#256b45; }
+  .errbox{
+    border:1px solid #6b2b23;
+    border-radius:10px;
+    overflow:hidden;
+    background:#1b0f0d;
+  }
+  .errbox__bar{
+    padding:8px 14px;
+    background:#2a1613;
+    color:#e79c8e;
+    font-size:11.5px;
+    letter-spacing:.1em;
+    border-bottom:1px solid #4a231d;
+  }
+  .errbox pre{
+    margin:0; padding:16px;
+    font-size:12.5px; line-height:1.8;
+    color:#ffb3a3;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .errbox .loc{ color:#8b6b64; }
+  .rows{ margin:18px 0 0; }
+  .rows .r{
+    display:flex; justify-content:space-between; gap:14px;
+    padding:7px 0; border-bottom:1px dashed var(--line-soft);
+    font-size:12.5px;
+  }
+  .rows .r:last-child{ border-bottom:0; }
+  .rows .r span:first-child{ color:var(--ink-3); font-family:ui-monospace,Consolas,monospace; font-size:11.5px; }
+  .rows .r span:last-child{ font-family:ui-monospace,Consolas,monospace; font-weight:600; }
+  .mini{ margin-top:6px; border-radius:10px; overflow:hidden; background:#07080d; aspect-ratio:16/9; }
+  .mini .swiper{ width:100%; height:100%; }
+  .mini .swiper-slide{ display:grid; place-items:center; color:#fff; font-size:24px; font-weight:700; }
+</style>
+</head>
+<body class="page-log">
+
+<header class="masthead">
+  <div class="wrap core-wrap">
+    <p class="kicker"><span class="kicker__dot"></span>REPRODUCE · 课堂任务 06</p>
+    <h1>只引核心包，键鼠模块就真的不存在</h1>
+    <p class="lede">
+      这个页面只加载了 <code>swiper.min.js</code>（核心包，不含任何模块），然后照 AI 第一版写法开键鼠控制。
+      下面的异常是运行到这里时真的抛出来的，页面把它原样抓下来显示。
+    </p>
+    <div class="log-nav">
+      <a class="btn" href="../prompts.html">← 回到提示词记录</a>
+      <a class="btn btn--ghost" href="index.html">看 A/B 对照</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap core-wrap">
+
+  <section class="core-card">
+    <h2>本页实际加载的文件</h2>
+    <div class="fileline">
+      <span class="chip chip--bad">swiper.min.js　核心包　67 KB　❌ 无 Mousewheel / Keyboard</span>
+      <span class="chip chip--good">swiper-bundle.min.js　完整包　152 KB　✅ 含全部模块</span>
+    </div>
+
+    <div class="mini">
+      <div class="swiper" id="coreSwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" style="background:linear-gradient(140deg,#2b1b4d,#0b0a14)">01</div>
+          <div class="swiper-slide" style="background:linear-gradient(140deg,#0e3f4a,#07131a)">02</div>
+          <div class="swiper-slide" style="background:linear-gradient(140deg,#4a1b2c,#14070d)">03</div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="rows">
+      <div class="r"><span>typeof Swiper</span><span id="r1">–</span></div>
+      <div class="r"><span>swiper.keyboard</span><span id="r2">–</span></div>
+      <div class="r"><span>swiper.mousewheel</span><span id="r3">–</span></div>
+      <div class="r"><span>模块列表</span><span id="r4">–</span></div>
+    </dl>
+
+    <div class="errbox" style="margin-top:18px">
+      <div class="errbox__bar">页面捕获的异常（try / catch 原样输出）</div>
+      <pre id="err">运行中…</pre>
+    </div>
+  </section>
+
+  <p class="ab-note" style="margin-top:18px;font-size:12px;color:var(--ink-3);line-height:1.8;">
+    换回 <code>swiper-bundle.min.js</code> 之后，<code>swiper.mousewheel</code> 就是一个正常对象，
+    <code>.enable() / .disable()</code> 都能用——主页面那三个开关就是靠它实现的。
+  </p>
+
+</main>
+
+<footer class="foot">
+  <p>不是版本升级坏了，是整个模块就没被引进来。</p>
+  <p class="foot__meta">复现页 · 课堂任务 06 · 万超然 24001011008</p>
+</footer>
+
+<script src="vendor/swiper-core.min.js"></script>
+<script>
+(function () {
+  var out = {
+    r1: document.getElementById('r1'),
+    r2: document.getElementById('r2'),
+    r3: document.getElementById('r3'),
+    r4: document.getElementById('r4')
+  };
+  var errBox = document.getElementById('err');
+
+  out.r1.textContent = typeof Swiper;
+
+  var sw;
+  try {
+    // 完全照 AI 第一版写法：布尔值 + 没引模块
+    sw = new Swiper('#coreSwiper', {
+      loop: true,
+      effect: 'cube',
+      keyboard: true,
+      mousewheel: true
+    });
+  } catch (e) {
+    errBox.textContent = e.name + ': ' + e.message;
+    return;
+  }
+
+  out.r2.textContent = typeof sw.keyboard;
+  out.r3.textContent = typeof sw.mousewheel;
+  out.r4.textContent = Array.isArray(sw.modules) ? (sw.modules.length + ' 个') : '—';
+
+  try {
+    // 想打开滚轮控制：模块不存在，这句会真的抛异常
+    sw.mousewheel.enable();
+    errBox.textContent = '没有异常（意料之外）';
+  } catch (e) {
+    errBox.textContent =
+      e.name + ': ' + e.message + '\n' +
+      '    at index.html: ' + (sw.mousewheel === undefined ? 'sw.mousewheel.enable()' : '?') + '\n' +
+      '    → swiper.mousewheel 是 ' + String(sw.mousewheel) + '，因为 swiper.min.js 不含 Mousewheel 模块';
+  }
+
+  try { sw.keyboard.enable(); } catch (e) {
+    errBox.textContent += '\n\n打开键盘控制时同样报错：\n' + e.name + ': ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>

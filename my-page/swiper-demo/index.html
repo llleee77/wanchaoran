@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>光影展 LUMEN · 轮播实验室 | 课堂任务 06</title>
+<link rel="stylesheet" href="vendor/swiper-bundle.min.css" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="masthead__top">
+      <p class="kicker"><span class="kicker__dot"></span>CHAPTER 06 · 课堂任务</p>
+      <a class="toplink" href="prompts.html">
+        提示词记录 · PROMPT LOG
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+    <h1>光影展 <span class="latin">LUMEN</span> 轮播实验室</h1>
+    <p class="lede">六种内置特效 + 一种 <code>creative</code> 自定义变换；键盘、滚轮、拖拽三通道控制；参数可现场调，结论可现场验。</p>
+    <ul class="badges">
+      <li>任务一 · 提示词工程</li>
+      <li>任务二 · creative 仿写</li>
+      <li>任务三 · 综合创作 + 技术答辩</li>
+    </ul>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= 舞台 ================= -->
+  <section class="stage" aria-label="轮播演示区">
+    <div class="stage__bar">
+      <span class="stage__label">EXHIBITION HALL</span>
+      <span class="stage__hint">
+        <kbd>←</kbd><kbd>→</kbd> 键盘　·　滚轮横向切换　·　按住拖拽
+      </span>
+    </div>
+
+    <div class="stage__frame">
+      <div class="swiper" id="mySwi4">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide" data-name="棱镜切片" data-en="PRISM" data-desc="一束白光穿过三角棱镜，被拆成连续光谱——所谓“白”，其实是一整套颜色挤在一起。">
+            <div class="art art--prism"></div>
+            <div class="slide__caption">
+              <span class="slide__no">01</span>
+              <h2>棱镜切片<span class="slide__en">PRISM</span></h2>
+              <p>一束白光穿过三角棱镜，被拆成连续光谱。</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide" data-name="霓虹谱" data-en="NEON" data-desc="单色光管按十二平均律排布，把听觉的频率关系翻译成视觉的间距关系。">
+            <div class="art art--neon"></div>
+            <div class="slide__caption">
+              <span class="slide__no">02</span>
+              <h2>霓虹谱<span class="slide__en">NEON</span></h2>
+              <p>十二根光管，按十二平均律排开。</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide" data-name="液光" data-en="LIQUID LIGHT" data-desc="三色光在雾箱里缓慢对流，每一次对流的边界都不会重复。">
+            <div class="art art--liquid"></div>
+            <div class="slide__caption">
+              <span class="slide__no">03</span>
+              <h2>液光<span class="slide__en">LIQUID LIGHT</span></h2>
+              <p>三色光在雾箱里对流，边界永不重复。</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide" data-name="光轨" data-en="TRACES" data-desc="长曝光记录下的城市车流，像一张被拉长的心电图。">
+            <div class="art art--trails"></div>
+            <div class="slide__caption">
+              <span class="slide__no">04</span>
+              <h2>光轨<span class="slide__en">TRACES</span></h2>
+              <p>长曝光记录下的车流，是城市的心电图。</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide" data-name="光谱墙" data-en="SPECTRUM WALL" data-desc="七色竖条与观众的呼吸同步，走近一步，它就亮一分。">
+            <div class="art art--spectrum"></div>
+            <div class="slide__caption">
+              <span class="slide__no">05</span>
+              <h2>光谱墙<span class="slide__en">SPECTRUM WALL</span></h2>
+              <p>七色竖条随呼吸明暗，走近就亮一分。</p>
+            </div>
+          </div>
+
+          <div class="swiper-slide" data-name="爱达·魔都号" data-en="ADORA MAGIC CITY" data-desc="首艘国产大型邮轮，2024 年 1 月 1 日自上海吴淞口开启商业首航。总吨位 13.55 万吨，全长 323.6 米，2125 间客房，满载可容纳 5246 人。图由 AI 生成（横版 16:9）。">
+            <img class="art art--photo" src="img/exhibit-06-adora.png" alt="黄昏海面上的大型邮轮，AI 生成示意图" />
+            <div class="slide__caption">
+              <span class="slide__no">06</span>
+              <h2>爱达·魔都号<span class="slide__en">ADORA MAGIC CITY</span></h2>
+              <p>首艘国产大型邮轮 · 2024.01.01 商业首航 · 13.55 万吨</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 控制器 -->
+    <div class="controls">
+      <div class="controls__nav">
+        <button class="navbtn" id="btnPrev" type="button" aria-label="上一张">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7" /></svg>
+        </button>
+        <button class="navbtn" id="btnNext" type="button" aria-label="下一张">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
+        <span class="counter"><b id="curIndex">1</b><i>/</i><span id="totalIndex">6</span></span>
+      </div>
+
+      <div class="swiper-pagination" id="pager"></div>
+
+      <div class="controls__switches">
+        <label class="switch">
+          <input type="checkbox" id="chkAutoplay" checked />
+          <span class="switch__track"><span class="switch__knob"></span></span>
+          <span class="switch__text">自动播放</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="chkWheel" checked />
+          <span class="switch__track"><span class="switch__knob"></span></span>
+          <span class="switch__text">滚轮控制</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="chkKeys" checked />
+          <span class="switch__track"><span class="switch__knob"></span></span>
+          <span class="switch__text">键盘控制</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 特效切换 ================= -->
+  <section class="panel" aria-labelledby="fxTitle">
+    <div class="panel__head">
+      <h2 id="fxTitle">特效切换 <span class="panel__sub">6 个内置 + 第 7 个 creative 电影墙</span></h2>
+      <p class="panel__note">点一下就销毁重建实例，参数一改即生效。</p>
+    </div>
+
+    <div class="fxbar" id="fxbar" role="tablist" aria-label="轮播特效">
+      <button class="fx" data-fx="slide" role="tab" aria-selected="false"><i>01</i>slide<i class="fx__cn">逐张推进</i></button>
+      <button class="fx" data-fx="fade" role="tab" aria-selected="false"><i>02</i>fade<i class="fx__cn">淡入淡出</i></button>
+      <button class="fx is-active" data-fx="cube" role="tab" aria-selected="true"><i>03</i>cube<i class="fx__cn">立方翻转</i></button>
+      <button class="fx" data-fx="coverflow" role="tab" aria-selected="false"><i>04</i>coverflow<i class="fx__cn">唱片封面</i></button>
+      <button class="fx" data-fx="flip" role="tab" aria-selected="false"><i>05</i>flip<i class="fx__cn">翻牌</i></button>
+      <button class="fx" data-fx="cards" role="tab" aria-selected="false"><i>06</i>cards<i class="fx__cn">叠牌</i></button>
+      <button class="fx fx--star" data-fx="creative" role="tab" aria-selected="false"><i>07</i>creative<i class="fx__cn">电影墙 ★</i></button>
+    </div>
+  </section>
+
+  <!-- ================= 参数与说明 ================= -->
+  <section class="grid">
+    <article class="card">
+      <h3 class="card__title">当前参数 <span class="card__hint">实时回读 swiper.params</span></h3>
+      <pre class="code" id="paramDump"></pre>
+    </article>
+
+    <article class="card">
+      <h3 class="card__title">现场调参 <span class="card__hint">答辩用：改一个值，说一句预期</span></h3>
+
+      <div class="knob">
+        <label for="delayInput">autoplay.delay（毫秒）</label>
+        <div class="knob__row">
+          <input type="range" id="delayRange" min="800" max="6000" step="100" value="3200" />
+          <input type="number" id="delayInput" min="800" max="6000" step="100" value="3200" />
+        </div>
+        <p class="knob__say" id="delaySay"></p>
+      </div>
+
+      <div class="knob">
+        <label for="speedInput">speed（毫秒，切图动画时长）</label>
+        <div class="knob__row">
+          <input type="range" id="speedRange" min="200" max="1600" step="50" value="700" />
+          <input type="number" id="speedInput" min="200" max="1600" step="50" value="700" />
+        </div>
+        <p class="knob__say" id="speedSay"></p>
+      </div>
+
+      <p class="card__foot">说明：改完立刻生效，控制台不会报错——因为改的是 <code>swiper.params</code> 而不是重新 new 一个实例。</p>
+    </article>
+  </section>
+
+  <!-- ================= 任务对照 ================= -->
+  <section class="panel">
+    <div class="panel__head">
+      <h2>需求对照表 <span class="panel__sub">逐条指出实现在哪一行</span></h2>
+      <p class="panel__note">答辩时照着说，不会漏项。</p>
+    </div>
+    <div class="checklist">
+      <div class="checklist__col">
+        <h4>任务一 · new Swiper('#mySwi4', {…})</h4>
+        <ul>
+          <li><b>① 无缝循环</b><code>loop: true</code>　索引从 0 数到 5 再回 0，首尾相接不跳帧</li>
+          <li><b>② 3.2 秒自动翻页，手动后不停</b><code>autoplay: { delay: 3200, disableOnInteraction: false }</code></li>
+          <li><b>③ 圆点分页器可点击</b><code>pagination: { el: '#pager', clickable: true }</code></li>
+          <li><b>④ 初始效果 cube</b><code>effect: 'cube'</code>　页面加载即立方体</li>
+        </ul>
+      </div>
+      <div class="checklist__col">
+        <h4>任务二 · creative 电影墙</h4>
+        <ul>
+          <li><b>prev：缩小 + 左移 + 带角度</b><code>translate: ['-20%', 0, -380]</code> · <code>scale: 0.6</code> · <code>rotate: [0, 30, 0]</code></li>
+          <li><b>next：放大 + 右移进场</b><code>translate: ['112%', 0, -120]</code> · <code>scale: 1.18</code></li>
+          <li><b>叠三层，形成纵深</b><code>limitProgress: 3</code></li>
+          <li><b>prev / next 按钮仍能驱动 transform</b>由 <code>navigation</code> 接管，切换即重算进度</li>
+        </ul>
+      </div>
+      <div class="checklist__col">
+        <h4>任务三 · 综合作品</h4>
+        <ul>
+          <li><b>第六件展品</b>爱达·魔都号，AI 生成横版 16:9，<code>object-fit: cover</code> 不变形</li>
+          <li><b>键盘控制</b><code>keyboard: { enabled: true, onlyInViewport: true }</code></li>
+          <li><b>滚轮控制</b><code>mousewheel: { releaseOnEdges: true, thresholdDelta: 16 }</code></li>
+          <li><b>delay 现场改</b>见右上“现场调参”，改完自动给出预期变化</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 提交材料入口 ================= -->
+  <section class="panel cta">
+    <div class="cta__text">
+      <h2>作业提交材料 · 提示词记录</h2>
+      <p>三轮提示词、每轮 AI 的原始回答、粘进页面后的验证结论，以及三个任务的答辩答案，全部可在线查看。</p>
+    </div>
+    <div class="cta__links">
+      <a href="prompts.html#t1">任务一 · 提示词工程 →</a>
+      <a href="prompts.html#t2">任务二 · creative 仿写 →</a>
+      <a href="prompts.html#t3">任务三 · 综合创作 + 答辩 →</a>
+      <a href="debug/index.html">附 · A/B 对照实验（答辩道具）→</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>轮播插件只是工具。<b>让它听话的，是写提示词的人和改参数的人。</b></p>
+  <p class="foot__meta">课堂任务 06 · 光影展 LUMEN 轮播实验室 · Swiper 11.1.14（本地引入，断网可用）</p>
+</footer>
+
+<script src="vendor/swiper-bundle.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

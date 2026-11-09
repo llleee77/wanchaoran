@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A/B 对照实验 · 第一轮 vs 第二轮</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="../vendor/swiper-bundle.min.css" />
+<style>
+  .ab-wrap{ max-width:1180px; }
+  .ab-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:22px;
+    margin-top:26px;
+  }
+  .ab-panel{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--paper-2);
+    padding:18px 18px 16px;
+    min-width:0;
+  }
+  .ab-panel--bad{ border-color:#e6c3ba; }
+  .ab-panel--good{ border-color:#bcd8c6; }
+  .ab-panel h2{
+    margin:0 0 3px; font-size:15px; font-weight:650;
+    display:flex; align-items:center; gap:8px;
+  }
+  .ab-tag{
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:10.5px; letter-spacing:.12em;
+    padding:2px 7px; border-radius:4px;
+  }
+  .ab-tag--bad{ background:#f7e2dc; color:#a3391f; }
+  .ab-tag--good{ background:#e2f0e7; color:#256b45; }
+  .ab-sub{ margin:0 0 12px; font-size:11.5px; color:var(--ink-3); }
+
+  .ab-stage{ border-radius:10px; overflow:hidden; background:#07080d; }
+  .ab-stage .swiper{ width:100%; height:100%; }
+  .ab-stage{ aspect-ratio:16/9; }
+  .ab-slide{ display:grid; place-items:center; color:#fff; font-size:26px; font-weight:700; letter-spacing:.1em; }
+
+  .ab-code{
+    margin:12px 0 0;
+    padding:10px 12px;
+    background:#12141a; color:#cfd4de;
+    border-radius:8px;
+    font-size:11px; line-height:1.7;
+    overflow-x:auto;
+  }
+  .ab-code .hl{ color:#ff9e80; }
+  .ab-code .ok{ color:#8fe0ae; }
+
+  .ab-rows{ margin:14px 0 0; }
+  .ab-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    gap:12px;
+    padding:6px 0;
+    border-bottom:1px dashed var(--line-soft);
+    font-size:12px;
+  }
+  .ab-row:last-child{ border-bottom:0; }
+  .ab-row dt{ color:var(--ink-3); font-family:ui-monospace,Consolas,monospace; font-size:11.5px; }
+  .ab-row dd{ margin:0; font-family:ui-monospace,Consolas,monospace; font-weight:600; }
+  .v-false{ color:#b4472f; }
+  .v-true{ color:#256b45; }
+
+  .ab-log{
+    margin-top:14px;
+    font-size:11.5px;
+    color:var(--ink-2);
+    background:#f4f1e9;
+    border-radius:8px;
+    padding:9px 12px;
+    min-height:38px;
+    font-family:ui-monospace,Consolas,monospace;
+    line-height:1.7;
+  }
+  .ab-btn{
+    margin-top:16px;
+    display:inline-flex; align-items:center; gap:8px;
+    padding:9px 16px;
+    border:1px solid var(--ink); border-radius:999px;
+    background:var(--ink); color:#fff;
+    font-size:12.5px; cursor:pointer;
+  }
+  .ab-btn:hover{ opacity:.86; }
+  .ab-note{ margin:18px 0 0; font-size:12px; color:var(--ink-3); line-height:1.8; }
+  @media (max-width:860px){ .ab-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body class="page-log">
+
+<header class="masthead">
+  <div class="wrap ab-wrap">
+    <p class="kicker"><span class="kicker__dot"></span>A/B TEST · 课堂任务 06</p>
+    <h1>同一段提示词，两轮结果并排跑</h1>
+    <p class="lede">
+      左边是第一轮提示词生成的配置，右边是第二轮把需求翻译成参数之后的配置。
+      两个实例跑同一份代码、同一个自动翻页间隔逻辑，下方的读数是从 <code>swiper.params</code> 和
+      <code>swiper.autoplay.running</code> 实时读出来的——不是写死的文案。
+    </p>
+    <div class="log-nav">
+      <a class="btn" href="../prompts.html">← 回到提示词记录</a>
+      <a class="btn btn--ghost" href="../index.html">看正式作品</a>
+      <a class="btn btn--ghost" href="core-only.html">复现：只引核心包</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap ab-wrap">
+
+  <button class="ab-btn" id="btnDrag" type="button">▶ 同时对两个实例模拟一次「用户主动切换」</button>
+
+  <div class="ab-grid">
+
+    <!-- A -->
+    <section class="ab-panel ab-panel--bad">
+      <h2>A · 第一轮提示词 <span class="ab-tag ab-tag--bad">ROUND 01</span></h2>
+      <p class="ab-sub">“自动播放、有分页器、立方体”——只给了形容词</p>
+
+      <div class="ab-stage">
+        <div class="swiper" id="swA">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#2b1b4d,#0b0a14)">01</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#0e3f4a,#07131a)">02</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#4a1b2c,#14070d)">03</div>
+          </div>
+        </div>
+      </div>
+
+      <pre class="ab-code">autoplay: { <span class="hl">delay: 3000</span>, <span class="hl">disableOnInteraction: true</span> }
+pagination: { el: '.swiper-pagination' }   <span class="hl">// 没有 clickable</span>
+<span class="hl">// 抄的是 Swiper 6/7 的老文档；v11 里这个默认值其实是 false</span></pre>
+
+      <dl class="ab-rows">
+        <div class="ab-row"><dt>autoplay.delay</dt><dd id="aDelay">–</dd></div>
+        <div class="ab-row"><dt>disableOnInteraction</dt><dd id="aDoi">–</dd></div>
+        <div class="ab-row"><dt>pagination.clickable</dt><dd id="aClick">–</dd></div>
+        <div class="ab-row"><dt>autoplay.running</dt><dd id="aRun">–</dd></div>
+        <div class="ab-row"><dt>自动翻页次数</dt><dd id="aCount">–</dd></div>
+      </dl>
+
+      <div class="ab-log" id="aLog">等待模拟拖拽…</div>
+    </section>
+
+    <!-- B -->
+    <section class="ab-panel ab-panel--good">
+      <h2>B · 第二轮提示词 <span class="ab-tag ab-tag--good">ROUND 02</span></h2>
+      <p class="ab-sub">点名参数：3.2 秒、手动后不停、圆点可点</p>
+
+      <div class="ab-stage">
+        <div class="swiper" id="swB">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#1b3a4d,#0a1420)">01</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#3a2d1b,#171007)">02</div>
+            <div class="swiper-slide ab-slide" style="background:linear-gradient(140deg,#1b4a2c,#07170f)">03</div>
+          </div>
+        </div>
+      </div>
+
+      <pre class="ab-code">autoplay: { <span class="ok">delay: 3200</span>, <span class="ok">disableOnInteraction: false</span> }
+pagination: { el: '.swiper-pagination', <span class="ok">clickable: true</span> }</pre>
+
+      <dl class="ab-rows">
+        <div class="ab-row"><dt>autoplay.delay</dt><dd id="bDelay">–</dd></div>
+        <div class="ab-row"><dt>disableOnInteraction</dt><dd id="bDoi">–</dd></div>
+        <div class="ab-row"><dt>pagination.clickable</dt><dd id="bClick">–</dd></div>
+        <div class="ab-row"><dt>autoplay.running</dt><dd id="bRun">–</dd></div>
+        <div class="ab-row"><dt>自动翻页次数</dt><dd id="bCount">–</dd></div>
+      </dl>
+
+      <div class="ab-log" id="bLog">等待模拟拖拽…</div>
+    </section>
+
+  </div>
+
+  <p class="ab-note">
+    说明：这里的「用户切换」用 <code>slideNext()</code> 触发——它不属于 autoplay 自己发的切换，Swiper 会走和手动拖拽
+    同一段判断（<code>beforeTransitionStart</code> / <code>sliderFirstMove</code>），所以 A 停、B 不停是配置决定的，
+    不是页面写死的。上方读数每 120ms 从 <code>swiper.params</code> 与 <code>swiper.autoplay.running</code> 现读。
+  </p>
+
+</main>
+
+<footer class="foot">
+  <p>A 和 B 跑的是同一份 CSS、同一份 Swiper，差的就是三个参数。</p>
+  <p class="foot__meta">对照实验 · 课堂任务 06 · 万超然 24001011008</p>
+</footer>
+
+<script src="../vendor/swiper-bundle.min.js"></script>
+<script>
+(function () {
+  var COUNTS = { a: 0, b: 0 };
+
+  var swA = new Swiper('#swA', {
+    loop: true,
+    effect: 'cube',
+    speed: 600,
+    autoplay: { delay: 3000, disableOnInteraction: true },   // 第一轮：AI 抄了旧版本文档
+    pagination: { el: '#pagerA' }                 // 没有 clickable
+  });
+
+  var swB = new Swiper('#swB', {
+    loop: true,
+    effect: 'cube',
+    speed: 600,
+    autoplay: { delay: 3200, disableOnInteraction: false },
+    pagination: { el: '#pagerB', clickable: true }
+  });
+
+  swA.on('slideChange', function () { COUNTS.a++; });
+  swB.on('slideChange', function () { COUNTS.b++; });
+
+  function paint(el, text, good) {
+    el.textContent = text;
+    el.className = good === true ? 'v-true' : good === false ? 'v-false' : '';
+  }
+
+  function tick() {
+    paint(document.getElementById('aDelay'), String(swA.params.autoplay.delay));
+    paint(document.getElementById('aDoi'), String(swA.params.autoplay.disableOnInteraction), !swA.params.autoplay.disableOnInteraction);
+    paint(document.getElementById('aClick'), String(swA.params.pagination.clickable), swA.params.pagination.clickable);
+    paint(document.getElementById('aRun'), String(swA.autoplay.running), swA.autoplay.running);
+    paint(document.getElementById('aCount'), COUNTS.a + ' 次');
+
+    paint(document.getElementById('bDelay'), String(swB.params.autoplay.delay));
+    paint(document.getElementById('bDoi'), String(swB.params.autoplay.disableOnInteraction), !swB.params.autoplay.disableOnInteraction);
+    paint(document.getElementById('bClick'), String(swB.params.pagination.clickable), swB.params.pagination.clickable);
+    paint(document.getElementById('bRun'), String(swB.autoplay.running), swB.autoplay.running);
+    paint(document.getElementById('bCount'), COUNTS.b + ' 次');
+  }
+  setInterval(tick, 120);
+  tick();
+
+  // 模拟一次「用户主动切换」：调 slideNext()，Swiper 会把它当成非 autoplay 触发的切换，
+  // 走的是和手动拖拽同一段判断（beforeTransitionStart / sliderFirstMove）。
+  function userNext(sw) {
+    sw.slideNext();
+  }
+
+  function runDrag() {
+    userNext(swA);
+    userNext(swB);
+    var t = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+    document.getElementById('aLog').textContent = '[' + t + '] 已模拟一次用户切换 → 稍等 0.6 秒看 running';
+    document.getElementById('bLog').textContent = '[' + t + '] 已模拟一次用户切换 → 稍等 0.6 秒看 running';
+    setTimeout(function () {
+      document.getElementById('aLog').textContent =
+        '切换后 autoplay.running = ' + swA.autoplay.running + '　（disableOnInteraction: true → 用户一操作就停）';
+      document.getElementById('bLog').textContent =
+        '切换后 autoplay.running = ' + swB.autoplay.running + '　（disableOnInteraction: false → 用户操作后继续跑）';
+    }, 600);
+  }
+
+  document.getElementById('btnDrag').addEventListener('click', function () { runDrag(); });
+
+  // 打开 2.5 秒后自动跑一次，方便直接截屏
+  setTimeout(function () { runDrag(); }, 2500);
+})();
+</script>
+</body>
+</html>

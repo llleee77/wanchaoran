@@ -20,6 +20,7 @@
 - 图标字体（`iconfont-1~4`）、SVG（`svg004`）、CSS3 动画（`css3004`）
 - 图文排版（`picture_above_text`）、JavaScript 对象（`obj005`）
 - 自我介绍页（`self-introduction.html`）
+- Swiper 轮播作品「光影展 LUMEN」（`my-page/swiper-demo/`）：六种内置 effect + 手写 creative 电影墙，附提示词记录 `prompts.html` 与 A/B 对照实验页
 
 图片素材位于 `my-page/img/`，本地字体库（Font Awesome / Lucide）位于 `my-page/cdn/`。
 

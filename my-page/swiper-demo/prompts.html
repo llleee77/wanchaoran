@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>提示词记录 PROMPT LOG · 光影展轮播实验室</title>
+<meta name="description" content="课堂任务 06 的提示词迭代记录：三轮提示词、每轮 AI 原始回答、粘贴后的验证结论，附答辩问答。" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page-log">
+
+<header class="masthead masthead--log">
+  <div class="wrap">
+    <p class="kicker"><span class="kicker__dot"></span>PROMPT LOG · 课堂任务 06</p>
+    <h1>提示词记录 <span class="latin">PROMPT LOG</span></h1>
+    <p class="lede">
+      三轮迭代，每轮都留了原始提示词、AI 的原始回答，以及「粘进页面之后到底成没成」的验证结论。
+      下面所有代码都已在本项目的 <code>js/main.js</code> 里跑通。
+    </p>
+    <ul class="badges">
+      <li>万超然 · 24001011008</li>
+      <li>前端开发 · 课堂任务 06</li>
+      <li>2026-11-05</li>
+    </ul>
+    <div class="log-nav">
+      <a class="btn" href="index.html">← 回到光影展</a>
+      <a class="btn btn--ghost" href="#t1">任务一</a>
+      <a class="btn btn--ghost" href="#t2">任务二</a>
+      <a class="btn btn--ghost" href="#t3">任务三</a>
+      <a class="btn btn--ghost" href="https://github.com/llleee77/swiper-lumen" target="_blank" rel="noopener">GitHub 仓库 ↗</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap log-wrap">
+
+  <!-- ================= 任务一 ================= -->
+  <section class="log-sec" id="t1">
+    <div class="log-sec__head">
+      <span class="log-sec__no">TASK 01</span>
+      <h2>提示词工程：让 AI 听懂需求</h2>
+      <p class="log-sec__goal">
+        任务：<b>不写代码，只写提示词</b>，让 AI 生成 <code>new Swiper('#mySwi4', {…})</code>，满足
+        ① 无缝循环 ② 3.2 秒自动翻页且手动操作后不停止 ③ 圆点分页器可点击 ④ 初始效果 cube。
+      </p>
+    </div>
+
+    <!-- ROUND 01 -->
+    <article class="round">
+      <div class="round__tag">ROUND 01 · 第一版</div>
+
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          用 Swiper 11 帮我写一段初始化代码，容器 id 是 <code>mySwi4</code>。要求：无缝循环、自动播放、有分页器，初始效果是立方体。
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="answer__head"><span>AI 回答</span><em>节选</em></div>
+<pre><code>new Swiper('#mySwi4', {
+  loop: true,
+  autoplay: { delay: 3000, disableOnInteraction: true },  // 抄的旧版本文档
+  pagination: { el: '.swiper-pagination' },               // 没有 clickable
+  effect: 'cube'
+});</code></pre>
+      </div>
+
+      <table class="verify">
+        <thead><tr><th>需求</th><th>粘进页面后看到的</th><th class="v-col">判定</th></tr></thead>
+        <tbody>
+          <tr><td>① 无缝循环</td><td>第 6 张后回第 1 张，无空白帧</td><td class="v-col ok">通过</td></tr>
+          <tr><td>② 3.2 秒自动翻页</td><td>能自动翻，但约 <b>3 秒</b>一张，不是 3.2</td><td class="v-col no">数值错</td></tr>
+          <tr><td>② 手动后不停止</td><td>手指拖一次，<b>自动播放直接停了</b></td><td class="v-col no">关键缺陷</td></tr>
+          <tr><td>③ 圆点可点击</td><td>圆点显示正常，<b>点了没反应</b></td><td class="v-col no">缺参数</td></tr>
+          <tr><td>④ 初始 cube</td><td>首屏就是立方体</td><td class="v-col ok">通过</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="shot" data-slot>
+        <img src="img/shot-01.png" alt="对照实验页 A 组：第一轮配置的实测读数" loading="lazy" />
+        <figcaption>图 1 · <a href="debug/index.html">对照实验页</a> A 组（第一轮配置）：切换一次之后 <code>autoplay.running</code> 变成 false</figcaption>
+      </figure>
+
+      <p class="insight">
+        <b>问题出在哪</b>：四条需求里有三条只给了形容词。形容词到参数之间，全靠 AI 猜。
+      </p>
+    </article>
+
+    <!-- ROUND 02 -->
+    <article class="round">
+      <div class="round__tag round__tag--ok">ROUND 02 · 说清楚</div>
+
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          在你上一版基础上，按下面四条精确改，每一条都要对应到具体参数，不要省略、不要只给 diff：<br />
+          1. <code>loop</code> 保持 <code>true</code>；<br />
+          2. <code>autoplay</code> 必须是对象写法：<code>{ delay: 3200, disableOnInteraction: false }</code>。delay 必须正好 3200（要 3.2 秒），<code>disableOnInteraction</code> 必须 <code>false</code>——因为需求是"手动拖动之后自动播放不能停"；<br />
+          3. <code>pagination</code> 里 <code>el</code> 改成 <code>'#pager'</code>，并且加 <code>clickable: true</code>，否则圆点点了没反应；<br />
+          4. <code>effect: 'cube'</code> 作为初始效果，并补上 <code>cubeEffect: { shadow: true, slideShadows: true }</code>。<br />
+          只用 Swiper 11 的写法，不要用 <code>autoplay: 3000</code> 这种 v6 以前的简写。
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="answer__head"><span>AI 回答 → 已落地到 js/main.js</span><em>节选</em></div>
+<pre><code>new Swiper('#mySwi4', {
+  loop: true,                                  // ① 无缝循环
+  effect: 'cube',                              // ④ 初始立方体
+  cubeEffect: { shadow: true, slideShadows: true },
+  autoplay: {
+    delay: 3200,                               // ② 3.2 秒
+    disableOnInteraction: false,               //    手动操作后不停止
+    pauseOnMouseEnter: false                   //    鼠标悬停也不停
+  },
+  pagination: {
+    el: '#pager',
+    clickable: true                            // ③ 圆点可点击
+  }
+});</code></pre>
+      </div>
+
+      <table class="verify">
+        <thead><tr><th>需求</th><th>验证动作</th><th class="v-col">结论</th></tr></thead>
+        <tbody>
+          <tr><td>① 无缝循环</td><td>一直点下一张，第 6 张后回第 1 张</td><td class="v-col ok">通过</td></tr>
+          <tr><td>② 3.2 秒</td><td>掐表数，稳定 3.2s 切一张</td><td class="v-col ok">通过</td></tr>
+          <tr><td>② 手动后不停</td><td>拖一次、松手、等 3.2s，自己又翻过去了</td><td class="v-col ok">通过</td></tr>
+          <tr><td>③ 圆点可点击</td><td>点第 5 个圆点，直接跳到第 5 张</td><td class="v-col ok">通过</td></tr>
+          <tr><td>④ 初始 cube</td><td>刷新页面，首屏即立方体</td><td class="v-col ok">通过</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="shot" data-slot>
+        <img src="img/shot-02.png" alt="对照实验页 B 组：第二轮配置的实测读数" loading="lazy" />
+        <figcaption>图 2 · 同一页 B 组（第二轮配置）：同样切换一次，<code>autoplay.running</code> 仍是 true，<code>delay</code> 是 3200</figcaption>
+      </figure>
+    </article>
+
+    <div class="qa">
+      <h3>答辩三问</h3>
+      <details open>
+        <summary>Q1 你的第一版提示词漏掉了哪个需求？</summary>
+        <p>漏了三条，而且是同一种漏法——<b>只给形容词，没给判据</b>：只写"自动播放"没写"3.2 秒"，AI 自己选了 3000ms；只写"自动播放"没写"手动操作后不能停"，AI 直接从旧版本文档里抄了 <code>disableOnInteraction: true</code>；只写"有分页器"没写"能点"，AI 只给了 <code>el</code>，没给 <code>clickable</code>。</p>
+      </details>
+      <details>
+        <summary>Q2 你是怎么在第二轮里"说清楚"的？</summary>
+        <p>不再描述感受，改成<b>点名参数 + 说明因果</b>。比如不说"要能一直自动播"，而是写"<code>disableOnInteraction: false</code>，因为需求是手动拖动后自动播放不能停"。参数名是 AI 唯一不会误解的语言；顺带把每个参数为什么这么设也写进去，AI 就没法再"合理发挥"。</p>
+      </details>
+      <details>
+        <summary>Q3 AI 第一次给的代码错在哪？</summary>
+        <p>三处，都是"不报错但行为不对"的那种：<code>delay: 3000</code> 差 200ms 肉眼看不出；<code>disableOnInteraction</code> 被写死成 <code>true</code>，一拖就再也不自动了，控制台一片安静；<code>pagination</code> 缺 <code>clickable</code>，圆点只是装饰。</p>
+        <p class="kv">加分点：Swiper 11 里 <code>disableOnInteraction</code> 的默认值其实已经改成了 <code>false</code>（v6–v8 才是 <code>true</code>）。所以真正的坑不是"默认值"，而是<b>AI 照抄了旧版本文档</b>。我在 <a href="debug/index.html">对照实验页</a> 里把两套配置并排跑了一遍验证这件事。</p>
+        <p class="kv">一句话：AI 不会替你判断需求有没有被满足，它只会把你说出口的部分实现掉。<b>说漏的，就是它会漏的。</b></p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= 任务二 ================= -->
+  <section class="log-sec" id="t2">
+    <div class="log-sec__head">
+      <span class="log-sec__no">TASK 02</span>
+      <h2>creative 仿写：课堂没讲的第 7 种特效</h2>
+      <p class="log-sec__goal">
+        起点是官方示例 <code>swiper/demo/257-effect-creative.html</code>。目标：给演示页加第 7 个按钮「creative 电影墙」，
+        上一张缩小左移带角度、下一张放大右移进场。
+      </p>
+    </div>
+
+    <article class="round">
+      <div class="round__tag">ASK 01 · 先让它读懂</div>
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          我在看 Swiper 11 官方示例 <code>257-effect-creative.html</code>。请解释：<code>effect: 'creative'</code> 配合
+          <code>creativeEffect: { prev: {...}, next: {...} }</code> 时，Swiper 内部是怎么把这两个配置换算成每张 slide 的
+          <code>transform</code> 的？progress 是什么？<code>limitProgress</code> 起什么作用？
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="answer__head"><span>AI 回答要点 + 我翻源码的结果</span><em>一致</em></div>
+<pre><code>// Swiper 11.1.14 creative effect 的核心一行
+m[t] = `calc(${基础位移}px + (${配置值} * ${Math.abs(progress * progressMultiplier)}))`
+
+scale   = 1 - (1 - g.scale)   * progress
+opacity = 1 - (1 - g.opacity) * progress
+// progress &lt; 0 用 next，progress &gt; 0 用 prev，limitProgress 只做 clamp</code></pre>
+        <p class="answer__after">
+          也就是说：<b>配的只是一端的姿态，另一端永远是"正中"</b>，中间的动画是 Swiper 每一帧按 progress 插值算出来的，
+          不需要写关键帧。官方示例在 Elements 里看到的
+          <code>translate3d(-100%, 0px, -1000px) …</code> 就是这么来的。
+        </p>
+      </div>
+    </article>
+
+    <article class="round">
+      <div class="round__tag round__tag--ok">ASK 02 · 再让它动手</div>
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          在这个基础上，帮我写一段 <code>creativeEffect</code>，效果要像"电影选片墙"：<br />
+          1. 上一张离场时缩小 + 向左移 + 绕 Y 轴带角度，并压暗；<br />
+          2. 下一张从右侧画外放大着推进来；<br />
+          3. 往后叠 3 层，形成纵深。<br />
+          只给 <code>creativeEffect</code> 这一段，并逐行注释每个数字对应的视觉效果。
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="answer__head"><span>落地参数 → 页面第 7 个按钮</span><em>js/main.js</em></div>
+<pre><code>effect: 'creative',
+creativeEffect: {
+  limitProgress: 3,                 // 往后叠 3 层
+  prev: {                           // 「已经过去的那张」
+    translate: ['-20%', 0, -380],   // 左移 20%（占自身宽度）+ 后退 380px
+    rotate:    [0, 30, 0],          // 绕 Y 轴 30°，卡片侧过去
+    scale:     0.6,                 // 缩到 60%
+    opacity:   0.55,                // 压暗让位
+    shadow:    true,
+    origin:    'left center'        // 以左边缘为轴，像一扇门开在墙上
+  },
+  next: {                           // 「还没进场的那张」
+    translate: ['112%', 0, -120],   // 停在右侧画外
+    rotate:    [0, -6, 0],          // 轻微反向角度，进场有推镜感
+    scale:     1.18,                // 起始放大 18%，到位回到 1
+    shadow:    true
+  }
+}</code></pre>
+      </div>
+
+      <figure class="shot" data-slot>
+        <img src="img/shot-03.png" alt="第 7 个按钮 creative 电影墙的切换瞬间" loading="lazy" />
+        <figcaption>图 3 · 第 7 个按钮：切换进行到 ~180ms 时，上一张缩到 0.6 侧着退场，下一张 1.18 倍推近</figcaption>
+      </figure>
+    </article>
+
+    <div class="qa">
+      <h3>追问与我的复述</h3>
+      <details open>
+        <summary>追问：prev / next 的 transform 各控制什么？</summary>
+        <p>它们描述的都是<b>"不是当前这张"时候的姿态</b>，不是动画本身。<code>next</code> 是还没进场的下一张（progress &lt; 0），
+        描述它此刻待在哪儿、多大、多少透明度；<code>prev</code> 是已经过去的上一张（progress &gt; 0），描述它退到哪儿、缩多小、侧多少度。</p>
+        <p>Swiper 每一帧算一个 progress（当前张 0、往右待场为负、往左退场为正），拿它当插值系数，把这套姿态慢慢插值回
+        <code>translate: 0 / scale: 1 / opacity: 1</code> 的正中状态。所以<b>配的是一端，另一端永远是正中，中间过程自动算</b>；
+        <code>limitProgress</code> 只是把 progress 卡一个上限，超出的卡片叠在同一位置不动。</p>
+      </details>
+      <details>
+        <summary>Q1 transform 里的百分比是相对谁的？</summary>
+        <p><b>相对 slide 元素自己的宽高</b>，不是容器、不是视口。Swiper 把 <code>'-20%'</code> 原样塞进
+        <code>calc(基础位移px + (-20% * 进度))</code> 再交给 <code>translate3d()</code>，而 CSS 规范里 translate 的百分比基准就是元素自身的 border-box。
+        所以 <code>-20%</code> = 往左走"自己宽度的 20%"，换到手机上会自动等比缩小，不用改代码。</p>
+        <p class="kv">加分点：translate 的第三个数（Z 轴）不能用百分比，只能 px——元素没有"厚度"可参照。</p>
+      </details>
+      <details>
+        <summary>Q2 改一个数值让卡片转 20 度？</summary>
+        <p>改 <code>prev.rotate</code> 的第二个数（Y 轴）：<code>[0, 30, 0]</code> → <code>[0, 20, 0]</code>。三个数依次是 X / Y / Z，单位是度。
+        改成 <code>[0, 0, 20]</code> 卡片就是平面内歪头，不是立起来——<b>这个对比正好说明只有 Y 轴旋转才有纵深</b>。</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= 任务三 ================= -->
+  <section class="log-sec" id="t3">
+    <div class="log-sec__head">
+      <span class="log-sec__no">TASK 03</span>
+      <h2>综合创作：课堂没讲的能力 + 现场调参</h2>
+      <p class="log-sec__goal">
+        挑的能力：<b>keyboard 键盘控制 + mousewheel 滚轮</b>（两个都做了，答辩任选其一）。
+        另外加了第六件展品「爱达·魔都号」，图片 AI 生成，横版 16:9。
+      </p>
+    </div>
+
+    <article class="round">
+      <div class="round__tag">ASK 01 · 第一版翻车</div>
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          给我的 Swiper 加键盘方向键控制和鼠标滚轮翻页。
+        </div>
+      </div>
+
+      <div class="answer answer--bad">
+        <div class="answer__head"><span>AI 回答（错的）</span><em>踩坑</em></div>
+<pre><code>// 1) 布尔值写法，v6 时代的老接口
+keyboard: true,
+mousewheel: true,</code></pre>
+        <p class="answer__after">
+          <b>现象</b>：按方向键毫无反应，控制台也不报错；滚轮报
+          <code>swiper.mousewheel is undefined</code>——因为项目当时只引了 <code>swiper.min.js</code>（核心包），
+          里面根本没有 Mousewheel 模块。
+        </p>
+      </div>
+
+      <figure class="shot" data-slot>
+        <img src="img/shot-04.png" alt="只引核心包时，swiper.mousewheel 为 undefined 并抛 TypeError" loading="lazy" />
+        <figcaption>图 4 · <a href="debug/core-only.html">复现页</a>：只引核心包，<code>swiper.keyboard / swiper.mousewheel</code> 都是 undefined，一调 <code>.enable()</code> 就抛 TypeError</figcaption>
+      </figure>
+    </article>
+
+    <article class="round">
+      <div class="round__tag round__tag--ok">ASK 02 · 改对</div>
+      <div class="prompt">
+        <div class="prompt__head">
+          <span>我的提示词</span>
+          <button class="copy" data-copy type="button">复制</button>
+        </div>
+        <div class="prompt__body">
+          两个问题请一起改：① <code>keyboard</code> 在 Swiper 11 里要写成对象，并且我只想让轮播在视口内时才响应方向键；
+          ② 滚轮要能翻页，但滚到第一张/最后一张时要把滚动还给页面，不要一直劫持。<br />
+          告诉我这两个能力分别需要哪个模块，以及我现在的 CDN 引用够不够。
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="answer__head"><span>AI 回答 → 已落地</span><em>js/main.js</em></div>
+<pre><code>keyboard: {
+  enabled: true,        // ← 必须是对象，keyboard: true 等于没开
+  onlyInViewport: true  // 只在轮播进入视口时响应
+},
+mousewheel: {
+  enabled: true,
+  releaseOnEdges: true, // 到边界把滚动还给页面
+  thresholdDelta: 18,   // 累积 18 才算一次，防手抖
+  forceToAxis: false    // 竖向滚轮也翻页（代价见下）
+}
+// 模块要全：用 swiper-bundle.min.js，或单独补 modules/mousewheel.min.js</code></pre>
+        <p class="answer__after">
+          <b>取舍</b>：<code>forceToAxis: false</code> 让竖向滚轮也能翻页，代价是鼠标停在展台上时竖向滚动会被"吃掉"。
+          想要滚轮翻页，就必然要抢滚动——这一点我是在页面上放了个开关来放行，而不是假装没有代价。
+        </p>
+      </div>
+    </article>
+
+    <div class="qa">
+      <h3>答辩四问</h3>
+      <details open>
+        <summary>Q1 这段代码什么意思？</summary>
+        <p><code>keyboard.enabled</code> 给容器绑 keydown 监听 ← →；<code>onlyInViewport</code> 用 IntersectionObserver 判断是否在视口内，
+        不加的话，页面滚到下方看"需求对照表"时按方向键，上面的轮播会偷偷翻页。<code>releaseOnEdges</code> 到边界就放行滚动，
+        <b>但本项目开了 <code>loop</code>，永远不会到边界</b>，所以实际靠页面开关放行。<code>thresholdDelta: 18</code> 是防抖阈值。</p>
+      </details>
+      <details>
+        <summary>Q2 AI 第一次给的哪里不对、你改了什么？</summary>
+        <ul class="tight">
+          <li><code>keyboard: true</code> → 改成 <code>{ enabled: true, onlyInViewport: true }</code></li>
+          <li>只引核心包却用 <code>mousewheel</code> → 换 <code>swiper-bundle.min.js</code></li>
+          <li><code>swiper.changeEffect('fade')</code> 报错 → Swiper 11 已移除该方法，改成 <code>destroy()</code> + 重新 <code>new</code>，并用 <code>initialSlide</code> 把 <code>realIndex</code> 带过去</li>
+          <li>把"循环切换特效"写进 <code>slideChange</code> → 一换特效就无限重建、页面卡死，改成只在点击时重建一次</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Q3 新参数的作用？</summary>
+        <p><code>onlyInViewport</code> 管"什么时候<b>不该</b>响应"，<code>thresholdDelta</code> 管"多大的动作才算一次"，
+        <code>releaseOnEdges</code> 管"什么时候<b>该放手</b>"——三个都是边界条件参数，不是视觉效果参数。会调这些，才算真的会用插件。</p>
+      </details>
+      <details>
+        <summary>Q4 现场把 delay 改成指定值，预期是什么？</summary>
+        <table class="verify">
+          <thead><tr><th>delay</th><th>切换间隔</th><th>speed 700ms 占一周期</th><th>观感</th></tr></thead>
+          <tbody>
+            <tr><td>3200（默认）</td><td>3.2s</td><td>22%</td><td>从容，每张停得住</td></tr>
+            <tr><td>1600</td><td>1.6s</td><td>44%</td><td>偏紧，翻页有点赶</td></tr>
+            <tr><td>800</td><td>0.8s</td><td>88%</td><td>动画没走完就被推走，观感"卡带"</td></tr>
+          </tbody>
+        </table>
+        <p>三句必须说出口：① <code>delay</code> 是"多久动一次"，<code>speed</code> 是"动多久"，两者不叠加；
+        ② 改的是 <code>swiper.params.autoplay.delay</code>，要 <code>stop()</code> → <code>start()</code> 才会立刻按新值重新计时；
+        ③ delay 不能比过渡时长小太多，否则视觉上就是"永远在动"。</p>
+        <p class="kv">这个演示已经做进页面右下角的「现场调参」，拖滑块会实时回一段预期说明。</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="log-end">
+    <h2>一眼验收</h2>
+    <ol class="steps">
+      <li>打开首页，看它自己翻页 → 拖一下，还在翻（任务一②）</li>
+      <li>点第 5 个圆点，直接跳过去（③）</li>
+      <li>按 →，翻页（任务三 keyboard）</li>
+      <li>点第 7 个按钮 ★，卡片侧着退场（任务二）</li>
+      <li>把 delay 拖到 800，看它"卡带"（任务三 Q4）</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>说漏的，就是 AI 会漏的。</p>
+  <p class="foot__meta">万超然 · 24001011008 · 课堂任务 06 · 光影展 LUMEN 轮播实验室</p>
+</footer>
+
+<script>
+// 提示词一键复制
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var box = btn.closest('.prompt').querySelector('.prompt__body');
+    var text = box.innerText.trim();
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = '已复制';
+      btn.classList.add('is-done');
+      setTimeout(function () { btn.textContent = old; btn.classList.remove('is-done'); }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done).catch(function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+});
+
+// 截图还没放进去时，别显示破图
+document.querySelectorAll('[data-slot] img').forEach(function (img) {
+  img.addEventListener('error', function () {
+    var fig = img.closest('[data-slot]');
+    fig.classList.add('is-empty');
+    img.remove();
+  });
+});
+</script>
+</body>
+</html>
