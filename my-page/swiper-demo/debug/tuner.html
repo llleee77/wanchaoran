@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Creative 调参台 · 拖滑杆看轮播</title>
+<link rel="stylesheet" href="../vendor/swiper-bundle.min.css" />
+<link rel="stylesheet" href="../css/style.css?v=20261109b" />
+<style>
+  .tuner-wrap{ max-width:1240px; }
+  .tuner{
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(320px,.9fr);
+    gap:22px;
+    margin-top:24px;
+    align-items:start;
+  }
+  .tuner__stage{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--paper-2);
+    padding:12px;
+    box-shadow:var(--shadow-sm);
+  }
+  .tuner__frame{
+    position:relative;
+    aspect-ratio:16/9;
+    border-radius:12px;
+    overflow:hidden;
+    background:#07080d;
+  }
+  .tuner__frame .swiper{ width:100%; height:100%; }
+  .t-slide{
+    display:grid; place-items:center;
+    color:#fff; font-weight:700;
+    font-size:clamp(28px,5vw,58px);
+    letter-spacing:.06em;
+    font-family:ui-monospace,Consolas,monospace;
+  }
+  .t-slide small{
+    display:block; font-size:12px; font-weight:400;
+    letter-spacing:.2em; opacity:.55; margin-top:6px;
+  }
+  .tuner__bar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+    padding:10px 4px 2px;
+  }
+  .tuner__bar .hint{ font-size:11.5px; color:var(--ink-3); }
+  .mini-btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink-2);
+    font-size:11.5px; padding:5px 11px; border-radius:999px; cursor:pointer;
+    transition:all .16s ease;
+  }
+  .mini-btn:hover{ border-color:var(--ink); color:var(--ink); }
+  .mini-btn.is-on{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .tuner__panel{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--paper-2);
+    padding:16px 18px 14px;
+    box-shadow:var(--shadow-sm);
+  }
+  .pgroup + .pgroup{ margin-top:18px; padding-top:16px; border-top:1px dashed var(--line); }
+  .pgroup__head{
+    display:flex; align-items:baseline; gap:8px; margin-bottom:12px;
+  }
+  .pgroup__head b{
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:12px; letter-spacing:.14em; color:var(--accent);
+  }
+  .pgroup__head span{ font-size:11.5px; color:var(--ink-3); }
+
+  .row{ display:grid; grid-template-columns:74px 1fr 54px; gap:10px; align-items:center; margin-bottom:11px; }
+  .row label{ font-size:12px; color:var(--ink-2); }
+  .row output{
+    font-family:ui-monospace,Consolas,monospace;
+    font-size:12px; text-align:right; color:var(--ink);
+  }
+  input[type="range"]{ width:100%; }
+
+  .presets{ display:flex; gap:7px; flex-wrap:wrap; margin-top:14px; }
+  .presets button{
+    border:1px solid #ddd0bc; background:#fff; color:var(--ink-2);
+    font-size:11.5px; padding:6px 11px; border-radius:8px; cursor:pointer;
+    transition:all .16s ease;
+  }
+  .presets button:hover{ border-color:var(--accent); color:var(--accent); }
+  .presets button.is-on{ background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .codebox{
+    margin-top:18px;
+    border:1px solid #232733;
+    border-radius:12px;
+    overflow:hidden;
+    background:#12141a;
+  }
+  .codebox__head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 14px; border-bottom:1px solid rgba(255,255,255,.08);
+    font-size:11px; letter-spacing:.1em; color:#9aa1b1;
+  }
+  .codebox pre{
+    margin:0; padding:14px 16px; overflow-x:auto;
+    font-size:12px; line-height:1.75; color:#d7dbe4;
+  }
+  .codebox pre code{ background:none; color:inherit; padding:0; font-size:inherit; }
+  .copy2{
+    border:1px solid rgba(255,255,255,.16); background:transparent; color:#cbd2de;
+    font-size:10.5px; padding:3px 9px; border-radius:6px; cursor:pointer;
+  }
+  .copy2:hover{ border-color:#8fa0bb; color:#fff; }
+
+  .tuner__note{
+    margin-top:14px; font-size:11.5px; color:var(--ink-3); line-height:1.8;
+  }
+  @media (max-width:960px){
+    .tuner{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body class="page-log">
+
+<header class="masthead">
+  <div class="wrap tuner-wrap">
+    <p class="kicker"><span class="kicker__dot"></span>CREATIVE TUNER · 课堂任务 06</p>
+    <h1>Creative 调参台 <span class="latin">TUNER</span></h1>
+    <p class="lede">
+      拖右边滑杆，左边轮播立刻按新参数播放——不是先改代码再刷新。
+      下面那块代码是<strong>实时生成</strong>的，拖完直接复制回 <code>js/main.js</code> 就能用。
+    </p>
+    <div class="log-nav">
+      <a class="btn" href="../prompts.html#t2">← 回到任务二</a>
+      <a class="btn btn--ghost" href="../index.html">看正式作品</a>
+      <a class="btn btn--ghost" href="index.html">A/B 对照</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap tuner-wrap">
+
+  <div class="tuner">
+
+    <!-- 左：实时预览 -->
+    <section class="tuner__stage">
+      <div class="tuner__frame">
+        <div class="swiper" id="tunerSwiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide t-slide" style="background:linear-gradient(140deg,#2b1b4d,#0b0a14)">01<small>PRISM</small></div>
+            <div class="swiper-slide t-slide" style="background:linear-gradient(140deg,#0e3f4a,#07131a)">02<small>NEON</small></div>
+            <div class="swiper-slide t-slide" style="background:linear-gradient(140deg,#4a1b2c,#14070d)">03<small>LIQUID</small></div>
+            <div class="swiper-slide t-slide" style="background:linear-gradient(140deg,#1b3a4d,#0a1420)">04<small>TRACES</small></div>
+            <div class="swiper-slide t-slide" style="background:linear-gradient(140deg,#3a2d1b,#171007)">05<small>SPECTRUM</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="tuner__bar">
+        <span class="hint">自动循环播放中，参数一改马上能看出差别</span>
+        <button class="mini-btn is-on" id="btnPlay" type="button">⏸ 暂停</button>
+      </div>
+    </section>
+
+    <!-- 右：滑杆 -->
+    <section class="tuner__panel">
+
+      <div class="pgroup">
+        <div class="pgroup__head"><b>PREV</b><span>出场（已经翻过去的那张）</span></div>
+
+        <div class="row">
+          <label for="pX">X 位移</label>
+          <input type="range" id="pX" min="0" max="150" step="5" value="60" />
+          <output id="pXv">60%</output>
+        </div>
+        <div class="row">
+          <label for="pZ">Z 纵深</label>
+          <input type="range" id="pZ" min="-600" max="600" step="10" value="190" />
+          <output id="pZv">190</output>
+        </div>
+        <div class="row">
+          <label for="pR">倾斜角</label>
+          <input type="range" id="pR" min="0" max="90" step="1" value="45" />
+          <output id="pRv">45°</output>
+        </div>
+        <div class="row">
+          <label for="pS">缩放</label>
+          <input type="range" id="pS" min="0.2" max="1.2" step="0.02" value="1" />
+          <output id="pSv">1.00</output>
+        </div>
+      </div>
+
+      <div class="pgroup">
+        <div class="pgroup__head"><b>NEXT</b><span>进场（还没轮到的那张）</span></div>
+
+        <div class="row">
+          <label for="nX">X 位移</label>
+          <input type="range" id="nX" min="50" max="150" step="5" value="100" />
+          <output id="nXv">100%</output>
+        </div>
+        <div class="row">
+          <label for="nZ">Z 纵深</label>
+          <input type="range" id="nZ" min="-600" max="600" step="10" value="120" />
+          <output id="nZv">120</output>
+        </div>
+        <div class="row">
+          <label for="nS">缩放</label>
+          <input type="range" id="nS" min="0.5" max="1.6" step="0.02" value="0.86" />
+          <output id="nSv">0.86</output>
+        </div>
+        <div class="row">
+          <label for="nO">透明度</label>
+          <input type="range" id="nO" min="0" max="1" step="0.05" value="0" />
+          <output id="nOv">0.00</output>
+        </div>
+      </div>
+
+      <div class="presets">
+        <button type="button" data-preset="wall" class="is-on">电影墙（当前）</button>
+        <button type="button" data-preset="side">3D 侧身</button>
+        <button type="button" data-preset="push">纯推近</button>
+        <button type="button" data-preset="reset">恢复默认</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 实时生成的代码 -->
+  <div class="codebox">
+    <div class="codebox__head">
+      <span>实时生成 · 直接复制回 js/main.js</span>
+      <button class="copy2" id="btnCopy" type="button">复制</button>
+    </div>
+    <pre><code id="codeOut"></code></pre>
+  </div>
+
+  <p class="tuner__note">
+    说明：滑杆一松手就调用 <code>swiper.setTranslate()</code> 重算，所以不用刷新页面。
+    <br />看到的效果和主页面第 7 个按钮完全同源——都是同一套 <code>creativeEffect</code>，只是把参数做成了可拖的。
+  </p>
+
+</main>
+
+<footer class="foot">
+  <p>参数不是背下来的，是拖出来的。</p>
+  <p class="foot__meta">Creative 调参台 · 课堂任务 06 · 万超然 24001011008</p>
+</footer>
+
+<script src="../vendor/swiper-bundle.min.js"></script>
+<script>
+(function () {
+  var PRESETS = {
+    wall:  { pX: 60,  pZ: 190,  pR: 45, pS: 1,    nX: 100, nZ: 120, nS: 0.86, nO: 0 },
+    side:  { pX: 20,  pZ: -420, pR: 0,  pS: 0.62, nX: 100, nZ: -100, nS: 1.15, nO: 0.6 },
+    push:  { pX: 0,   pZ: 240,  pR: 0,  pS: 0.7,  nX: 100, nZ: 160,  nS: 0.9,  nO: 0 }
+  };
+
+  var el = {
+    pX: document.getElementById('pX'), pZ: document.getElementById('pZ'),
+    pR: document.getElementById('pR'), pS: document.getElementById('pS'),
+    nX: document.getElementById('nX'), nZ: document.getElementById('nZ'),
+    nS: document.getElementById('nS'), nO: document.getElementById('nO')
+  };
+  var out = {
+    pX: document.getElementById('pXv'), pZ: document.getElementById('pZv'),
+    pR: document.getElementById('pRv'), pS: document.getElementById('pSv'),
+    nX: document.getElementById('nXv'), nZ: document.getElementById('nZv'),
+    nS: document.getElementById('nSv'), nO: document.getElementById('nOv')
+  };
+
+  var swiper = new Swiper('#tunerSwiper', {
+    effect: 'creative',
+    loop: true,
+    speed: 1000,
+    autoplay: { delay: 1400, disableOnInteraction: false },
+    creativeEffect: {
+      limitProgress: 3,
+      prev: { shadow: true, translate: ['60%', 0, 190], rotate: [0, 0, 45], scale: 1 },
+      next: { translate: ['100%', 0, 120], scale: 0.86, opacity: 0 }
+    }
+  });
+
+  function num(id) { return parseFloat(el[id].value); }
+
+  function renderLabels() {
+    out.pX.textContent = num('pX') + '%';
+    out.pZ.textContent = num('pZ');
+    out.pR.textContent = num('pR') + '\u00b0';
+    out.pS.textContent = num('pS').toFixed(2);
+    out.nX.textContent = num('nX') + '%';
+    out.nZ.textContent = num('nZ');
+    out.nS.textContent = num('nS').toFixed(2);
+    out.nO.textContent = num('nO').toFixed(2);
+  }
+
+  function renderCode() {
+    var code =
+      "creativeEffect: {\n" +
+      "  limitProgress: 3,\n" +
+      "  prev: {\n" +
+      "    shadow: true,\n" +
+      "    translate: ['" + num('pX') + "%', 0, " + num('pZ') + "],\n" +
+      "    rotate: [0, 0, " + num('pR') + "],\n" +
+      "    scale: " + num('pS').toFixed(2) + "\n" +
+      "  },\n" +
+      "  next: {\n" +
+      "    translate: ['" + num('nX') + "%', 0, " + num('nZ') + "],\n" +
+      "    scale: " + num('nS').toFixed(2) + ",\n" +
+      "    opacity: " + num('nO').toFixed(2) + "\n" +
+      "  }\n" +
+      "}";
+    document.getElementById('codeOut').textContent = code;
+    return code;
+  }
+
+  function apply() {
+    var ce = swiper.params.creativeEffect;
+    ce.prev.translate = [num('pX') + '%', 0, num('pZ')];
+    ce.prev.rotate = [0, 0, num('pR')];
+    ce.prev.scale = num('pS');
+    ce.next.translate = [num('nX') + '%', 0, num('nZ')];
+    ce.next.scale = num('nS');
+    ce.next.opacity = num('nO');
+    // 立即按新参数重算当前这一帧
+    swiper.setTranslate(swiper.translate);
+    renderLabels();
+    renderCode();
+  }
+
+  Object.keys(el).forEach(function (k) {
+    el[k].addEventListener('input', apply);
+  });
+
+  document.querySelectorAll('[data-preset]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var name = btn.dataset.preset;
+      document.querySelectorAll('[data-preset]').forEach(function (b) { b.classList.remove('is-on'); });
+      btn.classList.add('is-on');
+      if (name === 'reset') {
+        ['pX','pZ','pR','pS','nX','nZ','nS','nO'].forEach(function (k) {
+          el[k].value = el[k].defaultValue;
+        });
+      } else {
+        Object.keys(PRESETS[name]).forEach(function (k) { el[k].value = PRESETS[name][k]; });
+      }
+      apply();
+    });
+  });
+
+  var playing = true;
+  document.getElementById('btnPlay').addEventListener('click', function () {
+    playing = !playing;
+    if (playing) { swiper.autoplay.start(); this.textContent = '\u23f8 暂停'; }
+    else { swiper.autoplay.stop(); this.textContent = '\u25b6 播放'; }
+    this.classList.toggle('is-on', playing);
+  });
+
+  document.getElementById('btnCopy').addEventListener('click', function () {
+    var code = renderCode();
+    var self = this;
+    var done = function () { self.textContent = '已复制'; setTimeout(function () { self.textContent = '复制'; }, 1500); };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(code).then(done).catch(function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = code; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

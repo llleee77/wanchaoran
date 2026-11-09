@@ -3,6 +3,8 @@
 > **这份文档怎么用**：参数、源码结论、答辩答案是实测过的，可以直接用；「AI 回答」部分请换成你自己真实的对话截图。
 >
 > 对应文件：`js/main.js` 里的 `EFFECTS.creative`，页面第 7 个按钮。
+>
+> **想现场调参数？** 打开 `debug/tuner.html`（[在线](https://llleee77.github.io/wanchaoran/my-page/swiper-demo/debug/tuner.html)）：7 个滑杆对应 X 位移 / Z 纵深 / 倾斜角 / 缩放 / 透明度，拖一下轮播立刻按新参数重播，下方代码实时生成，可直接复制回 `js/main.js`。
 
 ---
 

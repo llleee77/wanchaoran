@@ -20,6 +20,7 @@
 | 在线演示（GitHub Pages） | <https://llleee77.github.io/swiper-lumen/> |
 | A/B 对照实验（答辩道具，两套配置并排跑） | [`debug/index.html`](debug/index.html) |
 | 复现：只引核心包会怎样 | [`debug/core-only.html`](debug/core-only.html) |
+| **Creative 调参台**（拖滑杆实时看轮播） | [`debug/tuner.html`](debug/tuner.html) |
 
 ## 二、三条任务分别落在哪
 
