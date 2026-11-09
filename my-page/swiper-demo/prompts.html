@@ -262,25 +262,21 @@ opacity = 1 - (1 - g.opacity) * progress
 creativeEffect: {
   limitProgress: 3,                 // 往后叠 3 层
   prev: {                           // 「已经过去的那张」
-    translate: ['-20%', 0, -380],   // 左移 20%（占自身宽度）+ 后退 380px
-    rotate:    [0, 30, 0],          // 绕 Y 轴 30°，卡片侧过去
-    scale:     0.6,                 // 缩到 60%
-    opacity:   0.55,                // 压暗让位
     shadow:    true,
-    origin:    'left center'        // 以左边缘为轴，像一扇门开在墙上
+    translate: ['60%', 0, 190],     // 往右让 60% 宽度，同时推到眼前 190px（Z 正 = 更近）
+    rotate:    [0, 0, 45]           // 绕 Z 轴平面内倾斜 45°（不是绕 Y 轴侧身）
   },
   next: {                           // 「还没进场的那张」
-    translate: ['112%', 0, -120],   // 停在右侧画外
-    rotate:    [0, -6, 0],          // 轻微反向角度，进场有推镜感
-    scale:     1.18,                // 起始放大 18%，到位回到 1
-    shadow:    true
+    translate: ['100%', 0, 120],    // 从右侧画外推进来
+    scale:     0.86,                // 起始 86%，到位回到 1
+    opacity:   0                    // 起手全透明，边走边显影
   }
 }</code></pre>
       </div>
 
       <figure class="shot" data-slot>
         <img src="img/shot-03.png" alt="第 7 个按钮 creative 电影墙的切换瞬间" loading="lazy" />
-        <figcaption>图 3 · 第 7 个按钮：切换进行到 ~180ms 时，上一张缩到 0.6 侧着退场，下一张 1.18 倍推近</figcaption>
+        <figcaption>图 3 · 第 7 个按钮：切换中，上一张向右让位并平面内倾斜 45°，下一张从右侧 0.86 倍推进来</figcaption>
       </figure>
     </article>
 
@@ -303,8 +299,10 @@ creativeEffect: {
       </details>
       <details>
         <summary>Q2 改一个数值让卡片转 20 度？</summary>
-        <p>改 <code>prev.rotate</code> 的第二个数（Y 轴）：<code>[0, 30, 0]</code> → <code>[0, 20, 0]</code>。三个数依次是 X / Y / Z，单位是度。
-        改成 <code>[0, 0, 20]</code> 卡片就是平面内歪头，不是立起来——<b>这个对比正好说明只有 Y 轴旋转才有纵深</b>。</p>
+        <p>改 <code>prev.rotate</code> 的第三个数（Z 轴，平面内倾斜）：<code>[0, 0, 45]</code> → <code>[0, 0, 20]</code>。
+        三个数依次是 X / Y / Z，单位是度。</p>
+        <p>顺带把这个对比说清楚：<code>[0, 0, 45]</code> 是卡片在屏幕平面里歪头（照片甩在桌上的感觉，现在用的就是这个）；
+        <code>[0, 45, 0]</code> 才是绕 Y 轴侧身，有 3D 纵深。<b>Z 轴和 Y 轴完全是两回事</b>，这是最容易混的一个点。</p>
       </details>
     </div>
   </section>

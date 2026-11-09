@@ -59,19 +59,16 @@
       effect: 'creative',
       creativeEffect: {
         limitProgress: 3,           // 往后叠 3 层，形成"选片墙"的纵深
+        // 参数取自 Creative 调参台（电影墙预设），三项滑杆对应 X 位移 / Z 纵深 / 倾斜角
         prev: {
-          translate: ['-20%', 0, -380],  // 左移 + 后退 380px（Z 轴）
-          rotate: [0, 30, 0],            // 绕 Y 轴转 30°，卡片侧过去
-          scale: 0.6,                    // 缩小到 60%
-          opacity: 0.55,                 // 压暗，让位给当前张
           shadow: true,
-          origin: 'left center'          // 以左边缘为轴，像立在墙上
+          translate: ['60%', 0, 190],    // 往右让 60%，同时推到观者眼前 190px
+          rotate: [0, 0, 45]             // 绕 Z 轴平面内倾斜 45°（不是绕 Y 轴侧身）
         },
         next: {
-          translate: ['112%', 0, -120],  // 停在右侧画外，带一点纵深
-          rotate: [0, -6, 0],            // 轻微反向角度，进场有"推镜"感
-          scale: 1.18,                   // 起始放大 18%，推近后回到 1
-          shadow: true
+          translate: ['100%', 0, 120],   // 从右侧画外推近
+          scale: 0.86,                   // 起始 86%，到位回到 1
+          opacity: 0                     // 起手全透明，边走边显影
         }
       }
     }
