@@ -50,6 +50,10 @@
 
 双击 `index.html` 即可，**不需要服务器、不需要联网**。
 
+> 改完 `css/style.css` 或 `js/main.js` 之后，记得把 `index.html` / `prompts.html` 里引用处的
+> `?v=20261109b` 改成新日期——GitHub Pages 的缓存是 10 分钟（`Cache-Control: max-age=600`），
+> 不改版本号的话，别人刷新看到的还是旧文件。
+
 ## 五、答辩偷懒入口
 
 地址栏加参数可以直接到状态，省得现场手点：
