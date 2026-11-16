@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- 姓名：万超然　学号：24001011008　任务三：移动端图片查看器（双指缩放 / 双击 / 拖动） -->
+    <title>图片查看器 · 双指缩放</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: radial-gradient(700px 500px at 50% 0%, #1b2340 0%, #0a0c14 62%);
+            color: #e8ecf7;
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 16px 22px;
+            min-height: 100%;
+        }
+
+        .wy_page {
+            width: 100%;
+            max-width: 560px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .wy_head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .wy_head h1 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: .06em;
+            font-weight: 800;
+        }
+
+        .wy_head span {
+            font-size: 12px;
+            color: #7f8bab;
+            letter-spacing: .04em;
+        }
+
+        /* ── 顶部提示条 ── */
+        .wy_hint {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            background: rgba(88, 130, 255, .13);
+            border: 1px solid rgba(110, 150, 255, .28);
+            font-size: 12.5px;
+            color: #b9c8f0;
+            line-height: 1.7;
+        }
+
+        .wy_hint b { color: #dbe5ff; }
+
+        .wy_hint button {
+            margin-left: auto;
+            flex: none;
+            border: 0;
+            background: rgba(255, 255, 255, .1);
+            color: #b9c8f0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        /* ── 查看器 ── */
+        .wy_viewer {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-radius: 18px;
+            background: #06070c;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06) inset;
+            /* 关键三件套：手势归我、文字不可选、长按不弹菜单 */
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            cursor: grab;
+        }
+
+        .wy_viewer:active { cursor: grabbing; }
+
+        /* 图片本身不接事件，事件统一落在容器上更好算坐标 */
+        .wy_img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: 0 0;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .wy_badge {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            padding: 5px 11px;
+            border-radius: 999px;
+            background: rgba(8, 10, 18, .62);
+            border: 1px solid rgba(255, 255, 255, .18);
+            backdrop-filter: blur(6px);
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #e8ecf7;
+            pointer-events: none;
+        }
+
+        /* ── 底部工具 ── */
+        .wy_tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12.5px;
+            color: #7f8bab;
+        }
+
+        .wy_tools button {
+            border: 1px solid rgba(255, 255, 255, .16);
+            background: rgba(255, 255, 255, .06);
+            color: #c8d3ee;
+            font-family: inherit;
+            font-size: 12.5px;
+            padding: 7px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+        }
+
+        .wy_tools button:hover {
+            background: rgba(110, 150, 255, .22);
+            border-color: rgba(110, 150, 255, .5);
+        }
+
+        /* ── 说明卡片 ── */
+        .wy_card {
+            padding: 16px 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            font-size: 12.5px;
+            line-height: 2;
+            color: #97a3c2;
+        }
+
+        .wy_card h2 {
+            margin: 0 0 8px;
+            font-size: 13px;
+            color: #ccd6f0;
+            letter-spacing: .04em;
+        }
+
+        .wy_card ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .wy_card code {
+            font-family: Consolas, monospace;
+            font-size: 11.5px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(110, 150, 255, .16);
+            color: #a9c0ff;
+        }
+
+        .wy_sign {
+            text-align: center;
+            font-size: 11.5px;
+            color: #566080;
+            letter-spacing: .08em;
+        }
+
+        /* ── 实拍视频位 ── */
+        .wy_video {
+            padding: 16px 18px 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .wy_video h2 {
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: #ccd6f0;
+            letter-spacing: .04em;
+        }
+
+        .wy_video-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #05060a;
+            border: 1px dashed rgba(255, 255, 255, .14);
+        }
+
+        .wy_video-el {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            background: #05060a;
+        }
+
+        .wy_video-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px;
+            text-align: center;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #8b95b3;
+        }
+
+        .wy_video-empty b { color: #c8d3ee; font-size: 13.5px; }
+
+        .wy_video-empty code {
+            font-family: Consolas, monospace;
+            font-size: 11.5px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(110, 150, 255, .16);
+            color: #a9c0ff;
+        }
+
+        .wy_video-cap {
+            margin: 10px 0 0;
+            font-size: 11.5px;
+            color: #7f8bab;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 420px) {
+            .wy_head h1 { font-size: 16px; }
+            body { padding: 14px 12px 18px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wy_page">
+        <header class="wy_head">
+            <h1>图片查看器</h1>
+            <span>中国天眼 FAST · 2560 × 1440</span>
+        </header>
+
+        <div class="wy_hint" id="wyHint">
+            <span><b>双指缩放请用手机打开</b>；桌面可用滚轮或双击</span>
+            <button type="button" id="wyHintClose" aria-label="关闭提示">×</button>
+        </div>
+
+        <!-- 手势容器：overflow:hidden + touch-action:none -->
+        <div class="wy_viewer" id="wyViewer">
+            <img class="wy_img" id="wyImg" src="./swiper-imgs/fast_1.jpg" alt="中国天眼 FAST 全景">
+            <span class="wy_badge" id="wyBadge">1.0×</span>
+        </div>
+
+        <div class="wy_tools">
+            <span>双指缩放 · 双击放大 · 单指拖动</span>
+            <button type="button" id="wyReset">恢复 1×</button>
+        </div>
+
+        <section class="wy_card">
+            <h2>怎么保证缩放"不跳"</h2>
+            <ul>
+                <li>缩放前先把两指中点换算成<b>图片坐标</b>：<code>p = (中点 - 位移) / 当前倍率</code></li>
+                <li>缩放后反解位移：<code>位移 = 当前中点 - p × 新倍率</code>，手指按住的那个点始终不动</li>
+                <li>倍率限制在 <code>1 ~ 4</code>，位移限制在边界内，回弹带 0.25s 过渡</li>
+            </ul>
+        </section>
+
+        <section class="wy_video">
+            <h2>手机实拍演示</h2>
+            <div class="wy_video-frame">
+                <video class="wy_video-el" id="wyVideo" controls playsinline preload="metadata" webkit-playsinline>
+                    <source src="./videos/mobile-zoom.mp4" type="video/mp4" id="wyVideoSrc">
+                </video>
+                <div class="wy_video-empty" id="wyVideoEmpty" hidden>
+                    <b>视频位已预留</b>
+                    <span>把手机实拍视频命名为 <code>mobile-zoom.mp4</code><br>放进 <code>my-page/videos/</code> 后刷新本页即可播放</span>
+                </div>
+            </div>
+            <p class="wy_video-cap">建议演示顺序：双指放大 → 两指中点不漂移 → 拖到边界被卡住 → 双击回 1×</p>
+        </section>
+
+        <p class="wy_sign">万超然 · 24001011008</p>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var wy_viewer = document.getElementById('wyViewer');
+            var wy_img = document.getElementById('wyImg');
+            var wy_badge = document.getElementById('wyBadge');
+            var wy_reset = document.getElementById('wyReset');
+            var wy_hint = document.getElementById('wyHint');
+            var wy_hintClose = document.getElementById('wyHintClose');
+
+            var wy_MIN = 1;      // 最小倍率
+            var wy_MAX = 4;      // 最大倍率
+            var wy_TAP_GAP = 300; // 两次点击的间隔上限（毫秒）
+
+            var wy_scale = 1;    // 当前倍率
+            var wy_tx = 0;       // 当前横向位移（px）
+            var wy_ty = 0;       // 当前纵向位移（px）
+
+            var wy_mode = 'none';      // none / pan / pinch
+            var wy_startDist = 0;      // 双指初始间距
+            var wy_startScale = 1;     // 双指按下时的倍率
+            var wy_anchor = { x: 0, y: 0 };  // 两指中点对应的「图片坐标」，缩放时保持不动
+            var wy_lastX = 0;          // 单指拖动时上一次的坐标
+            var wy_lastY = 0;
+            var wy_moved = false;      // 本次触摸里是否移动过（用于区分点击与拖动）
+            var wy_tapTime = 0;        // 上一次抬手的时间
+            var wy_tapX = 0;
+            var wy_tapY = 0;
+            var wy_lastW = 0;          // 旋转屏幕前记录尺寸，用于按比例修正位移
+            var wy_lastH = 0;
+
+            function wy_dist(a, b) {
+                var dx = b.clientX - a.clientX;
+                var dy = b.clientY - a.clientY;
+                return Math.sqrt(dx * dx + dy * dy) || 1;
+            }
+
+            function wy_mid(a, b) {
+                return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+            }
+
+            // 换算成相对查看器左上角的坐标（和 transform-origin:0 0 对齐）
+            function wy_local(clientX, clientY) {
+                var r = wy_viewer.getBoundingClientRect();
+                return { x: clientX - r.left, y: clientY - r.top };
+            }
+
+            // 边界约束：1x 时强制归位，>1x 时不许拖出空白
+            function wy_clamp() {
+                var w = wy_viewer.clientWidth;
+                var h = wy_viewer.clientHeight;
+
+                if (wy_scale <= wy_MIN + 0.001) {
+                    wy_scale = wy_MIN;
+                    wy_tx = 0;
+                    wy_ty = 0;
+                    return;
+                }
+                var minX = w - w * wy_scale;   // 负数：能向左移动的最大距离
+                var minY = h - h * wy_scale;
+                wy_tx = Math.min(0, Math.max(minX, wy_tx));
+                wy_ty = Math.min(0, Math.max(minY, wy_ty));
+            }
+
+            // animate = true 时带 0.25s 过渡（双击、回弹、重置用）
+            function wy_apply(animate) {
+                wy_img.style.transition = animate ? 'transform .25s cubic-bezier(.25,.8,.3,1)' : 'none';
+                wy_img.style.transform =
+                    'translate(' + wy_tx + 'px,' + wy_ty + 'px) scale(' + wy_scale + ')';
+                wy_badge.textContent = wy_scale.toFixed(1) + '×';
+            }
+
+            // ── 按下 ──
+            wy_viewer.addEventListener('touchstart', function (e) {
+                if (e.touches.length === 1) {
+                    wy_mode = 'pan';
+                    wy_lastX = e.touches[0].clientX;
+                    wy_lastY = e.touches[0].clientY;
+                    wy_moved = false;
+                } else if (e.touches.length >= 2) {
+                    wy_mode = 'pinch';
+                    wy_moved = true;
+                    wy_startDist = wy_dist(e.touches[0], e.touches[1]);
+                    wy_startScale = wy_scale;
+
+                    // 记住两指中点下面是图片的哪个点（图片坐标）
+                    var m = wy_local(wy_mid(e.touches[0], e.touches[1]).x,
+                                     wy_mid(e.touches[0], e.touches[1]).y);
+                    wy_anchor.x = (m.x - wy_tx) / wy_scale;
+                    wy_anchor.y = (m.y - wy_ty) / wy_scale;
+                }
+            }, { passive: true });
+
+            // ── 移动 ──
+            wy_viewer.addEventListener('touchmove', function (e) {
+                if (e.cancelable) e.preventDefault();
+
+                if (wy_mode === 'pinch' && e.touches.length >= 2) {
+                    var d = wy_dist(e.touches[0], e.touches[1]);
+                    var mid = wy_mid(e.touches[0], e.touches[1]);
+                    var local = wy_local(mid.x, mid.y);
+
+                    // 按两指间距的比例算新倍率，再夹在 1~4 之间
+                    var s = wy_startScale * (d / wy_startDist);
+                    s = Math.min(wy_MAX, Math.max(wy_MIN, s));
+                    wy_scale = s;
+
+                    // 反解位移：让锚点始终停在两指中点下方 → 缩放不跳
+                    wy_tx = local.x - wy_anchor.x * wy_scale;
+                    wy_ty = local.y - wy_anchor.y * wy_scale;
+
+                    wy_clamp();
+                    wy_apply(false);
+                    return;
+                }
+
+                if (wy_mode === 'pan' && e.touches.length === 1 && wy_scale > wy_MIN) {
+                    var t = e.touches[0];
+                    var dx = t.clientX - wy_lastX;
+                    var dy = t.clientY - wy_lastY;
+                    wy_lastX = t.clientX;
+                    wy_lastY = t.clientY;
+
+                    if (Math.abs(dx) + Math.abs(dy) > 2) wy_moved = true;
+
+                    wy_tx += dx;
+                    wy_ty += dy;
+                    wy_clamp();
+                    wy_apply(false);
+                }
+            }, { passive: false });
+
+            // ── 抬手 ──
+            wy_viewer.addEventListener('touchend', function (e) {
+                // 双指变单指：接着拖，不重新计锚点
+                if (e.touches.length === 1) {
+                    wy_mode = 'pan';
+                    wy_lastX = e.touches[0].clientX;
+                    wy_lastY = e.touches[0].clientY;
+                    wy_clamp();
+                    wy_apply(true);
+                    return;
+                }
+                if (e.touches.length > 0) return;
+
+                wy_mode = 'none';
+                wy_clamp();
+                wy_apply(true);   // 松手统一回弹到合法位置
+
+                // ── 双击判定：两次点击间隔 < 300ms 且位移很小 ──
+                if (wy_moved) { wy_tapTime = 0; return; }
+
+                var t = e.changedTouches[0];
+                var now = Date.now();
+                var near = Math.abs(t.clientX - wy_tapX) < 30 && Math.abs(t.clientY - wy_tapY) < 30;
+
+                if (now - wy_tapTime < wy_TAP_GAP && near) {
+                    wy_tapTime = 0;
+                    wy_toggleZoom(t.clientX, t.clientY);
+                } else {
+                    wy_tapTime = now;
+                    wy_tapX = t.clientX;
+                    wy_tapY = t.clientY;
+                }
+            });
+
+            // 手势被系统打断时也要复位，否则下次触摸状态是脏的
+            wy_viewer.addEventListener('touchcancel', function () {
+                wy_mode = 'none';
+                wy_clamp();
+                wy_apply(true);
+            });
+
+            // 双击：1x ↔ 2x，以点击位置为基准
+            function wy_toggleZoom(clientX, clientY) {
+                var p = wy_local(clientX, clientY);
+                var imgPoint = { x: (p.x - wy_tx) / wy_scale, y: (p.y - wy_ty) / wy_scale };
+
+                wy_scale = wy_scale > 1.05 ? 1 : 2;
+
+                wy_tx = p.x - imgPoint.x * wy_scale;
+                wy_ty = p.y - imgPoint.y * wy_scale;
+
+                wy_clamp();
+                wy_apply(true);
+            }
+
+            // 桌面预览：滚轮缩放（以鼠标位置为基准）
+            wy_viewer.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                var p = wy_local(e.clientX, e.clientY);
+                var imgPoint = { x: (p.x - wy_tx) / wy_scale, y: (p.y - wy_ty) / wy_scale };
+
+                var factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+                wy_scale = Math.min(wy_MAX, Math.max(wy_MIN, wy_scale * factor));
+
+                wy_tx = p.x - imgPoint.x * wy_scale;
+                wy_ty = p.y - imgPoint.y * wy_scale;
+
+                wy_clamp();
+                wy_apply(false);
+            }, { passive: false });
+
+            // 重置
+            wy_reset.addEventListener('click', function () {
+                wy_scale = 1;
+                wy_tx = 0;
+                wy_ty = 0;
+                wy_apply(true);
+            });
+
+            wy_hintClose.addEventListener('click', function () {
+                wy_hint.style.display = 'none';
+            });
+
+            // 屏幕旋转 / 尺寸变化：倍率保留，位移按比例换算后再夹边界
+            window.addEventListener('resize', function () {
+                var w = wy_viewer.clientWidth;
+                var h = wy_viewer.clientHeight;
+
+                if (wy_lastW && wy_lastH) {
+                    wy_tx = wy_tx * (w / wy_lastW);
+                    wy_ty = wy_ty * (h / wy_lastH);
+                }
+                wy_lastW = w;
+                wy_lastH = h;
+
+                wy_clamp();
+                wy_apply(false);
+            });
+
+            // 初始化
+            wy_lastW = wy_viewer.clientWidth;
+            wy_lastH = wy_viewer.clientHeight;
+            wy_apply(false);
+
+            // 图片没加载出来时给个提示，避免看到一片黑
+            wy_img.addEventListener('error', function () {
+                wy_badge.textContent = '图片加载失败';
+            });
+
+            // ── 实拍视频位：文件不存在时显示占位说明，而不是一个破图 ──
+            (function () {
+                var v = document.getElementById('wyVideo');
+                var empty = document.getElementById('wyVideoEmpty');
+                var src = document.getElementById('wyVideoSrc');
+                if (!v || !empty) return;
+
+                function wy_notFound() {
+                    v.style.display = 'none';
+                    empty.hidden = false;
+                }
+
+                v.addEventListener('error', wy_notFound);
+                if (src) src.addEventListener('error', wy_notFound);
+
+                // 视频后来加载成功（或换了源）就把占位收起来
+                v.addEventListener('loadedmetadata', function () {
+                    v.style.display = '';
+                    empty.hidden = true;
+                });
+
+                // 兜底：某些情况下错误不会冒泡到 video 元素
+                setTimeout(function () {
+                    if (v.error) wy_notFound();
+                }, 1500);
+            })();
+        })();
+    </script>
+</body>
+
+</html>

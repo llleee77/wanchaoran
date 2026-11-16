@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：万超然　学号：24001011008　任务一：事件侦探（观察记录） -->
+    <title>任务一 · 事件侦探观察记录</title>
+    <style>
+        :root {
+            --ink: #1b2333;
+            --muted: #6b7688;
+            --line: #e3e8f1;
+            --accent: #2a5bd7;
+            --warm: #c8892f;
+            --paper: #f4f6fa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.85;
+            padding: 34px 16px 60px;
+        }
+
+        .wy_paper {
+            width: min(880px, 100%);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 44px 46px 50px;
+            box-shadow: 0 14px 40px rgba(27, 35, 51, .08);
+        }
+
+        header.wy_head {
+            padding-bottom: 22px;
+            border-bottom: 2px solid var(--ink);
+            margin-bottom: 30px;
+        }
+
+        .wy_kicker {
+            margin: 0;
+            font-size: 11.5px;
+            letter-spacing: .3em;
+            color: var(--accent);
+        }
+
+        .wy_head h1 {
+            margin: 12px 0 10px;
+            font-size: 30px;
+            letter-spacing: .04em;
+            font-weight: 800;
+        }
+
+        .wy_meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 26px;
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .wy_meta b { color: var(--ink); font-weight: 700; }
+
+        h2 {
+            margin: 38px 0 12px;
+            font-size: 18px;
+            letter-spacing: .03em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 .wy_no {
+            flex: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: var(--ink);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        p { margin: 0 0 12px; font-size: 14.5px; }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            padding: 1px 6px;
+            border-radius: 5px;
+            background: #eef2fb;
+            color: #1e46a8;
+        }
+
+        .wy_note {
+            margin: 14px 0;
+            padding: 14px 18px;
+            border-left: 3px solid var(--accent);
+            background: #f6f9ff;
+            border-radius: 0 10px 10px 0;
+            font-size: 13.5px;
+            color: #33415c;
+        }
+
+        .wy_note--warm {
+            border-left-color: var(--warm);
+            background: #fdf8ef;
+            color: #6b4f22;
+        }
+
+        /* ── 表格 ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 6px;
+            font-size: 13.5px;
+        }
+
+        th, td {
+            border: 1px solid var(--line);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f7f9fd;
+            font-weight: 700;
+            color: #33415c;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        td.wy_ev {
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #1e46a8;
+            white-space: nowrap;
+        }
+
+        .wy_small { font-size: 12.5px; color: var(--muted); }
+
+        /* ── 三问 ── */
+        .wy_qa {
+            margin: 16px 0;
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #fcfdff;
+        }
+
+        .wy_qa h3 {
+            margin: 0 0 8px;
+            font-size: 14.5px;
+            color: #1e46a8;
+        }
+
+        .wy_qa p { margin: 0; font-size: 14px; }
+
+        .wy_qa p + p { margin-top: 8px; }
+
+        /* ── 图 ── */
+        figure {
+            margin: 18px 0 8px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #fbfcff;
+        }
+
+        figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        ul.wy_list {
+            margin: 8px 0 12px;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+
+        ul.wy_list li { margin-bottom: 6px; }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        @media (max-width: 620px) {
+            .wy_paper { padding: 28px 20px 34px; }
+            .wy_head h1 { font-size: 23px; }
+            table { font-size: 12.5px; }
+            td.wy_ev { font-size: 11.5px; }
+            footer { flex-direction: column; }
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .wy_paper { border: 0; box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <article class="wy_paper">
+        <header class="wy_head">
+            <p class="wy_kicker">MOBILE EVENTS · TASK 01</p>
+            <h1>事件侦探：一次拖动到底发生了什么</h1>
+            <p class="wy_meta">
+                <span>姓名：<b>万超然</b></span>
+                <span>学号：<b>24001011008</b></span>
+                <span>课程：高级网页设计</span>
+                <span>日期：<b>2026-11-16</b></span>
+            </p>
+        </header>
+
+        <h2><span class="wy_no">1</span>测量环境</h2>
+        <p>打开课程页面第 3 节「事件探针」，用 <b>DevTools 设备模式</b>（视口 390 × 844，DPR 2，触摸模拟开启）在探针区依次执行 5 种操作，
+        直接读取探针输出的日志。下表是这次跑出来的真实顺序，不是凭印象写的。</p>
+        <p class="wy_small">探针区尺寸 286 × 180，坐标是视口坐标（clientX / clientY）。日志区最多保留 <b>14 行</b>，超出会挤掉最早的记录——这一点后面会踩坑。</p>
+
+        <h2><span class="wy_no">2</span>五种操作的事件顺序</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:20%">操作</th>
+                    <th style="width:44%">事件序列</th>
+                    <th style="width:12%">条数</th>
+                    <th>关键观察</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>单击</td>
+                    <td class="wy_ev">touchstart → touchend → click</td>
+                    <td>3</td>
+                    <td>click 在 touchend <b>之后</b>补发</td>
+                </tr>
+                <tr>
+                    <td>向上拖动<br><span class="wy_small">240px</span></td>
+                    <td class="wy_ev">touchstart → touchmove ×20 → touchend</td>
+                    <td>22<br><span class="wy_small">日志显示 14</span></td>
+                    <td>日志被截断，只看到最后 13 次 move；<b>没有 click</b></td>
+                </tr>
+                <tr>
+                    <td>向左快速滑<br><span class="wy_small">275px</span></td>
+                    <td class="wy_ev">touchstart → touchmove ×5 → touchend</td>
+                    <td>7</td>
+                    <td>速度快 → move 次数少；<b>没有 click</b></td>
+                </tr>
+                <tr>
+                    <td>双指触摸</td>
+                    <td class="wy_ev">touchstart ×2 → touchmove ×6 → touchend ×2</td>
+                    <td>10</td>
+                    <td>每落下一根手指就再发一次 touchstart</td>
+                </tr>
+                <tr>
+                    <td>长按后抬起<br><span class="wy_small">约 950ms</span></td>
+                    <td class="wy_ev">touchstart → touchend → click</td>
+                    <td>3</td>
+                    <td>顺序同单击，只是 start 与 end 之间隔了近 1 秒</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="wy_note">
+            <b>双指那次有个细节：</b>两次 touchstart 打印出来的坐标一模一样（都是 x=150）。因为探针里用的是 <code>e.touches[0]</code>——
+            第二根手指按下时，<code>touches[0]</code> 仍然指向第一根手指。想看"新落下的那根"必须用 <code>e.changedTouches[0]</code>。
+        </div>
+
+        <h2><span class="wy_no">3</span>验收三问</h2>
+
+        <div class="wy_qa">
+            <h3>① 一次拖动里 touchmove 大约触发多少次？和距离什么关系？</h3>
+            <p>触摸事件的采样跟着屏幕刷新走，<b>大约每帧一次</b>（60Hz 屏约 60 次/秒）。所以次数取决于 <b>拖了多久</b>，而总距离决定 <b>每次 move 的步长</b>：
+            这次 240px 用了约 0.32 秒、跑了 20 次 move，平均每步 12px。</p>
+            <p>换句话说：同样的距离，慢慢拖，move 次数多、每步小；快速一甩，move 次数少、每步大（左滑 275px 只用了 5 次）。这也是"跟手"的原因——每一帧都按当前坐标重绘一次。</p>
+        </div>
+
+        <div class="wy_qa">
+            <h3>② click 出现在 touchend 之前还是之后？</h3>
+            <p><b>之后。</b>实测顺序是 <code>touchstart → touchend → click</code>，click 是浏览器在抬手后补发的"兼容鼠标事件"。
+            但不是所有操作都会补：这次 240px 的拖动和 275px 的快速滑动都<b>没有</b> click，因为位移超过了点击的容差。</p>
+            <p>所以同一个按钮上如果 touch 和 click 各写一套逻辑，轻点一下会执行两次；要么在 touch 处理里 <code>preventDefault()</code>，要么只用一套。</p>
+        </div>
+
+        <div class="wy_qa">
+            <h3>③ 把 touchend 换成 touchcancel 会发生什么？</h3>
+            <p><code>touchcancel</code> 不是"取消掉的 touchend"，而是<b>另一个事件</b>：当系统把手势抢走时（来电、通知栏下拉、页面开始滚动、多指手势冲突、iOS 边缘返回手势），
+            浏览器发的是 touchcancel，<b>不会再发 touchend</b>。</p>
+            <p>如果只监听 touchend，收尾逻辑（复位滑动标记、回弹到合法位置、解锁冷却）就永远不执行：表现为卡片卡在半路、下一次触摸被误判成"还在滑"、拖拽状态"粘手"。
+            正确做法是三个事件都绑，touchcancel 里做和 touchend 一样的收尾——我在任务二的页面里就写了这段。</p>
+        </div>
+
+        <h2><span class="wy_no">4</span>加分：轨迹草图</h2>
+        <p>把日志里的坐标点连起来就是手指的实际路径。下面是这次两组操作的真实落点（点越密，说明每帧移动越小）：</p>
+
+        <figure>
+            <svg viewBox="0 0 640 250" width="100%" role="img" aria-label="向上拖动与向左快速滑动的轨迹示意图">
+                <!-- 面板 A：向上拖动 -->
+                <rect x="18" y="16" width="290" height="200" rx="10" fill="#f7f9fd" stroke="#e3e8f1" />
+                <text x="34" y="40" font-size="11.5" fill="#6b7688">向上拖动 240px</text>
+                <text x="34" y="58" font-size="10.5" fill="#9aa5b7" font-family="Consolas, monospace">20 次 move · 每帧 12px</text>
+
+                <line x1="163" y1="188" x2="163" y2="86" stroke="#2a5bd7" stroke-width="2" />
+                <path d="M156 94 L163 82 L170 94" fill="none" stroke="#2a5bd7" stroke-width="2" stroke-linejoin="round" />
+                <circle cx="163" cy="188" r="4.5" fill="#2a5bd7" />
+                <circle cx="163" cy="178" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="168" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="158" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="148" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="138" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="128" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="118" r="2.8" fill="#8aa6ec" />
+                <circle cx="163" cy="108" r="2.8" fill="#8aa6ec" />
+                <text x="176" y="192" font-size="10" fill="#2a5bd7" font-family="Consolas, monospace">起点 y=512</text>
+                <text x="176" y="86" font-size="10" fill="#2a5bd7" font-family="Consolas, monospace">终点 y=272</text>
+
+                <!-- 面板 B：快速左滑 -->
+                <rect x="332" y="16" width="290" height="200" rx="10" fill="#fdf9f2" stroke="#f0e4d2" />
+                <text x="348" y="40" font-size="11.5" fill="#8a7048">向左快速滑 275px</text>
+                <text x="348" y="58" font-size="10.5" fill="#b39a72" font-family="Consolas, monospace">5 次 move · 每帧 55px</text>
+
+                <line x1="576" y1="140" x2="386" y2="140" stroke="#c8892f" stroke-width="2" />
+                <path d="M396 133 L382 140 L396 147" fill="none" stroke="#c8892f" stroke-width="2" stroke-linejoin="round" />
+                <circle cx="576" cy="140" r="4.5" fill="#c8892f" />
+                <circle cx="538" cy="140" r="2.8" fill="#dcae6a" />
+                <circle cx="500" cy="140" r="2.8" fill="#dcae6a" />
+                <circle cx="462" cy="140" r="2.8" fill="#dcae6a" />
+                <circle cx="424" cy="140" r="2.8" fill="#dcae6a" />
+                <text x="348" y="168" font-size="10" fill="#b47a24" font-family="Consolas, monospace">终点 x=40</text>
+                <text x="500" y="168" font-size="10" fill="#b47a24" font-family="Consolas, monospace">起点 x=315</text>
+
+                <text x="18" y="240" font-size="10.5" fill="#8b97ab" font-family="Consolas, monospace">
+                    点子越密 = 每帧位移越小 = 跟手越细腻；左滑每帧 55px，所以点明显更稀
+                </text>
+            </svg>
+            <figcaption>按探针日志的坐标点重绘：左边是慢拖，右边是快滑</figcaption>
+        </figure>
+
+        <h2><span class="wy_no">5</span>踩到的坑与解决办法</h2>
+        <div class="wy_note wy_note--warm">
+            <b>坑：</b>第一次向上拖动时，日志里怎么都找不到 <code>touchstart</code>，只剩一串 touchmove 和最后的 touchend——差点以为探针漏绑了事件。<br>
+            <b>原因：</b>探针日志区只保留最近 14 行，拖动产生的 move 太多，把 touchstart 挤出去了。<br>
+            <b>解决：</b>① 想看清完整顺序就拖短一点（3～4 次 move 就够）；② 想统计真实次数就同时开 F12 Console，或在代码里自增一个计数器打印；③ 记住"日志被截断"这件事本身也是个知识——事件处理里做节流/批量，别每次 move 都往 DOM 里塞一行。
+        </div>
+
+        <h2><span class="wy_no">6</span>AI 提示词记录</h2>
+        <ul class="wy_list">
+            <li>任务二：「做移动端美食卡片页，4 道菜，touchstart/touchend 计算横向位移，阈值 40px，左滑下一张右滑上一张，边界提示，touch-action: pan-y，0.3s 过渡，300ms 冷却防连跳，类名 id 变量统一 wy_ 前缀」</li>
+            <li>任务三：「图片查看器，双指缩放 1～4 倍且以两指中点为基准不跳，双击 1x/2x，放大后单指拖动并限制边界，缩回 1x 自动居中，0.25s 过渡」</li>
+            <li>任务四：「摇一摇抽菜谱，devicemotion 取 accelerationIncludingGravity 算合成加速度，阈值 18，1.5 秒冷却，无传感器时显示不支持并提供手动按钮」</li>
+        </ul>
+        <p class="wy_small">AI 生成的代码都逐行看过，并且用设备模式跑过一遍才交；上面第五节那个"日志被截断"的坑，就是自己跑的时候发现的。</p>
+
+        <h2><span class="wy_no">7</span>本次提交物</h2>
+        <table>
+            <tr><th style="width:36%">文件</th><th>对应任务</th></tr>
+            <tr><td><code>mobile-events-report.html</code></td><td>任务一 · 本报告（观察记录）</td></tr>
+            <tr><td><code>mobile-gesture.html</code></td><td>任务二 · 中华美食手势卡片</td></tr>
+            <tr><td><code>mobile-zoom.html</code></td><td>任务三 · 图片查看器（双指缩放）</td></tr>
+            <tr><td><code>mobile-sensor.html</code></td><td>任务四 · 摇一摇抽菜谱</td></tr>
+        </table>
+
+        <footer>
+            <span>高级网页设计 · 移动端常用事件</span>
+            <span>万超然 · 24001011008</span>
+        </footer>
+    </article>
+</body>
+
+</html>

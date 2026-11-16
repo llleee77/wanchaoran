@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：万超然　学号：24001011008　移动端课堂实践提交入口 -->
+    <title>移动端常用事件 · 课堂实践提交</title>
+    <style>
+        :root {
+            --ink: #14233c;
+            --muted: #6b7688;
+            --line: #e2e8f4;
+            --accent: #2563eb;
+            --gold: #b6863f;
+            --bg: #f3f6fb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(900px 460px at 82% -12%, #e2eafc 0%, transparent 62%),
+                var(--bg);
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.8;
+        }
+
+        .wy_shell {
+            width: min(1000px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 46px 0 60px;
+        }
+
+        /* ── 头部 ── */
+        .wy_head {
+            background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+            border-radius: 20px;
+            padding: 34px 36px;
+            color: #fff;
+            box-shadow: 0 14px 32px rgba(15, 43, 91, .28);
+        }
+
+        .wy_badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .3);
+            font-size: 12px;
+            letter-spacing: .18em;
+        }
+
+        .wy_head h1 {
+            margin: 16px 0 10px;
+            font-size: clamp(25px, 4vw, 32px);
+            letter-spacing: .04em;
+        }
+
+        .wy_head p {
+            margin: 0;
+            font-size: 14px;
+            color: #d3e0f7;
+            line-height: 1.95;
+        }
+
+        .wy_head p b { color: #ffd166; }
+
+        /* ── 说明 ── */
+        .wy_note {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 18px 0 26px;
+        }
+
+        .wy_note div {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: #4b5a72;
+        }
+
+        .wy_note b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--accent);
+            font-size: 12.5px;
+            letter-spacing: .06em;
+        }
+
+        /* ── 任务列表 ── */
+        .wy_list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .wy_item {
+            display: grid;
+            grid-template-columns: 74px 1fr auto;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 26px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 1px 2px rgba(20, 35, 60, .05);
+            transition: transform .2s, border-color .2s, box-shadow .2s;
+        }
+
+        .wy_item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 16px 30px rgba(37, 99, 235, .14);
+        }
+
+        .wy_stars {
+            text-align: center;
+            font-size: 17px;
+            letter-spacing: 2px;
+            color: var(--gold);
+        }
+
+        .wy_item h2 {
+            margin: 0 0 4px;
+            font-size: 18px;
+            letter-spacing: .02em;
+        }
+
+        .wy_item p {
+            margin: 0;
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.85;
+        }
+
+        .wy_go {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .wy_item:hover .wy_go { text-decoration: underline; }
+
+        .wy_tags {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .wy_tags i {
+            font-style: normal;
+            font-size: 11.5px;
+            color: #4b5a72;
+            background: #eef3fc;
+            border: 1px solid #dbe6f8;
+            border-radius: 6px;
+            padding: 2px 8px;
+        }
+
+        .wy_tags i.wy_video {
+            color: #8a5a12;
+            background: #fdf6e9;
+            border-color: #f2e0c2;
+        }
+
+        footer {
+            margin-top: 34px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 13px;
+            color: #9aa5b7;
+        }
+
+        @media (max-width: 620px) {
+            .wy_shell { width: min(100% - 24px, 560px); padding: 26px 0 40px; }
+            .wy_head { padding: 26px 22px; }
+            .wy_item {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                padding: 18px 20px;
+            }
+            .wy_stars { text-align: left; }
+            .wy_go { margin-top: 6px; }
+            footer { flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wy_shell">
+        <header class="wy_head">
+            <span class="wy_badge">M O B I L E　E V E N T S</span>
+            <h1>移动端常用事件 · 课堂实践</h1>
+            <p>四个递进任务：<b>观察记录 → 手势实现 → 综合交互 → 设备能力与降级</b>。
+            所有页面均为原生 HTML / CSS / JavaScript，可直接在手机或 DevTools 设备模式下验收。</p>
+        </header>
+
+        <section class="wy_note">
+            <div><b>提交内容</b>任务一提供三问答案；任务二直接看效果；任务三、四附手机实拍演示视频。</div>
+            <div><b>技术要点</b>touchstart / touchmove / touchend、changedTouches、touch-action、devicemotion。</div>
+            <div><b>兼容处理</b>坐标用 clientX/Y；多指用 touches；抬手判定用 changedTouches；无传感器自动降级。</div>
+        </section>
+
+        <main class="wy_list">
+            <a class="wy_item" href="./mobile-events-report.html">
+                <div class="wy_stars">⭐</div>
+                <div>
+                    <h2>任务一 · 事件侦探</h2>
+                    <p>在探针区实测 5 种操作，记录事件触发顺序，并回答三个思考题（move 次数、click 时机、touchcancel 的差别）。</p>
+                    <span class="wy_tags"><i>观察记录</i><i>三问作答</i><i>轨迹草图</i></span>
+                </div>
+                <span class="wy_go">查看报告 →</span>
+            </a>
+
+            <a class="wy_item" href="./mobile-gesture.html">
+                <div class="wy_stars">⭐⭐</div>
+                <div>
+                    <h2>任务二 · 中华美食手势卡片</h2>
+                    <p>4 道菜的上图下文卡片，左右滑动切换，阈值 40px、边界提示、300ms 冷却防连跳，纵向仍可滚动页面。</p>
+                    <span class="wy_tags"><i>touchstart / touchend</i><i>changedTouches</i><i>touch-action: pan-y</i></span>
+                </div>
+                <span class="wy_go">查看效果 →</span>
+            </a>
+
+            <a class="wy_item" href="./mobile-zoom.html">
+                <div class="wy_stars">⭐⭐⭐</div>
+                <div>
+                    <h2>任务三 · 图片查看器</h2>
+                    <p>双指缩放 1×～4×（以两指中点为基准不漂移）、双击切换 1×/2×、放大后单指拖动并限制边界、缩回自动居中。</p>
+                    <span class="wy_tags"><i>多指手势</i><i>transform 状态管理</i><i class="wy_video">含实拍视频</i></span>
+                </div>
+                <span class="wy_go">查看效果 →</span>
+            </a>
+
+            <a class="wy_item" href="./mobile-sensor.html">
+                <div class="wy_stars">⭐⭐⭐⭐</div>
+                <div>
+                    <h2>任务四 · 摇一摇抽菜谱</h2>
+                    <p>devicemotion 合成加速度超过 18 触发、1.5 秒冷却，iOS 权限申请，无传感器时自动降级为手动抽取。</p>
+                    <span class="wy_tags"><i>设备传感器</i><i>权限与降级</i><i class="wy_video">含实拍视频</i></span>
+                </div>
+                <span class="wy_go">查看效果 →</span>
+            </a>
+        </main>
+
+        <footer>
+            <span>高级网页设计 · 移动端常用事件</span>
+            <span>万超然 · 24001011008</span>
+        </footer>
+    </div>
+</body>
+
+</html>

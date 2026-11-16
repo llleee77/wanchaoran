@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 姓名：万超然　学号：24001011008　任务二：手势卡片（左右滑动切换） -->
+    <title>中华美食 · 左右滑动卡片</title>
+    <style>
+        :root {
+            --ink: #241a12;
+            --muted: #8a7a68;
+            --paper: #f6efe3;
+            --line: #e6d9c6;
+            --gold: #b6863f;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(700px 420px at 80% -10%, #fdf3df 0%, transparent 60%),
+                var(--paper);
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 26px 18px 34px;
+        }
+
+        .wy_page {
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* ── 标题 ── */
+        .wy_head { text-align: center; margin-bottom: 20px; }
+
+        .wy_kicker {
+            margin: 0;
+            font-size: 11px;
+            letter-spacing: .32em;
+            color: var(--gold);
+        }
+
+        .wy_head h1 {
+            margin: 10px 0 8px;
+            font-size: 27px;
+            letter-spacing: .08em;
+            font-weight: 800;
+        }
+
+        .wy_head p.wy_sub {
+            margin: 0;
+            font-size: 12.5px;
+            color: var(--muted);
+            line-height: 1.9;
+        }
+
+        /* ── 卡片舞台 ── */
+        .wy_stage {
+            position: relative;
+            overflow: hidden;
+            border-radius: 26px;
+            box-shadow: 0 20px 44px rgba(64, 40, 16, .18), 0 2px 0 rgba(255, 255, 255, .7) inset;
+            /* 纵向手势交还浏览器：页面照常上下滚，横向留给 JS */
+            touch-action: pan-y;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            background: #fff;
+        }
+
+        .wy_deck {
+            display: flex;
+            will-change: transform;
+            transform: translateX(0);
+        }
+
+        /* ── 单张卡片 ── */
+        .wy_card {
+            position: relative;
+            flex: 0 0 100%;
+            height: min(58vh, 430px);
+            min-height: 340px;
+            padding: 26px 26px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .wy_card::before {
+            content: attr(data-mark);
+            position: absolute;
+            right: -18px;
+            bottom: -46px;
+            font-family: "Kaiti SC", KaiTi, STKaiti, serif;
+            font-size: 210px;
+            line-height: 1;
+            color: rgba(255, 255, 255, .12);
+            pointer-events: none;
+        }
+
+        .wy_card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(120% 80% at 15% 0%, rgba(255, 255, 255, .22), transparent 55%);
+            pointer-events: none;
+        }
+
+        .wy_card--1 { background: linear-gradient(155deg, #a8182a 0%, #d7402f 52%, #f0894f 100%); }
+        .wy_card--2 { background: linear-gradient(155deg, #8a4a0c 0%, #c97c1e 52%, #edb65f 100%); }
+        .wy_card--3 { background: linear-gradient(155deg, #4c1618 0%, #8a2f2b 52%, #bf6a4a 100%); }
+        .wy_card--4 { background: linear-gradient(155deg, #0d4a3c 0%, #1c7d63 52%, #79c6a1 100%); }
+
+        .wy_card-top {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wy_cuisine {
+            padding: 5px 13px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .18);
+            border: 1px solid rgba(255, 255, 255, .34);
+            font-size: 12px;
+            letter-spacing: .12em;
+        }
+
+        .wy_no {
+            font-family: Georgia, serif;
+            font-size: 15px;
+            letter-spacing: .1em;
+            opacity: .75;
+        }
+
+        .wy_card-body { position: relative; z-index: 1; }
+
+        .wy_card-body h2 {
+            margin: 0 0 10px;
+            font-size: 32px;
+            letter-spacing: .06em;
+            font-weight: 800;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+        }
+
+        .wy_card-body p {
+            margin: 0;
+            font-size: 13.5px;
+            line-height: 2;
+            color: rgba(255, 255, 255, .9);
+            max-width: 92%;
+        }
+
+        .wy_line {
+            width: 38px;
+            height: 2px;
+            margin: 0 0 14px;
+            background: rgba(255, 255, 255, .55);
+            border-radius: 2px;
+        }
+
+        /* ── 底部状态条 ── */
+        .wy_bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 18px;
+            padding: 0 6px;
+        }
+
+        .wy_counter {
+            font-size: 13.5px;
+            color: var(--muted);
+            letter-spacing: .04em;
+        }
+
+        .wy_dots { display: flex; gap: 7px; }
+
+        .wy_dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #d8c8b1;
+            transition: width .3s, background .3s;
+        }
+
+        .wy_dot--on {
+            width: 20px;
+            background: var(--gold);
+        }
+
+        .wy_tip {
+            margin: 14px 0 0;
+            text-align: center;
+            font-size: 12.5px;
+            color: #a08d76;
+            line-height: 1.9;
+        }
+
+        /* ── 边界提示 ── */
+        .wy_toast {
+            position: fixed;
+            left: 50%;
+            bottom: 54px;
+            transform: translate(-50%, 10px);
+            padding: 10px 20px;
+            border-radius: 999px;
+            background: rgba(36, 26, 18, .88);
+            color: #fff;
+            font-size: 13px;
+            letter-spacing: .04em;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s, transform .25s;
+            z-index: 20;
+        }
+
+        .wy_toast--show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .wy_sign {
+            margin-top: auto;
+            padding-top: 26px;
+            text-align: center;
+            font-size: 12px;
+            color: #b2a18c;
+            letter-spacing: .06em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wy_page">
+        <header class="wy_head">
+            <p class="wy_kicker">TOUCH GESTURE</p>
+            <h1>中华美食</h1>
+            <p class="wy_sub">左右滑动切换 · 阈值 40px · 连滑冷却 300ms</p>
+        </header>
+
+        <main class="wy_stage" id="wyStage">
+            <div class="wy_deck" id="wyDeck">
+                <article class="wy_card wy_card--1" data-mark="麻">
+                    <div class="wy_card-top">
+                        <span class="wy_cuisine">川菜</span>
+                        <span class="wy_no">01</span>
+                    </div>
+                    <div class="wy_card-body">
+                        <div class="wy_line"></div>
+                        <h2>麻婆豆腐</h2>
+                        <p>麻、辣、烫、香、酥、嫩、鲜、活，一勺红油裹着嫩豆腐，出锅前撒一把花椒面。</p>
+                    </div>
+                </article>
+
+                <article class="wy_card wy_card--2" data-mark="辣">
+                    <div class="wy_card-top">
+                        <span class="wy_cuisine">川菜</span>
+                        <span class="wy_no">02</span>
+                    </div>
+                    <div class="wy_card-body">
+                        <div class="wy_line"></div>
+                        <h2>宫保鸡丁</h2>
+                        <p>鸡丁滑嫩、花生酥脆，糊辣荔枝味，酸甜里带一丝麻，是下饭界的常青树。</p>
+                    </div>
+                </article>
+
+                <article class="wy_card wy_card--3" data-mark="酥">
+                    <div class="wy_card-top">
+                        <span class="wy_cuisine">浙菜</span>
+                        <span class="wy_no">03</span>
+                    </div>
+                    <div class="wy_card-body">
+                        <div class="wy_line"></div>
+                        <h2>东坡肉</h2>
+                        <p>慢火焖足三小时，肥而不腻、入口即化，酱色油亮，配一碗白饭刚刚好。</p>
+                    </div>
+                </article>
+
+                <article class="wy_card wy_card--4" data-mark="鲜">
+                    <div class="wy_card-top">
+                        <span class="wy_cuisine">浙菜</span>
+                        <span class="wy_no">04</span>
+                    </div>
+                    <div class="wy_card-body">
+                        <div class="wy_line"></div>
+                        <h2>龙井虾仁</h2>
+                        <p>明前龙井配河虾仁，清鲜回甘，不勾浓芡，是杭帮菜里最清雅的一笔。</p>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <div class="wy_bar">
+            <span class="wy_counter" id="wyCounter">第 1 / 4 张</span>
+            <div class="wy_dots" id="wyDots"></div>
+        </div>
+
+        <p class="wy_tip">左滑看下一道 · 右滑回上一道<br>手机上纵向仍可滚动页面（touch-action: pan-y）· 桌面可用 ← → 键</p>
+
+        <p class="wy_sign">万超然 · 24001011008</p>
+    </div>
+
+    <div class="wy_toast" id="wyToast"></div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var wy_deck = document.getElementById('wyDeck');
+            var wy_stage = document.getElementById('wyStage');
+            var wy_counter = document.getElementById('wyCounter');
+            var wy_dots = document.getElementById('wyDots');
+            var wy_toast = document.getElementById('wyToast');
+
+            var wy_total = wy_deck.children.length;   // 4 张卡片
+            var wy_index = 0;                         // 当前第几张（从 0 开始）
+            var wy_startX = 0;                        // 手指按下时的横坐标
+            var wy_startY = 0;                        // 手指按下时的纵坐标
+            var wy_swiping = false;                   // 是否已经判定为横向滑动
+            var wy_locked = false;                    // 冷却锁：300ms 内不再切换
+            var wy_toastTimer = null;
+
+            var wy_THRESHOLD = 40;                    // 触发切换的最小横向位移
+            var wy_COOLDOWN = 300;                    // 连滑冷却时间
+            var wy_SLOP = 8;                          // 方向判定前的最小位移
+
+            // ── 圆点指示器 ──
+            for (var i = 0; i < wy_total; i++) {
+                var d = document.createElement('span');
+                d.className = 'wy_dot' + (i === 0 ? ' wy_dot--on' : '');
+                wy_dots.appendChild(d);
+            }
+
+            // ── 渲染：把 deck 平移到第 index 张 ──
+            function wy_render(animate) {
+                wy_deck.style.transition = animate
+                    ? 'transform .3s cubic-bezier(.22,.61,.36,1)'
+                    : 'none';
+                wy_deck.style.transform = 'translateX(' + (-wy_index * 100) + '%)';
+
+                wy_counter.textContent = '第 ' + (wy_index + 1) + ' / ' + wy_total + ' 张';
+
+                for (var k = 0; k < wy_dots.children.length; k++) {
+                    wy_dots.children[k].className = 'wy_dot' + (k === wy_index ? ' wy_dot--on' : '');
+                }
+            }
+
+            // ── 边界 / 冷却提示 ──
+            function wy_showToast(text) {
+                wy_toast.textContent = text;
+                wy_toast.classList.add('wy_toast--show');
+                clearTimeout(wy_toastTimer);
+                wy_toastTimer = setTimeout(function () {
+                    wy_toast.classList.remove('wy_toast--show');
+                }, 1200);
+            }
+
+            // ── 切换：step = 1 下一张，-1 上一张 ──
+            function wy_go(step) {
+                var next = wy_index + step;
+
+                if (next < 0) {                       // 已经是最左边
+                    wy_showToast('已经是第一张了');
+                    wy_render(true);                  // 回弹
+                    return;
+                }
+                if (next > wy_total - 1) {            // 已经是最右边
+                    wy_showToast('已经是最后一张了');
+                    wy_render(true);
+                    return;
+                }
+
+                wy_index = next;
+                wy_render(true);
+
+                // 冷却：这 300ms 内的第二次滑动直接忽略，防止快速连滑跳两张
+                wy_locked = true;
+                setTimeout(function () { wy_locked = false; }, wy_COOLDOWN);
+            }
+
+            // ── 按下：记录起点 ──
+            wy_stage.addEventListener('touchstart', function (e) {
+                if (e.touches.length !== 1) return;   // 多指不参与切卡
+                wy_startX = e.touches[0].clientX;
+                wy_startY = e.touches[0].clientY;
+                wy_swiping = false;
+                wy_deck.style.transition = 'none';    // 拖动期间跟手，不要过渡
+            }, { passive: true });
+
+            // ── 移动：跟手拖动 ──
+            wy_stage.addEventListener('touchmove', function (e) {
+                if (e.touches.length !== 1) return;
+
+                var dx = e.touches[0].clientX - wy_startX;
+                var dy = e.touches[0].clientY - wy_startY;
+
+                // 先判断主导方向：竖向为主就放过，交给浏览器滚动
+                if (!wy_swiping) {
+                    if (Math.abs(dx) < wy_SLOP) return;
+                    if (Math.abs(dx) <= Math.abs(dy)) return;
+                    wy_swiping = true;
+                }
+
+                // 到边界时给一点阻尼，手感上"拉不动"
+                if ((wy_index === 0 && dx > 0) || (wy_index === wy_total - 1 && dx < 0)) {
+                    dx = dx * 0.35;
+                }
+
+                if (e.cancelable) e.preventDefault();  // 横向时不让页面上下抖
+
+                wy_deck.style.transform =
+                    'translateX(calc(' + (-wy_index * 100) + '% + ' + dx + 'px))';
+            }, { passive: false });
+
+            // ── 抬起：算总位移，决定切不切 ──
+            wy_stage.addEventListener('touchend', function (e) {
+                if (!wy_swiping) { wy_render(true); return; }
+                wy_swiping = false;
+
+                var t = e.changedTouches[0];          // 抬手用 changedTouches
+                var dx = t.clientX - wy_startX;
+                var dy = t.clientY - wy_startY;
+
+                // 位移不够、或其实是在竖着滑 → 回弹，不切换
+                if (Math.abs(dx) < wy_THRESHOLD || Math.abs(dx) <= Math.abs(dy)) {
+                    wy_render(true);
+                    return;
+                }
+                // 冷却期内 → 回弹，防止一次连滑跳两张
+                if (wy_locked) {
+                    wy_render(true);
+                    return;
+                }
+
+                wy_go(dx < 0 ? 1 : -1);               // 左滑下一张，右滑上一张
+            });
+
+            // ── 被系统打断（来电、通知、手势冲突）时只发 touchcancel ──
+            // 不处理的话 wy_swiping 会一直挂着，下一次触摸会被误判成"正在滑"
+            wy_stage.addEventListener('touchcancel', function () {
+                wy_swiping = false;
+                wy_render(true);
+            });
+
+            // 桌面预览用：左右方向键（手机上不显示）
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'ArrowLeft') wy_go(-1);
+                if (e.key === 'ArrowRight') wy_go(1);
+            });
+
+            wy_render(false);
+        })();
+    </script>
+</body>
+
+</html>
