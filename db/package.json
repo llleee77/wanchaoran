@@ -1,0 +1,14 @@
+{
+  "name": "poems-db-server",
+  "version": "1.0.0",
+  "description": "诗词数据服务器：把 db.json 里的 poems 数组通过 3005 端口暴露成接口",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

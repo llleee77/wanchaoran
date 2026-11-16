@@ -5,6 +5,9 @@
 # Swiper 组件包（页面走 CDN，不需要入库）
 swiper/
 
+# npm 依赖（db 目录下 npm install 生成，本地重装即可）
+node_modules/
+
 # 系统杂项
 Thumbs.db
 .DS_Store

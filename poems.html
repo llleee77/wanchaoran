@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词赏析 · 上图下文</title>
+    <style>
+        :root {
+            --ink: #14233c;
+            --muted: #64748b;
+            --line: #e2e8f4;
+            --accent: #1d5bbf;
+            --gold: #c8a45c;
+            --bg: #f3f6fb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── 顶部 ── */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0b1730, #153a73 58%, #1d5bbf);
+            color: #fff;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -90px;
+            top: -130px;
+            width: 430px;
+            height: 430px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(200, 164, 92, .38), transparent 65%);
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 62px 0 58px;
+        }
+
+        .eyebrow {
+            margin: 0;
+            font-size: 12px;
+            letter-spacing: .28em;
+            color: #9fc0f5;
+        }
+
+        .hero h1 {
+            margin: 14px 0 12px;
+            font-size: clamp(32px, 5vw, 46px);
+            font-weight: 800;
+            letter-spacing: .08em;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .hero .lead {
+            margin: 0;
+            color: #c9d8f0;
+            font-size: 15px;
+        }
+
+        .hero .lead code {
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .18);
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+            padding: 7px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .1);
+            border: 1px solid rgba(255, 255, 255, .2);
+            font-size: 13px;
+            color: #e5edfa;
+        }
+
+        .status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, .22);
+        }
+
+        .status.ok .dot { background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, .22); }
+        .status.bad .dot { background: #f87171; box-shadow: 0 0 0 3px rgba(248, 113, 113, .22); }
+
+        /* ── 主体 ── */
+        .wrap {
+            width: min(1120px, calc(100% - 40px));
+            margin: -30px auto 0;
+            padding-bottom: 64px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding: 14px 20px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(20, 35, 60, .06);
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .toolbar button {
+            border: 1px solid #cfdcf4;
+            background: #f4f8ff;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 13.5px;
+            padding: 7px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .toolbar button:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        /* ── 上图下文卡片 ── */
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(20, 35, 60, .05);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 32px rgba(20, 35, 60, .13);
+        }
+
+        /* 图 */
+        .pic {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            background: #e8eef8;
+            overflow: hidden;
+        }
+
+        .pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .6s ease;
+        }
+
+        .card:hover .pic img { transform: scale(1.06); }
+
+        .pic::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 46%;
+            background: linear-gradient(transparent, rgba(8, 18, 38, .38));
+            pointer-events: none;
+        }
+
+        .badge {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            z-index: 2;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .94);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Kaiti SC", KaiTi, STKaiti, serif;
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(8, 18, 38, .18);
+        }
+
+        .pic-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9aa9bf;
+            font-size: 13px;
+            background: repeating-linear-gradient(45deg, #eef3fb, #eef3fb 10px, #e6edf8 10px, #e6edf8 20px);
+        }
+
+        /* 文 */
+        .cap { padding: 20px 22px 24px; }
+
+        .cap h2 {
+            position: relative;
+            margin: 0 0 8px;
+            padding-left: 12px;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: .03em;
+        }
+
+        .cap h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            border-radius: 2px;
+            background: var(--gold);
+        }
+
+        .cap p {
+            margin: 0;
+            color: #4a5a72;
+            font-size: 15px;
+            line-height: 2;
+            font-family: "Kaiti SC", KaiTi, STKaiti, "Songti SC", serif;
+        }
+
+        /* ── 骨架屏 / 空状态 / 错误 ── */
+        .skeleton .pic,
+        .skeleton .line {
+            background: linear-gradient(90deg, #eef2f9 25%, #e2eaf7 37%, #eef2f9 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.3s ease-in-out infinite;
+        }
+
+        .skeleton .cap { padding: 20px 22px 24px; }
+
+        .skeleton .line {
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton .line.short { width: 45%; }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+
+        .empty,
+        .error {
+            grid-column: 1 / -1;
+            padding: 40px 28px;
+            border-radius: 16px;
+            text-align: center;
+            background: #fff;
+            border: 1px dashed var(--line);
+            color: var(--muted);
+            font-size: 14.5px;
+        }
+
+        .error {
+            border: 1px solid #fecaca;
+            background: #fff5f5;
+            color: #991b1b;
+            text-align: left;
+        }
+
+        .error h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .error ol {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        .error code {
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        /* ── 页脚 ── */
+        footer {
+            padding: 26px 20px 40px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 2;
+        }
+
+        footer code {
+            font-family: Consolas, monospace;
+            color: #64748b;
+        }
+
+        @media (max-width: 560px) {
+            .hero-inner { padding: 46px 0 44px; }
+            .wrap { margin-top: -22px; }
+            .toolbar { font-size: 13px; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow">LOCAL DATA SERVER · PORT 3005</p>
+            <h1>诗词<em>赏析</em></h1>
+            <p class="lead">图片与文字由本地服务器返回，数据来自 <code>db/db.json</code> 的 <code>poems</code> 数组</p>
+            <div class="status" id="status">
+                <span class="dot"></span>
+                <span id="statusText">正在连接数据服务器…</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="toolbar">
+            <span id="count">加载中…</span>
+            <button type="button" id="refresh">重新获取数据</button>
+        </div>
+
+        <section class="grid" id="grid" aria-live="polite"></section>
+    </main>
+
+    <footer>
+        数据接口：<code>http://localhost:3005/api/poems</code> · 数据文件：<code>db/db.json</code><br>
+        改完 db.json 直接刷新本页即可，不用重启服务器
+    </footer>
+
+    <script>
+        (function () {
+            var API = 'http://localhost:3005/api/poems';
+            var CN_NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+
+            var grid = document.getElementById('grid');
+            var statusEl = document.getElementById('status');
+            var statusText = document.getElementById('statusText');
+            var countEl = document.getElementById('count');
+            var refreshBtn = document.getElementById('refresh');
+
+            // 状态：'' 加载中 / 'ok' 成功 / 'bad' 失败
+            function setStatus(type, text) {
+                statusEl.className = 'status' + (type ? ' ' + type : '');
+                statusText.textContent = text;
+            }
+
+            // 骨架屏：数据回来之前先占位，避免页面空白一片
+            function showSkeleton() {
+                var html = '';
+                for (var i = 0; i < 3; i++) {
+                    html += '<article class="card skeleton">' +
+                                '<div class="pic"></div>' +
+                                '<div class="cap"><div class="line short"></div><div class="line"></div></div>' +
+                            '</article>';
+                }
+                grid.innerHTML = html;
+            }
+
+            function showError(message) {
+                var box = document.createElement('div');
+                box.className = 'error';
+                box.innerHTML =
+                    '<h3>没能取到数据：' + message + '</h3>' +
+                    '<ol>' +
+                        '<li>确认服务器开着：终端里 <code>cd db</code> 后执行 <code>node server.js</code>，看到「数据服务器已启动」就对了</li>' +
+                        '<li>浏览器地址栏访问 <code>http://localhost:3005/api/poems</code>，能看到一段 JSON 才算接口正常</li>' +
+                        '<li>也可以直接用服务器地址打开本页：<code>http://localhost:3005/poems.html</code></li>' +
+                        '<li>点右上角「重新获取数据」重试，或按 Ctrl + F5 强制刷新</li>' +
+                    '</ol>';
+                grid.appendChild(box);
+            }
+
+            // 单张卡片：图上（.pic）+ 文下（.cap）
+            function createCard(item, index) {
+                var card = document.createElement('article');
+                card.className = 'card';
+
+                var pic = document.createElement('div');
+                pic.className = 'pic';
+
+                var badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = CN_NUM[index] || (index + 1);
+                pic.appendChild(badge);
+
+                if (item.pic) {
+                    var img = document.createElement('img');
+                    img.src = item.pic;
+                    img.alt = item.title || '诗词配图';
+                    img.loading = 'lazy';
+                    // 远程图片别带 referer，避开图床的防盗链
+                    img.referrerPolicy = 'no-referrer';
+                    img.addEventListener('error', function () {
+                        if (img.parentNode) img.parentNode.removeChild(img);
+                        var fallback = document.createElement('span');
+                        fallback.className = 'pic-fallback';
+                        fallback.textContent = '图片加载失败';
+                        pic.appendChild(fallback);
+                    });
+                    pic.appendChild(img);
+                } else {
+                    var none = document.createElement('span');
+                    none.className = 'pic-fallback';
+                    none.textContent = '暂无配图';
+                    pic.appendChild(none);
+                }
+
+                var cap = document.createElement('div');
+                cap.className = 'cap';
+
+                var h2 = document.createElement('h2');
+                h2.textContent = item.title || '无题';
+
+                var p = document.createElement('p');
+                p.textContent = item.content || '';
+
+                cap.appendChild(h2);
+                cap.appendChild(p);
+                card.appendChild(pic);
+                card.appendChild(cap);
+                return card;
+            }
+
+            function render(list) {
+                grid.innerHTML = '';
+                if (!list.length) {
+                    var empty = document.createElement('p');
+                    empty.className = 'empty';
+                    empty.textContent = 'db.json 里的 poems 是空的，加两条数据再点「重新获取数据」。';
+                    grid.appendChild(empty);
+                    return;
+                }
+                list.forEach(function (item, i) {
+                    grid.appendChild(createCard(item, i));
+                });
+            }
+
+            function load() {
+                showSkeleton();
+                setStatus('', '正在连接数据服务器…');
+                countEl.textContent = '加载中…';
+                refreshBtn.disabled = true;
+
+                fetch(API, { cache: 'no-store' })
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('服务器返回 ' + res.status);
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        // 接口返回的就是数组；万一包了一层 { poems: [...] } 也兼容
+                        var list = Array.isArray(data) ? data : (data && data.poems) || [];
+                        render(list);
+                        setStatus('ok', '数据已加载');
+                        countEl.textContent = '共 ' + list.length + ' 首 · 来自 ' + API;
+                        refreshBtn.disabled = false;
+                    })
+                    .catch(function (err) {
+                        var msg = (err && err.message) || '网络错误';
+                        // 浏览器给的原始报错是英文的 Failed to fetch，换成看得懂的说法
+                        if (/failed to fetch|networkerror|load failed/i.test(msg)) {
+                            msg = '连不上 3005 端口的服务';
+                        }
+                        render([]);
+                        grid.innerHTML = '';
+                        setStatus('bad', '未连接数据服务器');
+                        countEl.textContent = '取数失败';
+                        showError(msg);
+                        refreshBtn.disabled = false;
+                    });
+            }
+
+            refreshBtn.addEventListener('click', load);
+            load();
+        })();
+    </script>
+</body>
+
+</html>
