@@ -290,6 +290,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
+            margin: 0 auto;
             border-radius: 12px;
             overflow: hidden;
             background: #05040c;
@@ -584,10 +585,18 @@
                 v.addEventListener('error', wy_notFound);
                 if (src) src.addEventListener('error', wy_notFound);
 
-                // 视频加载成功后收起占位
+                // 视频加载成功后收起占位，并按视频真实比例调整播放框
                 v.addEventListener('loadedmetadata', function () {
                     v.style.display = '';
                     empty.hidden = true;
+
+                    var frame = v.parentNode;
+                    if (v.videoWidth && v.videoHeight) {
+                        frame.style.aspectRatio = v.videoWidth + ' / ' + v.videoHeight;
+                        if (v.videoHeight > v.videoWidth) {
+                            frame.style.maxWidth = '300px';
+                        }
+                    }
                 });
 
                 setTimeout(function () {

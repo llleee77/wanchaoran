@@ -12,6 +12,9 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* 占位层用了 display:flex，会盖住 hidden 属性，这里强制生效 */
+        [hidden] { display: none !important; }
+
         html, body { height: 100%; }
 
         body {
@@ -216,6 +219,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
+            margin: 0 auto;
             border-radius: 12px;
             overflow: hidden;
             background: #05060a;
@@ -576,10 +580,19 @@
                 v.addEventListener('error', wy_notFound);
                 if (src) src.addEventListener('error', wy_notFound);
 
-                // 视频后来加载成功（或换了源）就把占位收起来
+                // 视频加载成功后收起占位，并按视频真实比例调整播放框
                 v.addEventListener('loadedmetadata', function () {
                     v.style.display = '';
                     empty.hidden = true;
+
+                    var frame = v.parentNode;
+                    if (v.videoWidth && v.videoHeight) {
+                        frame.style.aspectRatio = v.videoWidth + ' / ' + v.videoHeight;
+                        // 竖屏视频（手机实拍）限宽，横屏就占满
+                        if (v.videoHeight > v.videoWidth) {
+                            frame.style.maxWidth = '300px';
+                        }
+                    }
                 });
 
                 // 兜底：某些情况下错误不会冒泡到 video 元素
