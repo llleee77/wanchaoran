@@ -157,5 +157,15 @@
   wy_askBtn.addEventListener('click', wy_ask);
   wy_questionEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') wy_ask(); });
 
+  // 自动演示模式：URL 带 ?demo=1 时自动提问（用于展示与截图）
+  if (location.search.indexOf('demo=1') !== -1) {
+    setTimeout(function () {
+      if (!wy_questionEl.value) {
+        wy_questionEl.value = '你们营业时间是多少？';
+        wy_ask();
+      }
+    }, 900);
+  }
+
   wy_loadDocs();
 })();

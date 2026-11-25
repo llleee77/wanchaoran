@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="万超然的 LLM 实践操作演示：AI 客服、知识库 RAG、图像识别、语音识别">
+    <title>万超然｜LLM 实践操作演示</title>
+    <style>
+        :root {
+            --ink: #14202e;
+            --body: #eef1f4;
+            --card: #ffffff;
+            --line: #dfe5ea;
+            --accent: #2563eb;
+            --accent-soft: #dbe7ff;
+            --accent-dark: #1e40af;
+            --muted: #64748b;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 500px at 85% -10%, #e2eafc 0%, transparent 60%),
+                var(--body);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.8;
+        }
+
+        .top { background: var(--ink); color: #fff; }
+
+        .top-inner {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+        }
+
+        .top-inner .brand { font-weight: 800; letter-spacing: .04em; }
+        .top-inner .brand span { color: #93c5fd; }
+
+        .top-inner a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            border: 1px solid #334155;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: background .2s ease, color .2s ease;
+        }
+        .top-inner a:hover { background: #fff; color: var(--ink); }
+
+        .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+        .hero { padding: 46px 0 10px; }
+
+        .hero .eyebrow {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .22em;
+        }
+
+        .hero h1 { margin: 10px 0 8px; font-size: clamp(32px, 5vw, 52px); font-weight: 900; letter-spacing: -.01em; }
+
+        .hero p.lead { margin: 0; color: var(--muted); max-width: 640px; }
+
+        .backend-note {
+            margin: 18px 0 6px;
+            background: #fff7e6;
+            border: 1px solid #f2ddb0;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 13.5px;
+            color: #8a5a00;
+        }
+
+        .backend-note a { color: var(--accent-dark); font-weight: 700; }
+
+        .module {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 26px 26px 22px;
+            margin: 26px 0;
+            box-shadow: 0 10px 26px rgba(20, 32, 46, .05);
+        }
+
+        .module-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+        .module-number {
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .18em;
+            color: var(--accent);
+        }
+
+        .module-head h2 { margin: 0; font-size: 21px; }
+
+        .module p.desc { margin: 10px 0 4px; color: #3d4a63; font-size: 14.5px; }
+
+        .shot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .shot { margin: 0; }
+
+        .shot img {
+            width: 100%;
+            display: block;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            cursor: zoom-in;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .shot img:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(20, 32, 46, .14); }
+
+        .shot figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+        .footer { padding: 34px 0 42px; color: var(--muted); font-size: 13px; }
+        .footer .shell { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+        /* 截图放大弹层 */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 18, 28, .82);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 30px;
+        }
+
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            max-width: min(1280px, 94vw);
+            max-height: 88vh;
+            border-radius: 10px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 18px;
+            right: 26px;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        @media (max-width: 720px) {
+            .module { padding: 20px 16px; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top">
+        <div class="top-inner">
+            <span class="brand">万超然 <span>· WCR</span></span>
+            <a href="index.html">← 返回课堂目录</a>
+        </div>
+    </header>
+
+    <main class="shell">
+        <section class="hero">
+            <p class="eyebrow">LLM APP PRACTICE</p>
+            <h1>LLM 实践操作演示</h1>
+            <p class="lead">课程实践中的四个 AI 能力模块 · 在上节课全栈项目（Node.js + Express，端口 8008）基础上完成 · 点击截图可放大查看。</p>
+            <div class="backend-note">
+                💡 下方截图为运行实测。如需<b>在线交互</b>（真实对话 / 上传 / 录音），请先在本机启动后端（双击全栈项目 start.bat），
+                再访问 <a href="llm-ai.html">llm-ai.html</a> ·
+                <a href="llm-kb.html">llm-kb.html</a> ·
+                <a href="llm-vision.html">llm-vision.html</a> ·
+                <a href="llm-voice.html">llm-voice.html</a>。
+                API Key 仅存于后端 .env（不进前端、不进 Git）。
+            </div>
+        </section>
+
+        <section class="module">
+            <div class="module-head">
+                <span class="module-number">MODULE · 01</span>
+                <h2>🤖 AI 客服 · 硅基流动 / 七牛 切换 下拉框 + 对话</h2>
+            </div>
+            <p class="desc">前端通过下拉框切换 AI 服务商（硅基流动 / 七牛），后端读取 .env 配置转发请求即可切换模型来源；多轮对话由前端维护完整 messages 数组实现，切换平台后历史继续有效；客服人设只回答营业时间、招牌菜、配送范围三类问题。AI 回复下方标注了本次实际使用的平台与模型名。</p>
+            <div class="shot-grid">
+                <figure class="shot">
+                    <img src="img/LLM/ai_1.png" alt="AI 客服对话演示" data-caption="🔼 硅基流动 · 对话界面（多轮对话 + 平台/模型标注）">
+                    <figcaption>🔼 硅基流动 · 对话界面（下拉框选择平台与人设）</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="module">
+            <div class="module-head">
+                <span class="module-number">MODULE · 02</span>
+                <h2>📚 知识库 · 上传文件 + 功能验证 RAG</h2>
+            </div>
+            <p class="desc">自行上传 txt/md 文档，后端自动切块（约 500 字/块）并调用 embedding 模型（BAAI/bge-m3）向量化存入 MySQL（wy_kb_docs / wy_kb_chunks 表）；提问时对全表做余弦相似度检索取 top3，拼入 system 提示词要求"仅根据资料回答并标注引用"，实现检索增强生成（RAG）。左图为已上传的 3 个知识库文档（共 9 个知识块）。</p>
+            <div class="shot-grid">
+                <figure class="shot">
+                    <img src="img/LLM/zsk_1.png" alt="知识库上传与 RAG 问答" data-caption="🔼 文件上传 · 构建知识库 → 提问验证 · RAG 检索（可展开查看命中知识块与相似度）">
+                    <figcaption>🔼 文档上传 · 提问验证 · RAG 检索（命中 3 条知识块，可展开）</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="module">
+            <div class="module-head">
+                <span class="module-number">MODULE · 03</span>
+                <h2>🖼️ 图像识别 · 上传图片 + 测试 Vision</h2>
+            </div>
+            <p class="desc">上传本地图片转 base64，由后端携带 API Key 调用多模态视觉模型（Qwen/Qwen3-VL-8B-Instruct）进行视觉理解，返回对物体 / 文字 / 场景的描述，支持自定义提问。</p>
+            <div class="shot-grid">
+                <figure class="shot">
+                    <img src="img/LLM/txsb.png" alt="图像识别演示" data-caption="🔼 图像识别 · 上传 → 识别结果（模型 Qwen3-VL）">
+                    <figcaption>🔼 图像识别 · 上传 → 识别结果</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="module">
+            <div class="module-head">
+                <span class="module-number">MODULE · 04</span>
+                <h2>🎤 语音识别 · 测试功能 ASR</h2>
+            </div>
+            <p class="desc">浏览器录音（MediaRecorder）或上传音频文件，后端内存接收后转发语音识别模型（Qwen/Qwen3-ASR-1.7B），返回识别文字。页面提示：请在 Chrome / Edge 中允许麦克风权限。</p>
+            <div class="shot-grid">
+                <figure class="shot">
+                    <img src="img/LLM/yysb.png" alt="语音识别界面" data-caption="🔼 语音识别 · 录音 → 转文字">
+                    <figcaption>🔼 语音识别 · 录音界面（点击开始录音，识别结果显示在下方）</figcaption>
+                </figure>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="shell">
+            <span>高级网页设计 · LLM 应用实践 · 万超然 24001011008</span>
+            <span>Made with HTML &amp; CSS</span>
+        </div>
+    </footer>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close" id="lightbox_close">✕ 关闭</span>
+        <img id="lightbox_img" src="" alt="放大预览">
+    </div>
+
+    <script>
+        (function () {
+            var lb = document.getElementById('lightbox');
+            var lbImg = document.getElementById('lightbox_img');
+            document.querySelectorAll('.shot img').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    lbImg.src = img.src;
+                    lbImg.alt = img.dataset.caption || img.alt;
+                    lb.classList.add('open');
+                });
+            });
+            function wyClose() { lb.classList.remove('open'); }
+            document.getElementById('lightbox_close').addEventListener('click', wyClose);
+            lb.addEventListener('click', function (e) { if (e.target === lb) wyClose(); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') wyClose(); });
+        })();
+    </script>
+</body>
+
+</html>

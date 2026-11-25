@@ -119,4 +119,14 @@
       wy_send();
     }
   });
+
+  // 自动演示模式：URL 带 ?demo=1 时自动发送一条示例消息（用于展示与截图）
+  if (location.search.indexOf('demo=1') !== -1) {
+    setTimeout(function () {
+      if (wy_messages.filter(function (m) { return m.role === 'user'; }).length === 0) {
+        wy_inputEl.value = '你好，请用一句话介绍你自己';
+        wy_send();
+      }
+    }, 700);
+  }
 })();

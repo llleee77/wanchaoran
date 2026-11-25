@@ -75,4 +75,22 @@
       })
       .finally(function () { wy_btn.disabled = false; });
   });
+
+  // 自动演示模式：URL 带 ?demo=1 时自动加载示例图并识别（用于展示与截图）
+  if (location.search.indexOf('demo=1') !== -1) {
+    fetch('images/wy_vision_test.png')
+      .then(function (r) { return r.blob(); })
+      .then(function (blob) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          wy_imageData = e.target.result;
+          wy_preview.src = wy_imageData;
+          wy_preview.hidden = false;
+          wy_placeholder.hidden = true;
+          setTimeout(function () { wy_btn.click(); }, 500);
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch(function (err) { console.error('[vision] demo 加载示例图失败：', err); });
+  }
 })();
