@@ -1,0 +1,89 @@
+/*
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：图像识别页样式
+*/
+.wy_api-note { margin-left: auto; color: #97a0bd; font-size: 12px; }
+
+.wy_vision-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.wy_vision-left, .wy_vision-right {
+  background: #ffffff;
+  border: 1px solid #e3e8f6;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.wy_panel-title { font-size: 15px; color: #1d2748; margin-bottom: 12px; }
+
+.wy_img-area {
+  border: 2px dashed #b9c6f5;
+  border-radius: 12px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 14px;
+  transition: background .2s, border-color .2s;
+  background: #f8f9fe;
+}
+.wy_img-area:hover, .wy_img-area.wy_drag { background: #f0f4ff; border-color: #5b7bff; }
+
+#wy_img_placeholder { color: #8b93ad; font-size: 14px; }
+
+#wy_img_preview { max-width: 100%; max-height: 300px; display: block; }
+
+.wy_vision-row { display: flex; gap: 12px; }
+
+.wy_kb-input {
+  flex: 1;
+  font-size: 14px;
+  padding: 11px 14px;
+  border: 1px solid #ccd4ea;
+  border-radius: 10px;
+  outline: none;
+}
+.wy_kb-input:focus { border-color: #5b7bff; box-shadow: 0 0 0 3px rgba(91, 123, 255, .15); }
+
+.wy_send-btn {
+  padding: 11px 26px;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: #fff;
+  background: linear-gradient(120deg, #3a56d4, #5b7bff);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.wy_send-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.wy_result-box {
+  min-height: 260px;
+  background: #f8f9fe;
+  border: 1px solid #edf0fa;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #242b42;
+}
+
+.wy_chat-tip { text-align: center; color: #97a0bd; font-size: 13px; }
+
+.wy_vision-model { margin-top: 12px; font-size: 12px; color: #97a0bd; }
+
+.wy_err { color: #b03030; }
+
+@media (max-width: 760px) {
+  .wy_vision-layout { grid-template-columns: 1fr; }
+}

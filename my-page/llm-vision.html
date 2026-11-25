@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：图像识别页 —— 上传图片（base64）调用视觉模型识别
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图像识别 - 万超然 24001011008</title>
+  <link rel="stylesheet" href="llm/wy_common.css">
+  <link rel="stylesheet" href="llm/wy_vision.css">
+</head>
+<body>
+  <header class="wy_topbar">
+    <div class="wy_topbar-left">
+      <a class="wy_back" href="index.html">← 返回首页</a>
+      <span class="wy_page-title">👁️ 图像识别</span>
+    </div>
+    <div class="wy_topbar-right">万超然 · 24001011008</div>
+  </header>
+
+  <div class="wy_container">
+    <div class="wy_api-bar">
+      <span class="wy_api-label">调用接口：</span>
+      <a class="wy_api-link" href="/api/vision" target="_blank">POST http://localhost:8008/api/vision</a>
+      <span class="wy_api-note">图片转 base64 → 后端带 Key 调视觉模型</span>
+    </div>
+
+    <div class="wy_vision-layout">
+      <section class="wy_vision-left">
+        <h2 class="wy_panel-title">上传图片</h2>
+        <div class="wy_img-area" id="wy_img_area">
+          <p id="wy_img_placeholder">🖼️ 点击或拖拽上传图片</p>
+          <img id="wy_img_preview" hidden alt="预览">
+        </div>
+        <input type="file" id="wy_img_input" accept="image/*" hidden>
+        <div class="wy_vision-row">
+          <input class="wy_kb-input" id="wy_vision_question" type="text" value="请描述这张图片的内容" placeholder="想让模型做什么">
+          <button class="wy_send-btn" id="wy_vision_btn" type="button">识别</button>
+        </div>
+      </section>
+
+      <section class="wy_vision-right">
+        <h2 class="wy_panel-title">识别结果</h2>
+        <div class="wy_result-box" id="wy_vision_result">
+          <div class="wy_chat-tip">上传图片后点击「识别」。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="wy_footer">高级网页设计 · LLM 应用实践 · 万超然 24001011008</footer>
+
+  <script src="llm/wy_vision.js"></script>
+</body>
+</html>

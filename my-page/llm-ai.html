@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：AI 聊天 + 在线客服页 —— 下拉框切换平台（硅基流动/七牛）与客服人设，多轮对话
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 聊天 / 在线客服 - 万超然 24001011008</title>
+  <link rel="stylesheet" href="llm/wy_common.css">
+  <link rel="stylesheet" href="llm/wy_ai.css">
+</head>
+<body>
+  <header class="wy_topbar">
+    <div class="wy_topbar-left">
+      <a class="wy_back" href="index.html">← 返回首页</a>
+      <span class="wy_page-title">🤖 AI 聊天 / 在线客服</span>
+    </div>
+    <div class="wy_topbar-right">万超然 · 24001011008</div>
+  </header>
+
+  <div class="wy_container">
+    <div class="wy_api-bar">
+      <span class="wy_api-label">调用接口：</span>
+      <a class="wy_api-link" href="/api/chat" target="_blank">POST http://localhost:8008/api/chat</a>
+      <span class="wy_api-note">Key 存于后端 .env，前端不接触密钥</span>
+    </div>
+
+    <div class="wy_ctrl-bar">
+      <div class="wy_ctrl-item">
+        <label class="wy_label" for="wy_provider">AI 平台</label>
+        <select class="wy_select" id="wy_provider">
+          <option value="siliconflow">硅基流动</option>
+          <option value="qiniu">七牛</option>
+        </select>
+      </div>
+      <div class="wy_ctrl-item">
+        <label class="wy_label" for="wy_mode">对话人设</label>
+        <select class="wy_select" id="wy_mode">
+          <option value="chat">通用智能助手</option>
+          <option value="service">中华美食街·在线客服</option>
+        </select>
+      </div>
+      <button class="wy_clear-btn" id="wy_btn_clear" type="button">清空对话</button>
+    </div>
+
+    <div class="wy_chat-box" id="wy_chat_box">
+      <div class="wy_chat-tip">选择平台与人设，开始对话。切换平台后对话继续有效。</div>
+    </div>
+
+    <div class="wy_input-bar">
+      <textarea class="wy_textarea" id="wy_input" rows="2" placeholder="输入消息，Enter 发送（Shift+Enter 换行）"></textarea>
+      <button class="wy_send-btn" id="wy_btn_send" type="button">发送</button>
+    </div>
+  </div>
+
+  <footer class="wy_footer">高级网页设计 · LLM 应用实践 · 万超然 24001011008</footer>
+
+  <script src="llm/wy_ai.js"></script>
+</body>
+</html>

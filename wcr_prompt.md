@@ -113,3 +113,25 @@
 
 **第 2 轮（保留机制，换掉承载方式）**
 - 这个不行：`history` 模块 pushState 的是路径，静态站刷新会 404，相对路径也会断。我要保留"前进后退能切张"的效果，但状态要放在 hash 里（`#neon`），刷新和分享都不会坏。另外自动播放每 3.2 秒翻一张，不要每张都往历史里塞一条——只有用户自己操作时才 push，自动播放请用 replace。
+
+# LLM 应用实践（2026-11-23）
+
+**模型**：GLM（WorkBuddy）
+
+**提示词 1（后端接口）**
+- 在上节课全栈项目（Node.js + Express，端口 8008，RESTful + MVC，命名 wy_ 前缀）基础上新增 LLM 接口：/api/chat 收前端完整 messages 数组，按 provider（siliconflow / qiniu）读取 backend/.env 中的 BASE_URL、MODEL、API_KEY 转发到 OpenAI 兼容接口；/api/vision 收 base64 图片调视觉模型；/api/asr 收录音文件转发语音识别接口。Key 只存 .env（已在 .gitignore），前端不接触。
+
+**提示词 2（AI 客服页）**
+- 创建 ai.html：顶部下拉框切换平台（硅基流动/七牛）与人设（通用助手 / "中华美食街"在线客服——只回答营业时间、招牌菜、配送范围三类问题，其余礼貌引导留言），前端维护含 system 的完整 messages 数组实现多轮对话，切换平台后历史继续有效，等待显示"正在思考…"，结果输出到 console。
+
+**提示词 3（知识库）**
+- 新建表 wy_kb_docs / wy_kb_chunks（MySQL，utf8mb4）。上传 txt/md 自动切块（约 500 字/块），调用 embeddings 接口（BAAI/bge-m3）向量化入库；问答时问题向量化后对全表余弦相似度排序取 top3，拼进 system 提示词要求"仅根据资料回答并标注引用"，返回答案与命中块（可展开）。
+
+**提示词 4（图像识别 + 语音识别）**
+- vision.html：图片转 base64 dataURL 发后端，后端用 Qwen-VL 视觉模型识别，支持自定义提问。voice.html：MediaRecorder 录音或选择音频文件，multer 内存存储收文件后转发 SenseVoice 语音识别模型，返回文字。
+
+**提示词 5（整合进课堂实践）**
+- 把四个 LLM 页面（llm-ai / llm-kb / llm-vision / llm-voice）加入课堂实践档案：页面放 my-page/ 根目录，样式脚本收进 llm/ 子目录，课程目录卡片 11-14 号，fetch 走 http://localhost:8008（本地演示需先启动后端）。
+
+**踩坑记录**
+- Windows 重启后 winnat（Hyper-V NAT）随机保留 TCP 端口段 7961-8060，正好罩住 8008，导致 Express 监听 EACCES（启动日志"成功"但端口实际未绑定）。修复：管理员权限 `netsh int ipv4 set dynamicport tcp start=49152 num=16384` 把动态池恢复为微软标准范围 + `net stop winnat` 释放端口 → 启动服务 → `net start winnat`。

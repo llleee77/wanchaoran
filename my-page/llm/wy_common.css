@@ -1,0 +1,73 @@
+/*
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-19 | 大模型：GLM
+  说明：子页面公共样式（顶栏 / 内容区 / 页脚）
+*/
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #f4f6fc;
+  color: #242b42;
+  min-height: 100vh;
+}
+
+.wy_topbar {
+  background: linear-gradient(120deg, #16204a, #2b3a86);
+  color: #fff;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(22, 32, 74, .25);
+}
+
+.wy_topbar-left { display: flex; align-items: center; gap: 14px; }
+
+.wy_back {
+  color: #cdd8ff;
+  text-decoration: none;
+  font-size: 13.5px;
+  border: 1px solid rgba(205, 216, 255, .5);
+  border-radius: 8px;
+  padding: 6px 14px;
+  transition: background .2s;
+}
+.wy_back:hover { background: rgba(205, 216, 255, .16); }
+
+.wy_page-title { font-size: 19px; letter-spacing: 1px; }
+
+.wy_topbar-right { font-size: 12.5px; color: #b8c4ee; }
+
+.wy_container { max-width: 960px; margin: 0 auto; padding: 28px 20px 40px; }
+
+.wy_footer {
+  text-align: center;
+  color: #8b93ad;
+  font-size: 12.5px;
+  padding: 18px 0 26px;
+}
+
+/* 接口地址条 */
+.wy_api-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #eef2ff;
+  border: 1px solid #d6defc;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.wy_api-label { color: #5b6b9e; flex-shrink: 0; }
+
+.wy_api-link {
+  color: #3a56d4;
+  text-decoration: none;
+  word-break: break-all;
+  font-family: Consolas, monospace;
+}
+.wy_api-link:hover { text-decoration: underline; }

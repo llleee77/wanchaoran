@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：语音识别页 —— 浏览器录音（MediaRecorder）或选择音频文件上传，POST /api/asr 识别
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音识别 - 万超然 24001011008</title>
+  <link rel="stylesheet" href="llm/wy_common.css">
+  <link rel="stylesheet" href="llm/wy_voice.css">
+</head>
+<body>
+  <header class="wy_topbar">
+    <div class="wy_topbar-left">
+      <a class="wy_back" href="index.html">← 返回首页</a>
+      <span class="wy_page-title">🎙️ 语音识别</span>
+    </div>
+    <div class="wy_topbar-right">万超然 · 24001011008</div>
+  </header>
+
+  <div class="wy_container">
+    <div class="wy_api-bar">
+      <span class="wy_api-label">调用接口：</span>
+      <a class="wy_api-link" href="/api/asr" target="_blank">POST http://localhost:8008/api/asr</a>
+      <span class="wy_api-note">浏览器录音 → 后端转发语音识别模型（SenseVoice）</span>
+    </div>
+
+    <div class="wy_voice-card">
+      <button class="wy_mic-btn" id="wy_mic_btn" type="button">
+        <span class="wy_mic-icon" id="wy_mic_icon">🎙️</span>
+        <span id="wy_mic_text">点击开始录音</span>
+      </button>
+      <div class="wy_voice-status" id="wy_voice_status"></div>
+
+      <div class="wy_voice-divider">或</div>
+
+      <div class="wy_voice-file-row">
+        <input type="file" id="wy_audio_file" accept="audio/*" hidden>
+        <button class="wy_file-btn" id="wy_file_btn" type="button">📁 选择音频文件识别</button>
+      </div>
+    </div>
+
+    <div class="wy_voice-card">
+      <h2 class="wy_panel-title">识别结果</h2>
+      <div class="wy_voice-result" id="wy_voice_result">
+        <div class="wy_chat-tip">录音或选择音频文件后自动识别。</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wy_footer">高级网页设计 · LLM 应用实践 · 万超然 24001011008</footer>
+
+  <script src="llm/wy_voice.js"></script>
+</body>
+</html>

@@ -280,7 +280,7 @@
         <section id="lessons" aria-labelledby="lessons-title">
             <div class="section-heading">
                 <h2 id="lessons-title">课堂目录</h2>
-                <p class="section-note">已完成 10 个模块 · 持续更新中</p>
+                <p class="section-note">已完成 14 个模块 · 持续更新中</p>
             </div>
 
             <div class="lesson-grid">
@@ -374,9 +374,45 @@
                     <span class="card-link">进入练习 →</span>
                 </a>
 
-                <div class="lesson-card upcoming">
+                <a class='lesson-card' href='./llm-ai.html'>
                     <div>
                         <span class="lesson-number">11</span>
+                        <h3>LLM 应用 · AI 聊天 / 在线客服</h3>
+                        <p>下拉框切换硅基流动 / 七牛平台（后端读配置热切换），多轮对话，智能助手与"中华美食街"客服双人设。需先启动本地后端（端口 8008）。</p>
+                    </div>
+                    <span class="card-link">进入练习 →</span>
+                </a>
+
+                <a class='lesson-card' href='./llm-kb.html'>
+                    <div>
+                        <span class="lesson-number">12</span>
+                        <h3>LLM 应用 · 知识库问答</h3>
+                        <p>上传 txt/md 文档自动切块、向量化存入 MySQL，提问时余弦检索 top3 拼 system 提示词（RAG），可展开查看命中的知识块。</p>
+                    </div>
+                    <span class="card-link">进入练习 →</span>
+                </a>
+
+                <a class='lesson-card' href='./llm-vision.html'>
+                    <div>
+                        <span class="lesson-number">13</span>
+                        <h3>LLM 应用 · 图像识别</h3>
+                        <p>上传图片转 base64，由后端携带 API Key 调用视觉模型（Qwen-VL），支持自定义提问。</p>
+                    </div>
+                    <span class="card-link">进入练习 →</span>
+                </a>
+
+                <a class='lesson-card' href='./llm-voice.html'>
+                    <div>
+                        <span class="lesson-number">14</span>
+                        <h3>LLM 应用 · 语音识别</h3>
+                        <p>浏览器录音（MediaRecorder）或上传音频文件，后端转发 SenseVoice 模型识别为文字。</p>
+                    </div>
+                    <span class="card-link">进入练习 →</span>
+                </a>
+
+                <div class="lesson-card upcoming">
+                    <div>
+                        <span class="lesson-number">15</span>
                         <h3>后续模块</h3>
                         <p>新的课堂实践将在这里继续添加，目录会随学习进度不断扩展。</p>
                     </div>
@@ -388,6 +424,7 @@
         <section class="prompt-section" aria-labelledby="prompt-title">
             <h2 id="prompt-title">本次提示词</h2>
             <blockquote>创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为万超然的《高级网页设计》课堂实践，美化页面，课堂目录中包含HTML基础、自我介绍网页、其余模块后续在增加。页面中包括本提示词。</blockquote>
+            <blockquote>使用硅基流动 API 与七牛 API，在上节课全栈项目（Node.js + Express 后端，端口 8008）基础上完成 LLM 应用实践：1、AI 聊天/在线客服页面，前端下拉框切换硅基流动/七牛平台（后端读 .env 配置转发，API Key 不进前端），多轮对话维护完整 messages 数组，客服人设只回答营业时间/招牌菜/配送范围三类问题；2、知识库页面，上传 txt/md 自动切块向量化存 MySQL（wy_kb_docs / wy_kb_chunks 表），问答时余弦检索 top3 拼入 system 提示词（RAG）；3、图像识别页面，上传图片调用视觉模型；4、语音识别页面，浏览器录音或上传音频调用语音识别模型。模型：GLM</blockquote>
         </section>
     </main>
 

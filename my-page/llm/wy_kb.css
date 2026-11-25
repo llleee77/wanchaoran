@@ -1,0 +1,134 @@
+/*
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：知识库页样式
+*/
+.wy_api-note { margin-left: auto; color: #97a0bd; font-size: 12px; }
+
+.wy_kb-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.wy_panel-title { font-size: 15px; color: #1d2748; margin-bottom: 12px; }
+
+/* 左侧 */
+.wy_kb-left {
+  background: #ffffff;
+  border: 1px solid #e3e8f6;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.wy_upload-area {
+  border: 2px dashed #b9c6f5;
+  border-radius: 12px;
+  padding: 22px 14px;
+  text-align: center;
+  cursor: pointer;
+  color: #3a56d4;
+  font-size: 14px;
+  transition: background .2s, border-color .2s;
+}
+.wy_upload-area:hover, .wy_upload-area.wy_drag { background: #f0f4ff; border-color: #5b7bff; }
+
+.wy_upload-note { font-size: 12px; color: #97a0bd; margin-top: 6px; }
+
+.wy_upload-status { font-size: 12.5px; margin-top: 10px; min-height: 18px; }
+.wy_upload-status.wy_ok { color: #157a3d; }
+.wy_upload-status.wy_err { color: #b03030; }
+
+.wy_doc-list { list-style: none; margin-top: 14px; }
+
+.wy_doc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px;
+  border-top: 1px solid #eef1fa;
+  font-size: 13px;
+}
+
+.wy_doc-name { flex: 1; word-break: break-all; color: #242b42; }
+
+.wy_doc-meta { color: #97a0bd; font-size: 11.5px; flex-shrink: 0; }
+
+.wy_doc-del {
+  border: none;
+  background: none;
+  color: #c05050;
+  cursor: pointer;
+  font-size: 12px;
+  flex-shrink: 0;
+  padding: 4px;
+}
+.wy_doc-del:hover { text-decoration: underline; }
+
+.wy_loading-sm { color: #8b93ad; font-size: 13px; padding: 10px 0; }
+
+/* 右侧 */
+.wy_kb-right {
+  background: #ffffff;
+  border: 1px solid #e3e8f6;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.wy_kb-answer-box {
+  height: 380px;
+  overflow-y: auto;
+  background: #f8f9fe;
+  border: 1px solid #edf0fa;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.wy_chat-tip { text-align: center; color: #97a0bd; font-size: 13px; margin: auto 0; }
+
+.wy_kb-q { align-self: flex-end; background: #3a56d4; color: #fff; padding: 9px 14px; border-radius: 12px 12px 4px 12px; font-size: 14px; max-width: 85%; white-space: pre-wrap; }
+
+.wy_kb-a { align-self: flex-start; background: #fff; border: 1px solid #e8ecf8; padding: 12px 14px; border-radius: 12px 12px 12px 4px; font-size: 14px; line-height: 1.7; max-width: 92%; white-space: pre-wrap; word-break: break-word; }
+.wy_kb-a.wy_err { background: #fdecec; color: #b03030; border-color: #f3bcbc; }
+
+.wy_kb-src { align-self: flex-start; font-size: 12px; color: #6b7699; background: #eef2ff; border-radius: 8px; padding: 8px 12px; max-width: 92%; }
+.wy_kb-src summary { cursor: pointer; color: #3a56d4; }
+
+.wy_kb-input {
+  flex: 1;
+  font-size: 14px;
+  padding: 11px 14px;
+  border: 1px solid #ccd4ea;
+  border-radius: 10px;
+  outline: none;
+}
+.wy_kb-input:focus { border-color: #5b7bff; box-shadow: 0 0 0 3px rgba(91, 123, 255, .15); }
+
+/* 输入区（复用 ai 页样式） */
+.wy_input-bar { display: flex; gap: 12px; align-items: center; }
+
+.wy_send-btn {
+  padding: 11px 26px;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: #fff;
+  background: linear-gradient(120deg, #3a56d4, #5b7bff);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity .2s;
+  flex-shrink: 0;
+}
+.wy_send-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-width: 760px) {
+  .wy_kb-layout { grid-template-columns: 1fr; }
+  .wy_kb-answer-box { height: 300px; }
+}

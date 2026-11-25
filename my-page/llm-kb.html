@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+  姓名：万超然 | 学号：24001011008 |
+  时间：2026-11-23 | 大模型：GLM
+  说明：知识库页 —— 上传 txt/md 文档自动切块向量化入库，支持向量检索问答（RAG）
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识库 - 万超然 24001011008</title>
+  <link rel="stylesheet" href="llm/wy_common.css">
+  <link rel="stylesheet" href="llm/wy_kb.css">
+</head>
+<body>
+  <header class="wy_topbar">
+    <div class="wy_topbar-left">
+      <a class="wy_back" href="index.html">← 返回首页</a>
+      <span class="wy_page-title">📚 知识库问答</span>
+    </div>
+    <div class="wy_topbar-right">万超然 · 24001011008</div>
+  </header>
+
+  <div class="wy_container">
+    <div class="wy_api-bar">
+      <span class="wy_api-label">调用接口：</span>
+      <a class="wy_api-link" href="/api/kb/upload" target="_blank">POST /api/kb/upload</a>
+      <a class="wy_api-link" href="/api/kb/chat" target="_blank">POST /api/kb/chat</a>
+      <span class="wy_api-note">文档切块 → 向量化入库 → 余弦检索 top3 → 拼 system 提示词（RAG）</span>
+    </div>
+
+    <div class="wy_kb-layout">
+      <!-- 左侧：文档管理 -->
+      <section class="wy_kb-left">
+        <h2 class="wy_panel-title">文档管理</h2>
+        <div class="wy_upload-area" id="wy_upload_area">
+          <p>📤 点击或拖拽上传 .txt / .md 文件</p>
+          <p class="wy_upload-note">上传后自动切块并向量化存入 MySQL</p>
+          <input type="file" id="wy_file_input" accept=".txt,.md" hidden>
+        </div>
+        <div class="wy_upload-status" id="wy_upload_status"></div>
+        <ul class="wy_doc-list" id="wy_doc_list"><li class="wy_loading-sm">加载中…</li></ul>
+      </section>
+
+      <!-- 右侧：问答测试 -->
+      <section class="wy_kb-right">
+        <h2 class="wy_panel-title">知识库问答验证</h2>
+        <div class="wy_kb-answer-box" id="wy_kb_box">
+          <div class="wy_chat-tip">先上传文档，再提问验证知识库检索效果。</div>
+        </div>
+        <div class="wy_input-bar">
+          <input class="wy_kb-input" id="wy_kb_question" type="text" placeholder="输入问题，基于已上传的文档提问">
+          <button class="wy_send-btn" id="wy_kb_btn" type="button">提问</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="wy_footer">高级网页设计 · LLM 应用实践 · 万超然 24001011008</footer>
+
+  <script src="llm/wy_kb.js"></script>
+</body>
+</html>
